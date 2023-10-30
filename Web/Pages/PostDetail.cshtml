@@ -1,0 +1,59 @@
+﻿@page
+
+@{
+    ViewData["Title"] = "PostDetail";
+}
+
+<h1>PostDetail</h1>
+
+<div>
+    <h4>Post</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Tiêu đề
+        </dt>
+        <dd class="col-sm-10">
+            Đây là tiêu đề
+        </dd>
+        <dt class="col-sm-2">
+            Nội dung
+        </dt>
+        <dd class="col-sm-10">
+            Đây là nội dung
+        </dd>
+        <dt class="col-sm-2">
+            Ngày đăng
+        </dt>
+        <dd class="col-sm-10">
+            19/9/2002
+        </dd>
+        <dt class="col-sm-2">
+            Ca thi
+        </dt>
+        <dd class="col-sm-10">
+            7 giờ sáng - 10 giờ sáng
+        </dd>
+        <dt class="col-sm-2">
+            Trạng thái
+        </dt>
+        <dd class="col-sm-10">
+            Cấp cứu
+        </dd>
+        
+    </dl>
+</div>
+
+<div class="commemnt-container">
+    <label>Bình luận</label>
+    <div>
+        <textarea cols="60" row="5"></textarea>
+        <button>Đăng</button>
+    </div>
+</div>
+<div>
+    <label>hihi: a la ba cháp</label>
+</div>
+<div class="my-5">
+    <a asp-page="/Index">Quay về trang chủ</a>
+</div>

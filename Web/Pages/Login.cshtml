@@ -1,4 +1,31 @@
-﻿@model Web.Pages.LoginModel
+﻿@page
+@model Web.Pages.LoginModel
 @{
 }
-<h1>Login</h1>
+<div class="row">
+    <div class="col-6 my-5">
+        <img src="https://www.vub.be/sites/default/files/styles/landscape/public/2022-08/2022_Administratie%20en%20inschrijven_Documenten_S_1708574428.jpg?h=b6717701&itok=_K_HqGXr" class="img-login" style="max-width:80%;max-height:100%" />
+    </div>
+    <div class="col-lg-6 col-sm-12 my-5 text-center">
+        @* <div class="text-center">
+            <img src="images/logo-small.png" style="max-width:30%" />
+        </div> *@
+        <div class="text-center">
+            <label class="my-5" style="font-size:30px">Đăng nhập</label>
+        </div>
+        <div class="form-container">
+            <form class="text-center" method="post">
+               
+                <input type="text" placeholder="Username" class="form-control mx-auto" style="width:50%" />
+                <input type="password" placeholder="Password" class="form-control my-3 mx-auto" style="width:50%" />
+                <div class="my-3">
+                   
+                    <input type="checkbox" check="Checked" />
+                    <lable class="text-decoration-underline" style="margin-right:18%">Nhớ mật khẩu</lable>
+                    <a href="#" class="text-decoration-underline">Quên mật khẩu?</a>
+                </div>
+                <button class="btn btn-lg btn-outline-secondary">Đăng Nhập</button>
+            </form>
+        </div>
+    </div>
+</div>

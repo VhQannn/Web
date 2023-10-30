@@ -1,0 +1,46 @@
+﻿@page
+@model Web.Pages.CreatePostModel
+
+@{
+    ViewData["Title"] = "CreatePost";
+}
+
+<h1 class="text-center">Tạo bài đăng</h1>
+
+<hr />
+<div class="row">
+    <div class="offset-4 col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="Post.Title" class="control-label">Tiêu đề</label>
+                <input asp-for="Post.Title" class="form-control" />
+                <span asp-validation-for="Post.Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Post.Content" class="control-label">Nội dung</label>
+                <input asp-for="Post.Content" class="form-control" />
+                <span asp-validation-for="Post.Content" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Post.TimeSlot" class="control-label">Ca thi</label>
+                <input asp-for="Post.TimeSlot" class="form-control" />
+                <span asp-validation-for="Post.TimeSlot" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group my-4 text-center">
+                <input type="submit" value="Tạo" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a class="btn btn-outline-info btn-sm" asp-page="/Index">Về trang chủ</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
