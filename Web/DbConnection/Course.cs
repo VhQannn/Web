@@ -7,11 +7,19 @@ public partial class Course
 {
     public int CourseId { get; set; }
 
-    public string Title { get; set; } = null!;
+    public int? UserId { get; set; }
 
-    public string? Description { get; set; }
+    public string CourseTitle { get; set; } = null!;
+
+    public string? CourseDescription { get; set; }
+
+    public string CourseraEmail { get; set; } = null!;
+
+    public string CourseraPassword { get; set; } = null!;
 
     public DateTime? StartDate { get; set; }
 
     public DateTime? EndDate { get; set; }
+
+    public virtual User? User { get; set; }
 }

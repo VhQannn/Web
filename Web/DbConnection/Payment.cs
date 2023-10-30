@@ -13,6 +13,10 @@ public partial class Payment
 
     public DateTime? PaymentDate { get; set; }
 
+    public int? RelatedId { get; set; }
+
+    public string? ServiceType { get; set; }
+
     public string? Status { get; set; }
 
     public virtual User? User { get; set; }

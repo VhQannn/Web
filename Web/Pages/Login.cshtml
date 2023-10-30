@@ -16,11 +16,11 @@
         <div class="form-container">
             <form class="text-center" method="post">
                
-                <input type="text" placeholder="Username" class="form-control mx-auto" style="width:50%" />
-                <input type="password" placeholder="Password" class="form-control my-3 mx-auto" style="width:50%" />
+                <input type="text" placeholder="Username" asp-for="@Model.username" class="form-control mx-auto" style="width:50%" />
+                <input type="password" placeholder="Password" asp-for="@Model.password" class="form-control my-3 mx-auto" style="width:50%" />
                 <div class="my-3">
                    
-                    <input type="checkbox" check="Checked" />
+                    <input type="checkbox" check="Checked" asp-for="@Model.IsRemember" />
                     <lable class="text-decoration-underline" style="margin-right:18%">Nhớ mật khẩu</lable>
                     <a href="#" class="text-decoration-underline">Quên mật khẩu?</a>
                 </div>

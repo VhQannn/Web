@@ -15,6 +15,8 @@ public partial class User
 
     public string? UserType { get; set; }
 
+    public string Facebook { get; set; } = null!;
+
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
@@ -22,6 +24,10 @@ public partial class User
     public virtual ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
+    public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+
+    public virtual ICollection<ParentComment> ParentComments { get; set; } = new List<ParentComment>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
@@ -34,4 +40,6 @@ public partial class User
     public virtual ICollection<Rating> RatingSupporters { get; set; } = new List<Rating>();
 
     public virtual ICollection<Tool> Tools { get; set; } = new List<Tool>();
+
+    public virtual ICollection<UserTool> UserTools { get; set; } = new List<UserTool>();
 }
