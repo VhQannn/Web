@@ -3,11 +3,88 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<style>
+    /* Add your custom CSS styles here */
+    .my-3 {
+        margin: 20px 0;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .search-bar {
+        display: flex;
+        align-items: center;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px 0 0 5px;
+    }
+
+    .search-button {
+        background-color: transparent; /* Đặt màu nền là trong suốt */
+        color: #007BFF; /* Màu biểu tượng kính lúp */
+        border: none;
+        padding: 10px 20px;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+    }
+
+        .search-button:hover {
+            color: #0056b3; /* Màu biểu tượng khi hover */
+        }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 0 10px;
+        text-decoration: none;
+        color: #fff;
+        border-radius: 5px;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+    }
+
+    .btn-primary {
+        background-color: #007BFF;
+    }
+
+    .btn-secondary:hover {
+        background-color: #545b62;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
 <div class="my-3">
-    <form method="#">
-        <div class="text-center">
-            <input class="" type="text" style="width:1000px" />
-            <input type="button" value="Search" />
+    <form method="post">
+        <div class="search-bar">
+            <input class="search-input" type="text" placeholder="Search..." />
+            <button type="submit" class="search-button">
+                <i class="fa fa-search"></i> <!-- Font Awesome search icon -->
+            </button>
         </div>
     </form>
 </div>
@@ -16,21 +93,16 @@
     <a href="#" class="btn btn-secondary">Check Legit</a>
     <a href="/createpost" class="btn btn-primary">Đăng bài</a>
 </div>
+
 <table class="table table-striped">
     <thead class="text-center">
-    <th>
-        Môn
-    </th>
-    <th>
-        Tiêu đề
-    </th>
+    <th>Môn</th>
+    <th>Tiêu đề</th>
     </thead>
     <tbody>
-    <td class="text-center">
-        PRM
-    </td>
-    <td>
-        Cần cứu anh Tuấn
-    </td>
+        <tr>
+            <td class="text-center">PRM</td>
+            <td>Cần cứu anh Tuấn</td>
+        </tr>
     </tbody>
 </table>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Web</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
@@ -23,15 +23,33 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                         </li>
-                        
                     </ul>
                     <ul class="navbar-nav">
-                        <li>
-                            <a class="nav-link text-dark" href="/login">Đăng Nhập</a>
-                        </li>
-                        <li>
-                            <a class="nav-link text-dark" href="/register">Đăng Kí</a>
-                        </li>
+                        @if (Context.User.Identity.IsAuthenticated)
+                        {
+                            <li>
+                                <span class="nav-link text-dark">@Context.User.Identity.Name</span>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" href="/logout">Đăng Xuất</a>
+                            </li>
+
+                            @if (Context.User.IsInRole("Admin"))
+                            {
+                                <li>
+                                    <a class="nav-link text-dark" href="/admin">Trang quản trị</a>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li>
+                                <a class="nav-link text-dark" href="/login">Đăng Nhập</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" href="/register">Đăng Kí</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -45,7 +63,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container text-center">
-            &copy; 2023 - Web 
+            &copy; 2023 - Web
         </div>
     </footer>
 

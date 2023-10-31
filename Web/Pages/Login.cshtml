@@ -12,9 +12,9 @@
         <label class="display-4 mb-5">Đăng nhập</label>
         <div class="form-container mx-auto" style="max-width: 300px;">
             <form class="text-center" method="post">
-                <input type="text" placeholder="Username" asp-for="@Model.username" class="form-control mb-3" />
+                <input type="text" placeholder="Username" asp-for="@Model.Username" class="form-control mb-3" />
                 <div class="password-toggle">
-                    <input type="password" placeholder="Mật khẩu" asp-for="@Model.password" class="form-control mb-3" />
+                    <input type="password" placeholder="Mật khẩu" asp-for="@Model.Password" class="form-control mb-3" />
 
                     <span class="toggle-icon"><i class="fa fa-eye"></i></span>
                 </div>
@@ -50,13 +50,13 @@
         position: relative;
     }
 
-    .password-toggle .toggle-icon {
-        position: absolute;
-        top: 50%;
-        right: 10px;
-        transform: translateY(-50%);
-        cursor: pointer;
-    }
+        .password-toggle .toggle-icon {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
 </style>
 
 @section Scripts {

@@ -15,7 +15,7 @@ public partial class User
 
     public string? UserType { get; set; }
 
-    public string Facebook { get; set; } = null!;
+    public string? Facebook { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

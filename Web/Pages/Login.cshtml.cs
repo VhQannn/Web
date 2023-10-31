@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 using Web.DbConnection;
 using Web.IRepository;
 
@@ -8,9 +11,9 @@ namespace Web.Pages
     public class LoginModel : PageModel
     {
         [BindProperty]
-        public string username { get; set; }
+        public string Username { get; set; }
         [BindProperty]
-        public string password { get; set; }
+        public string Password { get; set; }
 
         [BindProperty]
         public bool IsRemember { get; set; }
@@ -24,47 +27,41 @@ namespace Web.Pages
         {
             if (HttpContext.Request.Cookies.ContainsKey("username"))
             {
-                username = HttpContext.Request.Cookies["username"];
-                password = HttpContext.Request.Cookies["password"];
+                Username = HttpContext.Request.Cookies["username"];
+                Password = HttpContext.Request.Cookies["password"];
             }
         }
-        public void OnPost()
+        public async Task<IActionResult> OnPost()
         {
-            try
+            if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
             {
-                User currentUser = _userRepository.Login(username, password);
-                int userId = currentUser.UserId;
-                if (currentUser == null)
-                {
-                    TempData["Fail"] = "Đăng nhập thất bại!.";
-                    Redirect("/Login");
-                }
-                else
-                {
-                    if (IsRemember)
-                    {
-                        // Lưu username vào cookie
-                        HttpContext.Response.Cookies.Append("username", username, new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(14) });
+                ViewData["Error"] = "Tên đăng nhập và mật khẩu là bắt buộc.";
+                return Page();
+            }
 
-                        // Lưu một token vào cookie (ví dụ: bạn có thể lưu mật khẩu đã mã hóa)
-                        HttpContext.Response.Cookies.Append("password", password, new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(14) });
-                    }
-                    else
-                    {
-                        // Xóa cookies nếu người dùng không chọn "Nhớ mật khẩu"
-                        HttpContext.Response.Cookies.Delete("username");
-                        HttpContext.Response.Cookies.Delete("password");
-                    }
-                    HttpContext.Session.SetInt32("userId", userId);
-                    HttpContext.Session.SetString("role", currentUser.UserType);
-                    Response.Redirect("/Index");
-                }
-            }
-            catch (Exception)
+            var currentUser = _userRepository.Login(Username, Password);
+            if (currentUser == null)
             {
-                TempData["Fail"] = "Đăng nhập thất bại!.";
-                Redirect("/Login");
+                ViewData["Error"] = "Tên đăng nhập hoặc mật khẩu không đúng.";
+                return Page();
             }
+
+            var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, currentUser.Username),
+            new Claim(ClaimTypes.Role, currentUser.UserType.ToString())
+        };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = IsRemember
+            };
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+            return RedirectToPage("/Index");
 
         }
     }
