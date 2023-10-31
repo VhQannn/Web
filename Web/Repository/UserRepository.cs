@@ -8,8 +8,8 @@ namespace Web.Repository
 {
     public class UserRepository : IUserRepository
     {
-        private readonly WebContext _context;
-        public UserRepository(WebContext context)
+        private readonly WebscamContext _context;
+        public UserRepository(WebscamContext context)
         {
             _context = context;
         }

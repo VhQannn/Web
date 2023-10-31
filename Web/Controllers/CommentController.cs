@@ -9,9 +9,9 @@ namespace Web.Controllers
     [ApiController]
     public class CommentController : Controller
     {
-        private readonly WebContext _context;
+        private readonly WebscamContext _context;
 
-        public CommentController(WebContext context)
+        public CommentController(WebscamContext context)
         {
             _context = context;
         }

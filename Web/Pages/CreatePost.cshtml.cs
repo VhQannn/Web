@@ -5,47 +5,50 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Hosting;
 using Web.DbConnection;
 
 namespace Web.Pages
 {
     public class CreatePostModel : PageModel
     {
-        private readonly Web.DbConnection.WebContext _context;
-        private readonly IHubContext<PostHub> _postHub;
+        private readonly Web.DbConnection.WebscamContext _context;
 
-        public CreatePostModel(Web.DbConnection.WebContext context, IHubContext<PostHub> postHub)
+        public CreatePostModel(Web.DbConnection.WebscamContext context)
         {
             _context = context;
-            _postHub = postHub;
         }
 
         public IActionResult OnGet()
         {
-        ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
+            ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
+            ViewData["PostCategoryId"] = new SelectList(_context.PostCategories, "PostCategoryId", "PostCategoryName");
             return Page();
         }
 
         [BindProperty]
         public Post Post { get; set; } = default!;
-        
+
+        [BindProperty]
+        public string StartTime { get; set; } = default!;
+
+        [BindProperty]
+        public string EndTime { get; set; } = default!;
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Posts == null || Post == null)
+            Post.PostDate = DateTime.Now;
+            Post.Status = "pending";
+            Post.TimeSlot = $"{StartTime} - {EndTime}";
+
+            if (!ModelState.IsValid || _context.Posts == null || Post == null)
             {
                 return Page();
             }
-
             _context.Posts.Add(Post);
             await _context.SaveChangesAsync();
 
-            //Này e làm signalr cho cái post á nha 
-            var postHub = (IHubContext<PostHub>)HttpContext.RequestServices.GetService(typeof(IHubContext<PostHub>));
-            await postHub.Clients.All.SendAsync("UpdatePosts");
-            ////
             return RedirectToPage("./Index");
         }
     }

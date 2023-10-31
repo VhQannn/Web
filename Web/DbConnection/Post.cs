@@ -17,6 +17,8 @@ public partial class Post
 
     public DateTime PostDate { get; set; }
 
+    public DateTime DateSlot { get; set; }
+
     public string? TimeSlot { get; set; }
 
     public string? Status { get; set; }
