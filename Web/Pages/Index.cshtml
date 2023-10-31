@@ -18,19 +18,61 @@
 </div>
 <table class="table table-striped">
     <thead class="text-center">
-    <th>
-        Môn
-    </th>
-    <th>
-        Tiêu đề
-    </th>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].PostTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].PostContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].PostDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].TimeSlot)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].PostCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].User)
+            </th>
+            <th></th>
+        </tr>
     </thead>
     <tbody>
-    <td class="text-center">
-        PRM
-    </td>
-    <td>
-        Cần cứu anh Tuấn
-    </td>
+        @foreach (var item in Model.Post)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostContent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeSlot)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostCategory.PostCategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Username)
+                </td>
+                <td>
+                    <a asp-page="./PostDetails" asp-route-id="@item.PostId">View Details</a>
+
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
