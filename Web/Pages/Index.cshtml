@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -96,13 +96,42 @@
 
 <table class="table table-striped">
     <thead class="text-center">
-    <th>Môn</th>
-    <th>Tiêu đề</th>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].PostTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].PostContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].PostDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].TimeSlot)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].PostCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].User)
+            </th>
+            <th></th>
+        </tr>
     </thead>
     <tbody>
-        <tr>
-            <td class="text-center">PRM</td>
-            <td>Cần cứu anh Tuấn</td>
-        </tr>
+       
     </tbody>
 </table>
+
+<p>Trang: <span id="currentPage"></span> / <span id="totalPages"></span></p>
+
+
+<div class="pagination">
+    <button id="prevPage">Trước</button>
+    <span id="currentPage">1</span>
+    <button id="nextPage">Sau</button>
+</div>
+

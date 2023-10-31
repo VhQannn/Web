@@ -1,0 +1,163 @@
+﻿@page
+@model Web.Pages.PostDetailsModel
+
+@{
+	ViewData["Title"] = "PostDetails";
+}
+<style>
+	/* General Styles */
+	body {
+		font-family: Arial, sans-serif;
+		background-color: #f0f2f5;
+	}
+
+	/* Comment Section Styles */
+	.comment-container {
+		background-color: #fff;
+		padding: 15px;
+		border-radius: 8px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		margin-top: 20px;
+	}
+
+		.comment-container textarea {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ccd0d5;
+			border-radius: 18px;
+			font-size: 14px;
+			resize: none;
+		}
+
+		.comment-container button {
+			padding: 8px 16px;
+			background-color: #1877f2;
+			color: white;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			font-size: 14px;
+			margin-top: 10px;
+			transition: background-color 0.2s;
+		}
+
+			.comment-container button:hover {
+				background-color: #165dbb;
+			}
+
+	.comments-list {
+		margin-top: 20px;
+	}
+
+	.comment {
+		background-color: #fff;
+		padding: 12px;
+		border-radius: 8px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		margin: 10px 0;
+	}
+
+	.comment-author {
+		display: flex;
+		align-items: center;
+		margin-bottom: 10px;
+	}
+
+	.avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		margin-right: 10px;
+	}
+
+	.author-name {
+		font-weight: bold;
+		font-size: 14px;
+		color: #1d2129;
+	}
+
+	.comment-text {
+		font-size: 14px;
+		line-height: 1.4;
+		color: #606770;
+	}
+
+	a {
+		color: #1877f2;
+		text-decoration: none;
+	}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+</style>
+
+
+<div>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Post.PostTitle)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Post.PostTitle)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Post.PostContent)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Post.PostContent)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Post.PostDate)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Post.PostDate)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Post.TimeSlot)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Post.TimeSlot)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Post.Status)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Post.Status)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Post.PostCategory)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Post.PostCategory.PostCategoryId)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Post.User)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Post.User.UserId)
+		</dd>
+	</dl>
+</div>
+<div class="comment-container">
+	<label>Bình luận</label>
+	<div>
+		<textarea id="commentText" cols="90" rows="5"></textarea>
+		<button id="postCommentBtn">Đăng</button>
+	</div>
+</div>
+
+
+<div class="comment-container">
+	<label>Các bình luận hiện có:</label>
+	<div id="comments-section" class="comments-list">
+		<!-- Comments will be loaded here -->
+	</div>
+</div>
+
+<div class="my-5">
+	<a asp-page="/Index">Quay về trang chủ</a>
+</div>
+
