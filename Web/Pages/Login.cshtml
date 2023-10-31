@@ -2,30 +2,84 @@
 @model Web.Pages.LoginModel
 @{
 }
-<div class="row">
+
+
+<div class="row align-items-center h-100">
     <div class="col-6 my-5">
-        <img src="https://www.vub.be/sites/default/files/styles/landscape/public/2022-08/2022_Administratie%20en%20inschrijven_Documenten_S_1708574428.jpg?h=b6717701&itok=_K_HqGXr" class="img-login" style="max-width:80%;max-height:100%" />
+        <img src="https://www.vub.be/sites/default/files/styles/landscape/public/2022-08/2022_Administratie%20en%20inschrijven_Documenten_S_1708574428.jpg?h=b6717701&itok=_K_HqGXr" class="img-login img-fluid" />
     </div>
     <div class="col-lg-6 col-sm-12 my-5 text-center">
-        @* <div class="text-center">
-            <img src="images/logo-small.png" style="max-width:30%" />
-        </div> *@
-        <div class="text-center">
-            <label class="my-5" style="font-size:30px">Đăng nhập</label>
-        </div>
-        <div class="form-container">
+        <label class="display-4 mb-5">Đăng nhập</label>
+        <div class="form-container mx-auto" style="max-width: 300px;">
             <form class="text-center" method="post">
-               
-                <input type="text" placeholder="Username" asp-for="@Model.username" class="form-control mx-auto" style="width:50%" />
-                <input type="password" placeholder="Password" asp-for="@Model.password" class="form-control my-3 mx-auto" style="width:50%" />
-                <div class="my-3">
-                   
-                    <input type="checkbox" check="Checked" asp-for="@Model.IsRemember" />
-                    <lable class="text-decoration-underline" style="margin-right:18%">Nhớ mật khẩu</lable>
+                <input type="text" placeholder="Username" asp-for="@Model.username" class="form-control mb-3" />
+                <div class="password-toggle">
+                    <input type="password" placeholder="Mật khẩu" asp-for="@Model.password" class="form-control mb-3" />
+
+                    <span class="toggle-icon"><i class="fa fa-eye"></i></span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <input type="checkbox" asp-for="@Model.IsRemember" />
+                        <label class="text-decoration-underline ms-2">Nhớ mật khẩu</label>
+                    </div>
                     <a href="#" class="text-decoration-underline">Quên mật khẩu?</a>
                 </div>
-                <button class="btn btn-lg btn-outline-secondary">Đăng Nhập</button>
+                <button class="btn btn-lg btn-outline-secondary mb-3 w-100">Đăng Nhập</button>
+                <div>
+                    Chưa có tài khoản? <a href="/register" class="text-decoration-underline">Đăng ký ngay!</a>
+                </div>
             </form>
         </div>
     </div>
 </div>
+
+<style>
+    body {
+        background-color: #f5f5f5;
+    }
+
+    .form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .password-toggle {
+        position: relative;
+    }
+
+    .password-toggle .toggle-icon {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.querySelectorAll('.password-toggle .toggle-icon').forEach(toggleIcon => {
+            const passwordInput = toggleIcon.parentElement.querySelector('input[type="password"]');
+            if (passwordInput) {  // Check if passwordInput exists
+                toggleIcon.addEventListener('click', function () {
+                    if (passwordInput.type === "password") {
+                        passwordInput.type = "text";
+                        this.querySelector('i').classList.remove('fa-eye');
+                        this.querySelector('i').classList.add('fa-eye-slash');
+                    } else {
+                        passwordInput.type = "password";
+                        this.querySelector('i').classList.remove('fa-eye-slash');
+                        this.querySelector('i').classList.add('fa-eye');
+                    }
+                });
+            }
+        });
+
+    </script>
+}

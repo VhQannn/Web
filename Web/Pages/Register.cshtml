@@ -1,0 +1,83 @@
+﻿@page
+@model Web.Pages.RegisterModel
+
+@{
+    ViewData["Title"] = "Đăng ký";
+}
+<div class="row align-items-center h-100">
+    <div class="col-md-6 mx-auto">
+        <div class="text-center mb-5">
+            <h1 class="display-4">Đăng ký thành viên</h1>
+        </div>
+        <div class="form-container mx-auto" style="max-width: 300px;">
+            <form class="text-center" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <input type="text" placeholder="Tên người dùng" asp-for="User.Username" class="form-control mb-3" />
+                <div class="password-toggle mb-3">
+                    <input type="password" placeholder="Mật khẩu" asp-for="User.Password" class="form-control" />
+                    <span class="toggle-icon"><i class="fa fa-eye"></i></span>
+                </div>
+                <div class="password-toggle mb-3">
+                    <input type="password" placeholder="Xác nhận mật khẩu" asp-for="User.ConfirmPassword" class="form-control" />
+                    <span class="toggle-icon"><i class="fa fa-eye"></i></span>
+                </div>
+                <input type="email" placeholder="Email" asp-for="User.Email" class="form-control mb-3" />
+                <button class="btn btn-lg btn-outline-secondary mb-3 w-100">Đăng ký</button>
+                <div>
+                    Đã có tài khoản? <a href="/login" class="text-decoration-underline">Đăng nhập ngay!</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        height: 100vh;
+        background-color: #f5f5f5;
+    }
+
+    .form-container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .password-toggle {
+        position: relative;
+    }
+
+        .password-toggle .toggle-icon {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+</style>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.querySelectorAll('.password-toggle .toggle-icon').forEach(toggleIcon => {
+            toggleIcon.addEventListener('click', function () {
+                const passwordInput = this.previousElementSibling;
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    this.querySelector('i').classList.remove('fa-eye');
+                    this.querySelector('i').classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = "password";
+                    this.querySelector('i').classList.remove('fa-eye-slash');
+                    this.querySelector('i').classList.add('fa-eye');
+                }
+            });
+        });
+    </script>
+}

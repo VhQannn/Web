@@ -36,7 +36,7 @@ namespace Web.Repository
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.UtcNow,
                 UserType = "Customer",
-
+                Facebook = ""
             };
             _context.Users.Add(user);
             return _context.SaveChanges() > 0;
