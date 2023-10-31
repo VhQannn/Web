@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Web;
 using Web.DbConnection;
 using Web.IRepository;
 using Web.Repository;
@@ -21,6 +22,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<WebContext>
     (opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddSignalR();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,5 +41,12 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<PostHub>("/postHub");
+    endpoints.MapRazorPages();
+    endpoints.MapControllers();
+});
 
 app.Run();
