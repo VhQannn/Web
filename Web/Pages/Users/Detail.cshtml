@@ -1,0 +1,47 @@
+﻿@page
+@model Web.Pages.Users.DetailModel
+
+@{
+    ViewData["Title"] = "detail";
+}
+<div class="container">
+    <div class="row shadow-lg p-4 bg-white rounded">
+        <!-- Cột 1: Avatar, Icon Facebook và mô tả -->
+        <div class="col-lg-3 d-flex flex-column align-items-center text-center p-4">
+            <img src="https://files.playerduo.net/production/images/20115ac4-b3d2-4a54-9f14-cda26c9eed30__9a892640-4f0e-11ee-bec4-f929e725acab__player_avatar.jpg" alt="Avatar" class="img-fluid rounded-circle mb-3" style="width: 150px;">
+            <a href="https://facebook.com/your_username" target="_blank" class="btn btn-primary btn-sm mb-3">
+                <i class="fab fa-facebook-f"></i> Facebook
+            </a>
+           
+        </div>
+
+        <!-- Cột 2: Thông tin chi tiết và tỉ lệ hoàn thành công việc -->
+        <div class="col-lg-6 border-start border-end p-4">
+            <h4>Thông tin chi tiết</h4>
+            <ul class="list-unstyled">
+                <li><strong>Tên:</strong> Nguyễn Văn A</li>
+                <li><strong>Tuổi:</strong> 30</li>
+                <!-- ... Thêm các thông tin khác ... -->
+            </ul>
+            <h5>Tỉ lệ hoàn thành công việc: <span class="text-success">90%</span></h5>
+            <!-- ... Thêm các thông tin khác ... -->
+        </div>
+
+        <!-- Cột 3: Giá tiền, Rating và chữ "Thuê" và "Chat" -->
+        <div class="col-lg-3 d-flex flex-column justify-content-center align-items-center p-4">
+            <h2 class="text-success mb-3">$100/h</h2>
+            <!-- Rating stars -->
+            <div class="mb-3">
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star text-warning"></i>
+                <i class="fas fa-star-half-alt text-warning"></i>
+            </div>
+            <button class="btn btn-warning btn-sm mt-2">Thuê</button>
+            <button class="btn btn-info btn-sm mt-2">Chat</button>
+        </div>
+    </div>
+</div>
+
+

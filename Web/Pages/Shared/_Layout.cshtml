@@ -28,7 +28,9 @@
                         @if (Context.User.Identity.IsAuthenticated)
                         {
                             <li>
-                                <span class="nav-link text-dark">@Context.User.Identity.Name</span>
+                                <span class="nav-link text-dark">
+                                    <a href="/users/detail">@Context.User.Identity.Name</a>
+                                </span>
                             </li>
                             <li>
                                 <a class="nav-link text-dark" href="/logout">Đăng Xuất</a>
