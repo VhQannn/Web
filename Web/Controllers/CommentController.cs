@@ -53,7 +53,7 @@ namespace Web.Controllers
 			{
 				PostId = postId,
 				Content = content,
-                UserId = 3,
+                UserId = 1,
 				CommentDate = DateTime.Now
 			};
 
@@ -70,7 +70,7 @@ namespace Web.Controllers
 			{
 				ParentCommentId = parentCommentId,
 				Content = content,
-				UserId = 3,
+				UserId = 1,
 				CommentDate = DateTime.Now
 			};
 
