@@ -26,7 +26,7 @@ function loadPosts(pageNumber) {
                         <td>${post.status}</td>
                         <td>${post.postCategoryName}</td>
                         <td>${post.username}</td>
-                        <td><a href="./Details?id=${post.postId}">View Details</a></td>
+                        <td><a href="./PostDetails?id=${post.postId}">View Details</a></td>
                     </tr>
                 `;
                 $("table tbody").append(row);
