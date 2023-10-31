@@ -7,10 +7,10 @@ namespace Web.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly Web.DbConnection.WebContext _context;
+        private readonly Web.DbConnection.WebscamContext _context;
         private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger, Web.DbConnection.WebContext context)
+        public IndexModel(ILogger<IndexModel> logger, Web.DbConnection.WebscamContext context)
         {
             _logger = logger;
             _context = context;

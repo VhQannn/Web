@@ -11,7 +11,9 @@ public partial class ParentComment
 
     public int? UserId { get; set; }
 
-    public string? Content { get; set; }
+    public decimal Price { get; set; }
+
+    public string Content { get; set; } = null!;
 
     public DateTime? CommentDate { get; set; }
 
