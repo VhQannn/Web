@@ -2,16 +2,18 @@
     .withUrl("/postHub")
     .build();
 
-connection.on("UpdatePosts", () => {
-    // Gọi API để lấy danh sách bài viết mới
+let currentPage = 1;
+const pageSize = 5;
+
+function loadPosts(pageNumber) {
     $.ajax({
-        url: "/api/posts",  // Đường dẫn tới API lấy danh sách bài viết
+        url: `/api/posts?pageNumber=${pageNumber}&pageSize=${pageSize}`,
         method: "GET",
-        success: function (data) {
+        success: function (response) {
+            const { data, totalRecords, totalPages } = response;
+
             // Xóa nội dung hiện tại của bảng
             $("table tbody").empty();
-
-            console.log(data);
 
             // Duyệt qua mỗi bài viết và thêm vào bảng
             data.forEach(post => {
@@ -29,11 +31,45 @@ connection.on("UpdatePosts", () => {
                 `;
                 $("table tbody").append(row);
             });
+
+            if (currentPage >= totalPages) {
+                $("#nextPage").hide();
+            } else {
+                $("#nextPage").show();
+            }
+
+            if (currentPage <= 1) {
+                $("#prevPage").hide();
+            } else {
+                $("#prevPage").show();
+            }
+
+            $("#currentPage").text(currentPage);
+            $("#totalPages").text(totalPages);
         },
         error: function (error) {
             console.error("Lỗi khi cập nhật bảng: ", error);
         }
     });
+}
+
+connection.on("UpdatePosts", () => {
+    loadPosts(currentPage);
+});
+
+$("#prevPage").click(function () {
+    if (currentPage > 1) {
+        currentPage--;
+        loadPosts(currentPage);
+    }
+});
+
+$("#nextPage").click(function () {
+    currentPage++;
+    loadPosts(currentPage);
 });
 
 connection.start().catch(err => console.error(err.toString()));
+
+// Load initial data
+loadPosts(currentPage);

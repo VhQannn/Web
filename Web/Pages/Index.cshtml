@@ -44,35 +44,16 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Post)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PostTitle)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PostContent)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PostDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeSlot)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PostCategory.PostCategoryName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.Username)
-                </td>
-                <td>
-                    <a asp-page="./PostDetails" asp-route-id="@item.PostId">View Details</a>
-
-                </td>
-            </tr>
-        }
+       
     </tbody>
 </table>
+
+<p>Trang: <span id="currentPage"></span> / <span id="totalPages"></span></p>
+
+
+<div class="pagination">
+    <button id="prevPage">Trước</button>
+    <span id="currentPage">1</span>
+    <button id="nextPage">Sau</button>
+</div>
+
