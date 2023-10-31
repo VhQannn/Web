@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Web.DbConnection;
@@ -11,7 +11,7 @@ public partial class Comment
 
     public int? UserId { get; set; }
 
-    public string Content { get; set; } = null!;
+    public string? Content { get; set; }
 
     public DateTime? CommentDate { get; set; }
 
