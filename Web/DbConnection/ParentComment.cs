@@ -13,7 +13,9 @@ public partial class ParentComment
 
     public string? Content { get; set; }
 
-    public DateTime? CommentDate { get; set; }
+	public decimal Price { get; set; }
+
+	public DateTime? CommentDate { get; set; }
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 

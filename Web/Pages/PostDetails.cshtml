@@ -57,10 +57,22 @@
 		margin: 10px 0;
 	}
 
+	.comment-top {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
 	.comment-author {
 		display: flex;
 		align-items: center;
-		margin-bottom: 10px;
+		margin-bottom: 0;
+	}
+	
+	.comment-content {
+		display: flex;
+		align-items: center;
+		margin-bottom: 0;
 	}
 
 	.avatar {
@@ -77,9 +89,10 @@
 	}
 
 	.comment-text {
-		font-size: 14px;
-		line-height: 1.4;
-		color: #606770;
+		font-size: 15px;
+		line-height: 2.4;
+		color: #8c8c8c;
+		font-weight: bold;
 	}
 
 	a {
@@ -90,6 +103,56 @@
 		a:hover {
 			text-decoration: underline;
 		}
+
+	.edit-price-btn {
+		background-color: #007bff;
+		color: white;
+		border: none;
+		padding: 5px 10px;
+		margin-left: 10px;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+
+		.edit-price-btn:hover {
+			background-color: #0056b3;
+		}
+
+	.price-input {
+		margin-left: 10px;
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	.comment-price {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		flex: 1;
+		font-size: 16px; /* Tăng kích thước font cho giá */
+		color: #e74c3c; /* Màu đỏ cho giá */
+	}
+	.comment-action {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		flex: 1;
+	}
+
+	.price-display {
+		margin-left: 5px; /* Thêm khoảng cách giữa biểu tượng và giá */
+	}
+
+	.price-icon {
+		display: inline-block;
+		width: 18px; /* Kích thước của biểu tượng */
+		height: 18px;
+		background: url('https://dl.dropbox.com/scl/fi/84tfpvsdpdoi65pvk0cre/flame_426833.png?rlkey=e1pjwoyfva95jczklwumgyv2v&dl=0') no-repeat center; /* Đường dẫn đến biểu tượng đóm lửa */
+		background-size: contain; /* Đảm bảo biểu tượng fit với kích thước */
+		margin-right: 5px; /* Thêm khoảng cách giữa biểu tượng và giá */
+	}
 
 </style>
 
@@ -142,12 +205,14 @@
 	</dl>
 </div>
 <div class="comment-container">
-	<label>Bình luận</label>
+	<label>Bình luận và đưa giá</label>
 	<div>
-		<textarea id="commentText" cols="90" rows="5"></textarea>
+		<textarea id="commentText" cols="90" rows="3" placeholder="Nhập bình luận của bạn..."></textarea>
+		<input type="number" id="priceOffered" placeholder="Đưa giá của bạn (đ)" />
 		<button id="postCommentBtn">Đăng</button>
 	</div>
 </div>
+
 
 
 <div class="comment-container">
@@ -161,3 +226,6 @@
 	<a asp-page="/Index">Quay về trang chủ</a>
 </div>
 
+<script>
+	var postUserId = @Model.Post.User.UserId;
+</script>
