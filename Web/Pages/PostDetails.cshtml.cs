@@ -27,7 +27,7 @@ namespace Web.Pages
                 return NotFound();
             }
 
-            var post = await _context.Posts.FirstOrDefaultAsync(m => m.PostId == id);
+            var post = await _context.Posts.Include(pc => pc.User).FirstOrDefaultAsync(m => m.PostId == id);
             if (post == null)
             {
                 return NotFound();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,11 +37,16 @@ namespace Web.Pages
         [BindProperty]
         public string EndTime { get; set; } = default!;
 
+
+        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
+            var currentUserName = User.Identity.Name;
+            var currentUser = _context.Users.FirstOrDefault(u => u.Username == currentUserName);
             Post.PostDate = DateTime.Now;
             Post.Status = "pending";
             Post.TimeSlot = $"{StartTime} - {EndTime}";
+            Post.User = currentUser;
 
             if (!ModelState.IsValid || _context.Posts == null || Post == null)
             {
