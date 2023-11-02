@@ -17,15 +17,17 @@ function loadPosts(pageNumber) {
 
             // Duyệt qua mỗi bài viết và thêm vào bảng
             data.forEach(post => {
+                const dateOnly = post.dateSlot.split('T')[0];
+                const displayedUsername = post.username || "Chưa có";
                 const row = `
                     <tr>
                         <td>${post.postTitle}</td>
                         <td>${post.postContent}</td>
-                        <td>${post.postDate}</td>
+                        <td>${dateOnly}</td>
                         <td>${post.timeSlot}</td>
                         <td>${post.status}</td>
                         <td>${post.postCategoryName}</td>
-                        <td>${post.username}</td>
+                        <td>${displayedUsername}</td>
                         <td><a href="./PostDetails?id=${post.postId}">View Details</a></td>
                     </tr>
                 `;

@@ -31,7 +31,8 @@ namespace Web.Controllers
 			var userDTO = new AccountDTO
 			{
 				Id = currentUser.UserId,
-				Username = currentUser.Username
+				Username = currentUser.Username,
+				Role = currentUser.UserType != null ? currentUser.UserType : "Unknown"
 			};
 
 			return Ok(userDTO);

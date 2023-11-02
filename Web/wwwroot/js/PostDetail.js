@@ -1,9 +1,12 @@
-﻿function loadComments(postId) {
+﻿
+function loadComments(postId) {
+    if (currentUserId === postUserId || currentRole == "Customer") {
+        $('#comment-container').hide();
+    }
     $.ajax({
         url: `/api/comments?postId=${postId}`,
         method: "GET",
         success: function (parentComments) {
-            console.log(parentComments);
             let commentsHtml = "";
 
             parentComments.forEach(parentComment => {
@@ -28,8 +31,7 @@
                 `;
 
                 if (parentComment.parentCommentUser === currentUsername) {
-                    console.log(parentComment);
-                                    commentsHtml += `
+                    commentsHtml += `
                         
                             <div class="comment-action">
                                     <button class="edit-price-btn" > Edit</button >
@@ -40,9 +42,19 @@
                         `;
                 }
 
+                if (currentUserId === postUserId) {
+                    commentsHtml += `
+                        
+                            <div class="comment-action">
+                                    <button class="accept-button">Chấp nhận giá này</button >
+                            </div>
+                        `;
+
+                }
+
 
                 commentsHtml += `</div>`;
-                
+
 
 
                 if (parentComment.comments && parentComment.comments.length > 0) {
@@ -63,7 +75,7 @@
                     commentsHtml += `</div>`;
                 }
 
-                if (parentComment.parentCommentUser === currentUsername || parentComment.parentCommentUser === postUserId) {
+                if (parentComment.parentCommentUser === currentUsername || parentComment.parentCommentUser === postUserId || currentUserId === postUserId) {
 
                     commentsHtml += `
                     <div class="reply-form">
@@ -74,31 +86,32 @@
                 </div>`;
 
                 }
+
+
+                commentsHtml += `</div>`;
             });
 
             $("#comments-section").html(commentsHtml);
         },
         error: function (error) {
-            console.error("Error loading comments: ", error);
+            showToast("Error", error.responseText, "error");
         }
     });
+
+
 
     $.ajax({
         url: `/api/comments/checkParentComment?postId=${postId}`,
         method: "GET",
         success: function (hasPosted) {
             if (hasPosted) {
-                $('#commentText').hide();  // Ẩn textarea
-                $('#postCommentBtn').hide();  // Ẩn nút Đăng
-                $('#priceOffered').hide();
+                $('#comment-container').addClass('hidden');
             } else {
-                $('#commentText').show();  // Hiển thị textarea
-                $('#postCommentBtn').show();  // Hiển thị nút Đăng
-                $('#priceOffered').show();
+                $('#comment-container').removeClass('hidden');
             }
         },
         error: function (error) {
-            console.error("Error checking parent comment: ", error);
+            showToast("Error", error.responseText, "error");
         }
     });
 }
@@ -116,18 +129,19 @@ function getParameterByName(name, url = window.location.href) {
 var postId = getParameterByName('id');
 let currentUserId = null;
 let currentUsername = null;
+let currentRole = null;
 if (postId) {
     $.ajax({
         url: '/api/account/current',
         method: 'GET',
         success: function (data) {
-            console.log(data);
-            currentUserId = data.Id;
+            currentUserId = data.id;
             currentUsername = data.username;
+            currentRole = data.role;
             loadComments(postId);
         },
         error: function (error) {
-            console.error("Error fetching current user: ", error);
+            showToast("Error", error.responseText, "error");
         }
     });
 }
@@ -135,7 +149,7 @@ if (postId) {
 $('#postCommentBtn').click(function () {
     let commentContent = $('#commentText').val();
     let currentPostId = getParameterByName('id');
-    let priceOffer = $('#priceOffered').val();
+    let priceOffer = $('#priceOffered').val().replace(/[^0-9]/g, '');
 
     // Gọi API để thêm comment mới
     $.ajax({
@@ -148,16 +162,13 @@ $('#postCommentBtn').click(function () {
         ),
         contentType: "application/json; charset=utf-8",
         success: function () {
-            // Sau khi thêm comment thành công, thông báo cho các client khác
+            showToast("Success", "Comment success", "success");
             connection.invoke("NotifyNewComment").catch(err => console.error(err.toString()));
         },
         error: function (error) {
-            console.error("Error posting comment: ", error);
+            showToast("Error", error.responseText, "error");
         }
     });
-    $('#commentText').hide();  // Ẩn textarea
-    $('#postCommentBtn').hide();  // Ẩn nút Đăng
-    $('#priceOffered').hide();
 });
 
 // Cập nhật giao diện khi có comment mới
@@ -192,11 +203,11 @@ $(document).on('click', '[id^="reply-btn-"]', function () {
         data: JSON.stringify(content),
         contentType: "application/json; charset=utf-8",
         success: function () {
-            // Sau khi thêm comment con thành công, thông báo cho các client khác
+            showToast("Success", "Comment success", "success");
             connection.invoke("NotifyNewChildComment").catch(err => console.error(err.toString()));
         },
         error: function (error) {
-            console.error("Error posting reply: ", error);
+            showToast("Error", error.responseText, "error");
         }
     });
 });
@@ -222,10 +233,11 @@ $(document).on('click', '.confirm-edit-btn', function () {
         data: JSON.stringify({ price: newPrice }),
         contentType: "application/json; charset=utf-8",
         success: function () {
+            showToast("Success", "Update price success", "success");
             connection.invoke("NotifyNewComment").catch(err => console.error(err.toString()));
         },
         error: function (error) {
-            console.error("Error updating price: ", error);
+            showToast("Error", error.responseText, "error");
         }
     });
 });
@@ -233,6 +245,7 @@ $(document).on('click', '.confirm-edit-btn', function () {
 
 // Khi nhấp vào nút "Hủy bỏ"
 $(document).on('click', '.cancel-edit-btn', function () {
+    showToast("Success", "Cancel edit price", "success");
     $(this).siblings('.price-display').show();
     $(this).siblings('.price-input, .confirm-edit-btn, .cancel-edit-btn').addClass('hidden');
     $(this).siblings('.edit-price-btn').show();
@@ -252,3 +265,64 @@ $(document).on('input', '.price-vnd-format', function () {
     $(this).val(formattedValue + 'đ');
 });
 
+const $confirmBox = $("#confirm-box");
+const $overlay = $("#overlay");
+const $yesButton = $("#yes-button");
+const $noButton = $("#no-button");
+
+const $closeBtn = $('#popup-close');
+const $backdrop = $('#popup-backdrop');
+
+$overlay.click(function () {
+    $overlay.hide();
+    $confirmBox.hide();
+});
+
+$(document).on('click', '.accept-button', function () {
+    $confirmBox.show();
+    $overlay.show();
+});
+
+$yesButton.click(function () {
+    //Hiện pop-up QR code 
+    $("#vietqr-popup").show();
+    $('.popup-backdrop').addClass('show');
+
+    var linkQRCode = "https://img.vietqr.io/image/970436-1014794186-lx65zFs.jpg?accountName=TRAN%20QUANG%20QUI&amount=";
+
+    var priceValue = $(".price-display").text().replace(/[^0-9]/g, '');
+    linkQRCode += priceValue;
+
+    linkQRCode += "&addInfo=Payment%20OrderID%20";
+
+
+    // Sau khi ghép thành công số tiền cần chuyển thì tiếp tục nối chuỗi gồm mã đơn hàng 
+    var orderID = "Donhang0001";
+    linkQRCode += orderID + "%20";
+    linkQRCode += currentUsername;
+    // Sau khi ghép thành công username thì set src cho the img
+    $("#txtQRCode").attr('src', linkQRCode);
+
+    showToast("Notification", "Don't reload the page or leave the page", "info");
+});
+
+$noButton.click(function () {
+    $overlay.hide();
+    $confirmBox.hide();
+});
+
+$closeBtn.click(function () {
+    showToast("Notification", "Cancel payment", "info");
+    $("#vietqr-popup").hide();
+    $('.popup-backdrop').removeClass('show');
+    $overlay.hide();
+    $confirmBox.hide();
+});
+
+$backdrop.click(function () {
+    showToast("Notification", "Canceled payment", "info");
+    $("#vietqr-popup").hide();
+    $('.popup-backdrop').removeClass('show');
+    $overlay.hide();
+    $confirmBox.hide();
+});

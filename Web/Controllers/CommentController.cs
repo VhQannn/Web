@@ -52,10 +52,7 @@ namespace Web.Controllers
 		[HttpPost]
 		public async Task<IActionResult> AddComment(int postId, [FromBody] CommentInputModel input)
 		{
-			// 1. Lấy tên đăng nhập của người dùng hiện tại
 			var userName = User.Identity.Name;
-
-			// 2. Truy vấn cơ sở dữ liệu để lấy đối tượng người dùng
 			var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == userName);
 
 			if (currentUser == null)
@@ -63,13 +60,28 @@ namespace Web.Controllers
 				return BadRequest("Người dùng hiện tại không tồn tại trong cơ sở dữ liệu.");
 			}
 
-			decimal price;
-			if (!decimal.TryParse(input.Price, out price))
+			var post = await _context.Posts.Include(pc => pc.User).FirstOrDefaultAsync(m => m.PostId == postId);
+			if (post == null)
 			{
-				return BadRequest("Invalid price format.");
+				return NotFound();
 			}
 
-			// 3. Sử dụng ID của người dùng khi tạo bình luận
+			if (currentUser.UserType == "Customer" && post.User.UserId != currentUser.UserId)
+			{
+				return BadRequest("Khách không được comment hỗ trợ người khác.");
+			}
+
+			var existingComment = await _context.ParentComments.FirstOrDefaultAsync(c => c.PostId == postId && c.User.Username == userName);
+			if (existingComment != null)
+			{
+				return BadRequest("Người dùng chỉ được phép comment 1 parent-comment.");
+			}
+
+			if (!decimal.TryParse(input.Price, out var price))
+			{
+				return BadRequest("Lỗi định dạng giá offer.");
+			}
+
 			var newComment = new ParentComment
 			{
 				PostId = postId,
@@ -93,17 +105,50 @@ namespace Web.Controllers
 			return Ok(existingComment != null);
 		}
 
-
-
 		[HttpPost("reply")]
 		public async Task<IActionResult> AddChildComment(int parentCommentId, [FromBody] string content)
 		{
-			// Lấy người dùng hiện tại và ID của họ tương tự như trên
 			var userName = User.Identity.Name;
 			var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == userName);
 			if (currentUser == null)
 			{
 				return BadRequest("Người dùng hiện tại không tồn tại trong cơ sở dữ liệu.");
+			}
+
+			var parentComment = await _context.ParentComments.Include(pc => pc.User).FirstOrDefaultAsync(m => m.ParentCommentId == parentCommentId);
+			if (parentComment == null)
+			{
+				return NotFound("Comment gốc không tồn tại.");
+			}
+
+			if (parentComment.User.UserId != currentUser.UserId || currentUser.UserType != "Customer")
+			{
+				var post = await _context.Posts.Include(pc => pc.User).FirstOrDefaultAsync(m => m.PostId == parentComment.PostId);
+				if (post == null)
+				{
+					return NotFound("Bài viết không tồn tại.");
+				}
+
+				if(currentUser.UserId == parentComment.User.UserId)
+				{
+					var childComment2 = new Comment
+					{
+						ParentCommentId = parentCommentId,
+						Content = content,
+						UserId = currentUser.UserId,
+						CommentDate = DateTime.Now
+					};
+
+					_context.Comments.Add(childComment2);
+					await _context.SaveChangesAsync();
+
+					return Ok();
+				}
+
+				if (post.User.UserId != currentUser.UserId)
+				{
+					return BadRequest("Không được comment vào comment của người hỗ trợ khác.");
+				}
 			}
 
 			var childComment = new Comment
@@ -119,6 +164,7 @@ namespace Web.Controllers
 
 			return Ok();
 		}
+
 
 
 		[HttpPost("updatePrice")]
