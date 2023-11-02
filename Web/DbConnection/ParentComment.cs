@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Web.DbConnection;
+﻿namespace Web.DbConnection;
 
 public partial class ParentComment
 {

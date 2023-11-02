@@ -64,7 +64,6 @@ app.UseStatusCodePages(context => {
 });
 
 
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using Web.DbConnection;
 
@@ -7,16 +9,24 @@ namespace Web.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly Web.DbConnection.WebContext _context;
+        private readonly WebContext _context;
         private readonly ILogger<IndexModel> _logger;
         public string? SelectedPostCategoryName { get; set; }
-        public IndexModel(ILogger<IndexModel> logger, Web.DbConnection.WebContext context)
+        public string hihi { get; set; }
+        [BindProperty]
+        public string Title { get; set; }
+        public IndexModel(ILogger<IndexModel> logger, WebContext context)
         {
             _logger = logger;
             _context = context;
         }
         public List<Post> Post { get; set; } = default!;
 
+        public void OnGetSearchByTitle(string title)
+        {
+            Post = _context.Posts.Include(p => p.PostCategory).Include(u => u.User)
+                .Where(p => p.PostTitle.Contains(title)).ToList();
+        }
 
         public void OnGet(string? CategoryName = null)
         {
@@ -29,5 +39,6 @@ namespace Web.Pages
             }
 
         }
+
     }
 }

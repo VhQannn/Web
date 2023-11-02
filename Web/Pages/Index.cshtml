@@ -3,197 +3,88 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<style>
-    /* Add your custom CSS styles here */
-    .my-3 {
-        margin: 20px 0;
-    }
 
-    .text-center {
-        text-align: center;
-    }
-
-    .search-bar {
-        display: flex;
-        align-items: center;
-    }
-
-    .search-input {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px 0 0 5px;
-    }
-
-    .search-button {
-        background-color: transparent; /* Đặt màu nền là trong suốt */
-        color: #007BFF; /* Màu biểu tượng kính lúp */
-        border: none;
-        padding: 10px 20px;
-        border-radius: 0 5px 5px 0;
-        cursor: pointer;
-    }
-
-        .search-button:hover {
-            color: #0056b3; /* Màu biểu tượng khi hover */
-        }
-
-    .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        margin: 0 10px;
-        text-decoration: none;
-        color: #fff;
-        border-radius: 5px;
-    }
-
-    .btn-secondary {
-        background-color: #6c757d;
-    }
-
-    .btn-primary {
-        background-color: #007BFF;
-    }
-
-    .btn-secondary:hover {
-        background-color: #545b62;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        padding: 10px;
-        border: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #f2f2f2;
-    }
-
-    .popup-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        z-index: 9999;
-    }
-
-    .popup-content {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #fff;
-        padding: 20px;
-        width: 300px;
-        border-radius: 10px;
-        z-index: 10000;
-    }
-
-        .popup-content button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-</style>
-
-<form method="get">
+<h1>@Model.hihi</h1>
+<form method="get" asp-page-handler="OnGetSearchByTitle">
     <div class="my-3">
         <div class="search-bar">
-            <input class="search-input" type="text" placeholder="Search..." />
-            <button type="submit" class="search-button select2">
-                <i class="fa fa-search"></i>
-            </button>
+            <input class="search-input" name="Title" type="text" placeholder="Search..." />
+            <input class="btn btn-sm btn-outline-primary text-black" type="submit" />
         </div>
-    </div>
-    <div class="form-group">
-        <label class="control-label">Môn</label>
-        <select name="CategoryName" class="form-control select2">
-            @foreach (var category in ViewData["CategoryName"] as SelectList)
-            {
-                var isSelected = Model.SelectedPostCategoryName == category.Value;
-                if (isSelected)
-                {
-                    <option value="@category.Value" selected>@category.Text</option>
-                }
-                <option value="@category.Value">@category.Text</option>
-            }
-        </select>
     </div>
 </form>
 <div class="my-5 text-center">
     <a href="#" class="btn btn-secondary">Check Legit</a>
     <a href="/createpost" class="btn btn-primary" id="post">Đăng bài</a>
 </div>
-@if (Model.Post != null && Model.Post.Count > 0)
-{
-    <table class="table table-striped">
-        <thead class="text-center">
-            <tr>
-                <th>
-                    Tiêu Đề
-                </th>
-                <th>
-                    Nội Dung
-                </th>
-                <th>
-                    Ngày Thi
-                </th>
-                <th>
-                    Thời gian
-                </th>
-                <th>
-                    Trạng thái
-                </th>
-                <th>
-                    Môn
-                </th>
-                <th>
-                    Người nhận
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-
-    </table>
-
-    <p>Trang: <span id="currentPage"></span> / <span id="totalPages"></span></p>
+<table class="table table-striped">
+    <thead class="text-center">
+        <tr>
+            <th>
+                Tiêu Đề
+            </th>
+            <th>
+                Nội Dung
+            </th>
+            <th>
+                Ngày Thi
+            </th>
+            <th>
+                Thời gian
+            </th>
+            <th>
+                Trạng thái
+            </th>
+            <th>
+                Môn
+            </th>
+            <th>
+                Người nhận
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<p>Trang: <span id="currentPage"></span> / <span id="totalPages"></span></p>
 
 
-    <div class="pagination">
-        <button id="prevPage">Trước</button>
-        <span id="currentPage">1</span>
-        <button id="nextPage">Sau</button>
-    </div>
+<div class="pagination">
+    <button id="prevPage">Trước</button>
+    <span id="currentPage">1</span>
+    <button id="nextPage">Sau</button>
+</div>
 
-}
-else
-{
-    <p>Không tìm thấy</p>
-}
+
 
 <script>
-    $(document).ready(function () {
-     
-    });
+   
+
 
 </script>
 
+
+
+<script>
+    $(document).ready(function () {
+        // Handle category change
+        $('select[name="CategoryName"]').on('change', function () {
+            let category = $(this).val();
+            $.get('/Index?handler=SearchByCategoryName', { categoryName: category }, function (data) {
+                // Update the posts list with the returned data
+                $('tbody').html(data);
+            });
+        });
+
+        // Handle search button click
+        $('.search-button').on('click', function (e) {
+            e.preventDefault(); // Prevent default form submission
+            let title = $('.search-input').val();
+            $.get('/Index?handler=SearchByTitle', { title: title }, function (data) {
+                // Update the posts list with the returned data
+                $('tbody').html(data);
+            });
+        });
+    });
+</script>
