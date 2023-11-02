@@ -8,9 +8,9 @@ namespace Web.Controllers
     [ApiController]
     public class PostsController : Controller
     {
-        private readonly WebscamContext _context;
+        private readonly WebContext _context;
 
-        public PostsController(WebscamContext context)
+        public PostsController(WebContext context)
         {
             _context = context;
         }

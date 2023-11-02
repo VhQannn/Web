@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace Web.DbConnection;
+namespace Web.DbConnections;
 
-public partial class WebscamContext : DbContext
+public partial class WebContext : DbContext
 {
-    public WebscamContext()
+    public WebContext()
     {
     }
 
-    public WebscamContext(DbContextOptions<WebscamContext> options)
+    public WebContext(DbContextOptions<WebContext> options)
         : base(options)
     {
     }
@@ -41,7 +41,9 @@ public partial class WebscamContext : DbContext
 
     public virtual DbSet<UserTool> UserTools { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){ }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=HongQuan\\HONGQUAN;Database=Web;uid=sa;pwd=123;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -49,7 +51,7 @@ public partial class WebscamContext : DbContext
 
         modelBuilder.Entity<Assignment>(entity =>
         {
-            entity.HasKey(e => e.AssignmentId).HasName("PK__Assignme__DA8918143B3E2255");
+            entity.HasKey(e => e.AssignmentId).HasName("PK__Assignme__DA891814A2149839");
 
             entity.Property(e => e.AssignmentId).HasColumnName("assignment_id");
             entity.Property(e => e.Deadline)
@@ -66,12 +68,12 @@ public partial class WebscamContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Assignments)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Assignmen__user___619B8048");
+                .HasConstraintName("FK__Assignmen__user___628FA481");
         });
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.CommentId).HasName("PK__Comments__E79576870C95A905");
+            entity.HasKey(e => e.CommentId).HasName("PK__Comments__E79576878828B70B");
 
             entity.Property(e => e.CommentId).HasColumnName("comment_id");
             entity.Property(e => e.CommentDate)
@@ -84,16 +86,16 @@ public partial class WebscamContext : DbContext
 
             entity.HasOne(d => d.ParentComment).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.ParentCommentId)
-                .HasConstraintName("FK__Comments__parent__6D0D32F4");
+                .HasConstraintName("FK__Comments__parent__6E01572D");
 
             entity.HasOne(d => d.User).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Comments__user_i__6E01572D");
+                .HasConstraintName("FK__Comments__user_i__6EF57B66");
         });
 
         modelBuilder.Entity<Course>(entity =>
         {
-            entity.HasKey(e => e.CourseId).HasName("PK__Courses__8F1EF7AEE96B2578");
+            entity.HasKey(e => e.CourseId).HasName("PK__Courses__8F1EF7AE61CEF61C");
 
             entity.Property(e => e.CourseId).HasColumnName("course_id");
             entity.Property(e => e.CourseDescription).HasColumnName("course_description");
@@ -116,12 +118,12 @@ public partial class WebscamContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Courses)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Courses__user_id__656C112C");
+                .HasConstraintName("FK__Courses__user_id__66603565");
         });
 
         modelBuilder.Entity<ParentComment>(entity =>
         {
-            entity.HasKey(e => e.ParentCommentId).HasName("PK__Parent_C__D23CEB6DA87E9C4D");
+            entity.HasKey(e => e.ParentCommentId).HasName("PK__Parent_C__D23CEB6D90817E1C");
 
             entity.ToTable("Parent_Comment");
 
@@ -139,16 +141,16 @@ public partial class WebscamContext : DbContext
 
             entity.HasOne(d => d.Post).WithMany(p => p.ParentComments)
                 .HasForeignKey(d => d.PostId)
-                .HasConstraintName("FK__Parent_Co__post___68487DD7");
+                .HasConstraintName("FK__Parent_Co__post___693CA210");
 
             entity.HasOne(d => d.User).WithMany(p => p.ParentComments)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Parent_Co__user___693CA210");
+                .HasConstraintName("FK__Parent_Co__user___6A30C649");
         });
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__ED1FC9EAD08601CB");
+            entity.HasKey(e => e.PaymentId).HasName("PK__Payments__ED1FC9EAEB603880");
 
             entity.Property(e => e.PaymentId).HasColumnName("payment_id");
             entity.Property(e => e.Amount)
@@ -169,12 +171,12 @@ public partial class WebscamContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Payments__user_i__5BE2A6F2");
+                .HasConstraintName("FK__Payments__user_i__5CD6CB2B");
         });
 
         modelBuilder.Entity<Post>(entity =>
         {
-            entity.HasKey(e => e.PostId).HasName("PK__Posts__3ED787663E407575");
+            entity.HasKey(e => e.PostId).HasName("PK__Posts__3ED7876684DBD157");
 
             entity.Property(e => e.PostId).HasColumnName("post_id");
             entity.Property(e => e.DateSlot)
@@ -188,6 +190,7 @@ public partial class WebscamContext : DbContext
             entity.Property(e => e.PostTitle)
                 .HasMaxLength(255)
                 .HasColumnName("post_title");
+            entity.Property(e => e.PosterId).HasColumnName("poster_id");
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasColumnName("status");
@@ -198,20 +201,24 @@ public partial class WebscamContext : DbContext
 
             entity.HasOne(d => d.PostCategory).WithMany(p => p.Posts)
                 .HasForeignKey(d => d.PostCategoryId)
-                .HasConstraintName("FK__Posts__post_cate__412EB0B6");
+                .HasConstraintName("FK__Posts__post_cate__4222D4EF");
 
-            entity.HasOne(d => d.User).WithMany(p => p.Posts)
+            entity.HasOne(d => d.Poster).WithMany(p => p.PostPosters)
+                .HasForeignKey(d => d.PosterId)
+                .HasConstraintName("FK__Posts__poster_id__412EB0B6");
+
+            entity.HasOne(d => d.User).WithMany(p => p.PostUsers)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__Posts__user_id__403A8C7D");
         });
 
         modelBuilder.Entity<PostCategory>(entity =>
         {
-            entity.HasKey(e => e.PostCategoryId).HasName("PK__Post_Cat__B2316F12621AEE2E");
+            entity.HasKey(e => e.PostCategoryId).HasName("PK__Post_Cat__B2316F12F04B4FC2");
 
             entity.ToTable("Post_Category");
 
-            entity.HasIndex(e => e.PostCategoryName, "UQ__Post_Cat__8CA54ABEC9DD5985").IsUnique();
+            entity.HasIndex(e => e.PostCategoryName, "UQ__Post_Cat__8CA54ABE3D85C691").IsUnique();
 
             entity.Property(e => e.PostCategoryId).HasColumnName("post_category_id");
             entity.Property(e => e.PostCategoryName)
@@ -221,7 +228,7 @@ public partial class WebscamContext : DbContext
 
         modelBuilder.Entity<Purchase>(entity =>
         {
-            entity.HasKey(e => e.PurchaseId).HasName("PK__Purchase__87071CB9473F5924");
+            entity.HasKey(e => e.PurchaseId).HasName("PK__Purchase__87071CB90FB1C187");
 
             entity.Property(e => e.PurchaseId).HasColumnName("purchase_id");
             entity.Property(e => e.Amount).HasColumnName("amount");
@@ -234,16 +241,16 @@ public partial class WebscamContext : DbContext
 
             entity.HasOne(d => d.Buyer).WithMany(p => p.Purchases)
                 .HasForeignKey(d => d.BuyerId)
-                .HasConstraintName("FK__Purchases__buyer__5165187F");
+                .HasConstraintName("FK__Purchases__buyer__52593CB8");
 
             entity.HasOne(d => d.Tool).WithMany(p => p.Purchases)
                 .HasForeignKey(d => d.ToolId)
-                .HasConstraintName("FK__Purchases__tool___52593CB8");
+                .HasConstraintName("FK__Purchases__tool___534D60F1");
         });
 
         modelBuilder.Entity<Rating>(entity =>
         {
-            entity.HasKey(e => e.RatingId).HasName("PK__Ratings__D35B278B4090905A");
+            entity.HasKey(e => e.RatingId).HasName("PK__Ratings__D35B278BEA001421");
 
             entity.Property(e => e.RatingId).HasColumnName("rating_id");
             entity.Property(e => e.Comments).HasColumnName("comments");
@@ -257,16 +264,16 @@ public partial class WebscamContext : DbContext
 
             entity.HasOne(d => d.Rater).WithMany(p => p.RatingRaters)
                 .HasForeignKey(d => d.RaterId)
-                .HasConstraintName("FK__Ratings__rater_i__5629CD9C");
+                .HasConstraintName("FK__Ratings__rater_i__571DF1D5");
 
             entity.HasOne(d => d.Supporter).WithMany(p => p.RatingSupporters)
                 .HasForeignKey(d => d.SupporterId)
-                .HasConstraintName("FK__Ratings__support__571DF1D5");
+                .HasConstraintName("FK__Ratings__support__5812160E");
         });
 
         modelBuilder.Entity<Tool>(entity =>
         {
-            entity.HasKey(e => e.ToolId).HasName("PK__Tools__28DE264F17E8C800");
+            entity.HasKey(e => e.ToolId).HasName("PK__Tools__28DE264F0682320B");
 
             entity.Property(e => e.ToolId).HasColumnName("tool_id");
             entity.Property(e => e.CreatedAt)
@@ -289,20 +296,20 @@ public partial class WebscamContext : DbContext
 
             entity.HasOne(d => d.Seller).WithMany(p => p.Tools)
                 .HasForeignKey(d => d.SellerId)
-                .HasConstraintName("FK__Tools__seller_id__48CFD27E");
+                .HasConstraintName("FK__Tools__seller_id__49C3F6B7");
 
             entity.HasOne(d => d.ToolCategory).WithMany(p => p.Tools)
                 .HasForeignKey(d => d.ToolCategoryId)
-                .HasConstraintName("FK__Tools__tool_cate__47DBAE45");
+                .HasConstraintName("FK__Tools__tool_cate__48CFD27E");
         });
 
         modelBuilder.Entity<ToolCategory>(entity =>
         {
-            entity.HasKey(e => e.ToolCategoryId).HasName("PK__Tool_Cat__77A0093DCA6E731C");
+            entity.HasKey(e => e.ToolCategoryId).HasName("PK__Tool_Cat__77A0093D035DFF90");
 
             entity.ToTable("Tool_Category");
 
-            entity.HasIndex(e => e.ToolCategoryName, "UQ__Tool_Cat__E74C77BE34C4A2A4").IsUnique();
+            entity.HasIndex(e => e.ToolCategoryName, "UQ__Tool_Cat__E74C77BE33EA9045").IsUnique();
 
             entity.Property(e => e.ToolCategoryId).HasColumnName("tool_category_id");
             entity.Property(e => e.ToolCategoryName)
@@ -312,9 +319,9 @@ public partial class WebscamContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370F707C0C9E");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370FEE72A579");
 
-            entity.HasIndex(e => e.Username, "UQ__Users__F3DBC572EC80FDD3").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Users__F3DBC572E5DFF2BA").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.CreatedAt)
@@ -344,7 +351,7 @@ public partial class WebscamContext : DbContext
 
         modelBuilder.Entity<UserTool>(entity =>
         {
-            entity.HasKey(e => e.UserToolId).HasName("PK__User_Too__2ED437F3F7A36479");
+            entity.HasKey(e => e.UserToolId).HasName("PK__User_Too__2ED437F3476AAC59");
 
             entity.ToTable("User_Tools");
 
@@ -357,11 +364,11 @@ public partial class WebscamContext : DbContext
 
             entity.HasOne(d => d.Tool).WithMany(p => p.UserTools)
                 .HasForeignKey(d => d.ToolId)
-                .HasConstraintName("FK__User_Tool__tool___4D94879B");
+                .HasConstraintName("FK__User_Tool__tool___4E88ABD4");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserTools)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__User_Tool__user___4E88ABD4");
+                .HasConstraintName("FK__User_Tool__user___4F7CD00D");
         });
 
         OnModelCreatingPartial(modelBuilder);

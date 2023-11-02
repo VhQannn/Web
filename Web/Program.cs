@@ -34,7 +34,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddDbContext<WebscamContext>
+builder.Services.AddDbContext<WebContext>
     (opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddSignalR();
 var app = builder.Build();

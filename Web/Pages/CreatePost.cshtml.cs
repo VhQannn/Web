@@ -14,9 +14,9 @@ namespace Web.Pages
     [Authorize]
     public class CreatePostModel : PageModel
     {
-        private readonly WebscamContext _context;
+        private readonly WebContext _context;
 
-        public CreatePostModel(WebscamContext context)
+        public CreatePostModel(WebContext context)
         {
             _context = context;
         }
