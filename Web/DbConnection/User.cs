@@ -31,7 +31,9 @@ public partial class User
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+    public virtual ICollection<Post> PostPosters { get; set; } = new List<Post>();
+
+    public virtual ICollection<Post> PostUsers { get; set; } = new List<Post>();
 
     public virtual ICollection<Purchase> Purchases { get; set; } = new List<Purchase>();
 

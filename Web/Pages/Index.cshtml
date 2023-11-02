@@ -184,12 +184,6 @@
         <button id="nextPage">Sau</button>
     </div>
 
-    <div class="popup-overlay" id="loginPopup">
-        <div class="popup-content">
-            <p>Vui lòng đăng nhập để đăng bài.</p>
-            <button onclick="window.location.href='/login'">Đăng nhập</button>
-        </div>
-    </div>
 }
 else
 {
@@ -198,30 +192,7 @@ else
 
 <script>
     $(document).ready(function () {
-        initializeLoginCheck();
-        $('.select2').on('change', function () {
-            initializeLoginCheck();
-        });
-
-        function initializeLoginCheck() {
-            $('.btn-primary').off('click').click(function (e) { // Sử dụng .off('click') để ngăn chặn gắn nhiều sự kiện click
-                e.preventDefault();
-                console.log("Baasm rooif ");
-                var userLoggedIn = false; // TODO: Replace with actual check
-                if (!userLoggedIn) {
-                    $('#loginPopup').show();
-                } else {
-                    window.location.href = "/createpost";
-                }
-            });
-
-            $('.popup-overlay').off('click').click(function (e) {
-                if (e.target !== this) {
-                    return;
-                }
-                $(this).hide();
-            });
-        }
+     
     });
 
 </script>
