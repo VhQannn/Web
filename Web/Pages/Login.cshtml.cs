@@ -45,8 +45,8 @@ namespace Web.Pages
                 ViewData["Error"] = "Tên đăng nhập hoặc mật khẩu không đúng.";
                 return Page();
             }
-            
-            HttpContext.Session.SetString("UserId", currentUser.UserId.ToString());
+            Console.WriteLine(currentUser.UserId);
+            HttpContext.Session.SetInt32("UserId", currentUser.UserId);
             HttpContext.Session.SetString("UserName", currentUser.Username);
 
             var claims = new List<Claim>
