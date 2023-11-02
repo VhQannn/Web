@@ -18,16 +18,15 @@ namespace Web.Pages
         public List<Post> Post { get; set; } = default!;
 
 
-        public void OnGet(string? CategoryName = null)
+        public async Task OnGetAsync(string? CategoryName = null)
         {
             ViewData["CategoryName"] = new SelectList(_context.PostCategories, "PostCategoryName", "PostCategoryName", SelectedPostCategoryName);
             Post = new List<Post>();
             if (!string.IsNullOrEmpty(CategoryName))
             {
                 Console.Write(CategoryName);
-                Post = _context.Posts.Include(p => p.PostCategory).Include(u => u.User).Where(p => p.PostCategory.PostCategoryName.Equals(CategoryName)).ToList();
+            Post = _context.Posts.Include(p => p.PostCategory).Include(u => u.User).Where(p => p.PostCategory.PostCategoryName.Equals(CategoryName)).ToList();
             }
-
         }
     }
 }

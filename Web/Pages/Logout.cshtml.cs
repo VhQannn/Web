@@ -10,6 +10,7 @@ namespace Web.Pages
         public async Task<IActionResult> OnGetAsync()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
             return RedirectToPage("/Index");  // Redirect user to the main page after logout
         }   
     }

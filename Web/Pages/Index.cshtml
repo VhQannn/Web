@@ -141,8 +141,6 @@
     <a href="#" class="btn btn-secondary">Check Legit</a>
     <a href="/createpost" class="btn btn-primary" id="post">Đăng bài</a>
 </div>
-@if (Model.Post != null && Model.Post.Count > 0)
-{
     <table class="table table-striped">
         <thead class="text-center">
             <tr>
@@ -183,12 +181,6 @@
         <span id="currentPage">1</span>
         <button id="nextPage">Sau</button>
     </div>
-
-}
-else
-{
-    <p>Không tìm thấy</p>
-}
 
 <script>
     $(document).ready(function () {

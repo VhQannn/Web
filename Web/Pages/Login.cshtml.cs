@@ -48,6 +48,7 @@ namespace Web.Pages
             Console.WriteLine(currentUser.UserId);
             HttpContext.Session.SetInt32("UserId", currentUser.UserId);
             HttpContext.Session.SetString("UserName", currentUser.Username);
+            HttpContext.Session.SetString("Role", currentUser.UserType.ToString());
 
             var claims = new List<Claim>
         {

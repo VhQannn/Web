@@ -18,27 +18,34 @@ namespace Web.Controllers
 		[HttpGet]
 		public IActionResult GetAllPosts(int pageNumber = 1, int pageSize = 5)
 		{
+			var roles = HttpContext.Session.GetString("Role");
+
 			var totalRecords = _context.Posts.Count();
 			var skip = (pageNumber - 1) * pageSize;
 
-			var posts = _context.Posts.Include(p => p.PostCategory).Include(p => p.User).Skip(skip).Take(pageSize).Select(p => new
-			{
-				postTitle = p.PostTitle,
-				postContent = p.PostContent,
-				postDate = p.PostDate,
-				dateSlot = p.DateSlot,
-				timeSlot = p.TimeSlot,
-				status = p.Status,
-				postCategoryName = p.PostCategory.PostCategoryName,
-				username = p.User.Username,
-				postId = p.PostId
-			}).ToList();
-			int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+            IQueryable<Post> query = _context.Posts.Include(p => p.PostCategory).Include(p => p.User);
 
-			return Ok(new { data = posts, totalRecords, totalPages });
-		}
+            // Filter the posts based on user role
+            if (roles == null || roles.Contains("Customer") || roles.Contains("Supporter") || roles.Contains("Seller"))
+            {
+                query = query.Where(p => p.Status != "pending");
+            }
 
+            var posts = query.Skip(skip).Take(pageSize).Select(p => new
+            {
+                postTitle = p.PostTitle,
+                postContent = p.PostContent,
+                postDate = p.PostDate,
+                dateSlot = p.DateSlot,
+                timeSlot = p.TimeSlot,
+                status = p.Status,
+                postCategoryName = p.PostCategory.PostCategoryName,
+                username = p.Poster.Username,
+                postId = p.PostId
+            }).ToList();
+            int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
-
+            return Ok(new { data = posts, totalRecords, totalPages });
+        }
 	}
 }

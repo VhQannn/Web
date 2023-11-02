@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 using Web.DbConnection;
 
 namespace Web.Pages
@@ -49,6 +50,11 @@ namespace Web.Pages
             }
             _context.Posts.Add(Post);
             await _context.SaveChangesAsync();
+
+            //Này e làm signalr cho cái post á nha 
+            var postHub = (IHubContext<PostHub>)HttpContext.RequestServices.GetService(typeof(IHubContext<PostHub>));
+            await postHub.Clients.All.SendAsync("UpdatePosts");
+            ////
 
             return RedirectToPage("./Index");
         }
