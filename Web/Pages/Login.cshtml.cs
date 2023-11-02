@@ -29,11 +29,7 @@ namespace Web.Pages
         }
         public void OnGet()
         {
-            if (HttpContext.Request.Cookies.ContainsKey("username"))
-            {
-                Username = HttpContext.Request.Cookies["username"];
-                Password = HttpContext.Request.Cookies["password"];
-            }
+           
         }
         public async Task<IActionResult> OnPost()
         {
@@ -49,9 +45,13 @@ namespace Web.Pages
                 ViewData["Error"] = "Tên đăng nhập hoặc mật khẩu không đúng.";
                 return Page();
             }
+            
+            HttpContext.Session.SetString("UserId", currentUser.UserId.ToString());
+            HttpContext.Session.SetString("UserName", currentUser.Username);
 
             var claims = new List<Claim>
         {
+            new Claim(ClaimTypes.NameIdentifier, currentUser.UserId.ToString()),
             new Claim(ClaimTypes.Name, currentUser.Username),
             new Claim(ClaimTypes.Role, currentUser.UserType.ToString())
         };
