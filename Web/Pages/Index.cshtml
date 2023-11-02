@@ -76,70 +76,153 @@
     th {
         background-color: #f2f2f2;
     }
+
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+    }
+
+    .popup-content {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        width: 300px;
+        border-radius: 10px;
+        z-index: 10000;
+    }
+
+        .popup-content button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
 </style>
 
-<div class="my-3">
-    <form method="post">
+<form method="get">
+    <div class="my-3">
         <div class="search-bar">
             <input class="search-input" type="text" placeholder="Search..." />
             <button type="submit" class="search-button">
-                <i class="fa fa-search"></i> <!-- Font Awesome search icon -->
+                <i class="fa fa-search"></i>
             </button>
         </div>
-    </form>
-</div>
-
+    </div>
+    <div class="form-group">
+        <label class="control-label">Môn</label>
+        <select name="CategoryName" class="form-control select2">
+            @foreach (var category in ViewData["CategoryName"] as SelectList)
+            {
+                var isSelected = Model.SelectedPostCategoryName == category.Value;
+                if (isSelected)
+                {
+                    <option value="@category.Value" selected>@category.Text</option>
+                }
+                <option value="@category.Value">@category.Text</option>
+            }
+        </select>
+    </div>
+</form>
 <div class="my-5 text-center">
     <a href="#" class="btn btn-secondary">Check Legit</a>
-    <a href="/createpost" class="btn btn-primary">Đăng bài</a>
+    <a href="/createpost" class="btn btn-primary" id="post">Đăng bài</a>
 </div>
+@if (Model.Post != null && Model.Post.Count > 0)
+{
+    <table class="table table-striped">
+        <thead class="text-center">
+            <tr>
+                <th>
+                    Tiêu Đề
+                </th>
+                <th>
+                    Nội Dung
+                </th>
+                <th>
+                    Ngày Thi
+                </th>
+                <th>
+                    Thời gian
+                </th>
+                <th>
+                    Trạng thái
+                </th>
+                <th>
+                    Môn
+                </th>
+                <th>
+                    Người nhận
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
 
-<table class="table table-striped">
-    <thead class="text-center">
-        <tr>
-            <th>
-                @* @Html.DisplayNameFor(model => model.Post[0].PostTitle) *@
-                Tiêu Đề
-            </th>
-            <th>
-                @* @Html.DisplayNameFor(model => model.Post[0].PostContent) *@
-                Nội Dung
-            </th>
-            <th>
-                @* @Html.DisplayNameFor(model => model.Post[0].DateSlot) *@
-                Ngày Thi
-            </th>
-            <th>
-                @* @Html.DisplayNameFor(model => model.Post[0].TimeSlot) *@
-                Thời gian
-            </th>
-            <th>
-                @* @Html.DisplayNameFor(model => model.Post[0].Status) *@
-                Trạng thái
-            </th>
-            <th>
-                @* @Html.DisplayNameFor(model => model.Post[0].PostCategory) *@
-                Môn
-            </th>
-            <th>
-                @* @Html.DisplayNameFor(model => model.Post[0].User) *@
-                Người nhận
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        
-    </tbody>
+    </table>
 
-</table>
-
-<p>Trang: <span id="currentPage"></span> / <span id="totalPages"></span></p>
+    <p>Trang: <span id="currentPage"></span> / <span id="totalPages"></span></p>
 
 
-<div class="pagination">
-    <button id="prevPage">Trước</button>
-    <span id="currentPage">1</span>
-    <button id="nextPage">Sau</button>
-</div>
+    <div class="pagination">
+        <button id="prevPage">Trước</button>
+        <span id="currentPage">1</span>
+        <button id="nextPage">Sau</button>
+    </div>
+
+    <div class="popup-overlay" id="loginPopup">
+        <div class="popup-content">
+            <p>Vui lòng đăng nhập để đăng bài.</p>
+            <button onclick="window.location.href='/login'">Đăng nhập</button>
+        </div>
+    </div>
+}
+else
+{
+    <p>Không tìm thấy</p>
+}
+
+<script>
+    $(document).ready(function () {
+        initializeLoginCheck();
+        $('.select2').on('change', function () {
+            initializeLoginCheck();
+        });
+
+        function initializeLoginCheck() {
+            $('.btn-primary').off('click').click(function (e) { // Sử dụng .off('click') để ngăn chặn gắn nhiều sự kiện click
+                e.preventDefault();
+                console.log("Baasm rooif ");
+                var userLoggedIn = false; // TODO: Replace with actual check
+                if (!userLoggedIn) {
+                    $('#loginPopup').show();
+                } else {
+                    window.location.href = "/createpost";
+                }
+            });
+
+            $('.popup-overlay').off('click').click(function (e) {
+                if (e.target !== this) {
+                    return;
+                }
+                $(this).hide();
+            });
+        }
+    });
+
+</script>
 

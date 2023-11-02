@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Web.DbConnection;
 using Web.IRepository;
@@ -11,8 +12,11 @@ namespace Web.Pages
     public class LoginModel : PageModel
     {
         [BindProperty]
+        [Required(ErrorMessage = "Vui lòng nhập username.")]
         public string Username { get; set; }
         [BindProperty]
+        [Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
+        [MinLength(6, ErrorMessage = "Mật khẩu phải có độ dài từ 6 kí tự.")]
         public string Password { get; set; }
 
         [BindProperty]

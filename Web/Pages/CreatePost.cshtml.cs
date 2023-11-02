@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,11 +11,12 @@ using Web.DbConnection;
 
 namespace Web.Pages
 {
+    [Authorize]
     public class CreatePostModel : PageModel
     {
-        private readonly Web.DbConnection.WebscamContext _context;
+        private readonly WebscamContext _context;
 
-        public CreatePostModel(Web.DbConnection.WebscamContext context)
+        public CreatePostModel(WebscamContext context)
         {
             _context = context;
         }
@@ -35,7 +37,6 @@ namespace Web.Pages
         [BindProperty]
         public string EndTime { get; set; } = default!;
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
             Post.PostDate = DateTime.Now;

@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Web.DbConnection;
 
@@ -9,23 +9,25 @@ namespace Web.Pages
     {
         private readonly Web.DbConnection.WebscamContext _context;
         private readonly ILogger<IndexModel> _logger;
-
+        public string? SelectedPostCategoryName { get; set; }
         public IndexModel(ILogger<IndexModel> logger, Web.DbConnection.WebscamContext context)
         {
             _logger = logger;
             _context = context;
         }
-        public IList<Post> Post { get; set; } = default!;
+        public List<Post> Post { get; set; } = default!;
 
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string? CategoryName = null)
         {
-            if (_context.Posts != null)
+            ViewData["CategoryName"] = new SelectList(_context.PostCategories, "PostCategoryName", "PostCategoryName", SelectedPostCategoryName);
+            Post = new List<Post>();
+            if (!string.IsNullOrEmpty(CategoryName))
             {
-                Post = await _context.Posts
-                .Include(p => p.PostCategory)
-                .Include(p => p.User).ToListAsync();
+                Console.Write(CategoryName);
+            Post = _context.Posts.Include(p => p.PostCategory).Include(u => u.User).Where(p => p.PostCategory.PostCategoryName.Equals(CategoryName)).ToList();
             }
+
         }
     }
 }
