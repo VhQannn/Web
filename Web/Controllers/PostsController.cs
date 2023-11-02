@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Web.DbConnection;
+using Web.Pages;
 
 namespace Web.Controllers
 {
@@ -15,7 +16,16 @@ namespace Web.Controllers
             _context = context;
         }
 
-		[HttpGet]
+
+        [HttpGet]
+        public IActionResult GetPostByTitle(string title)
+        {	
+			var data = _context.Posts.Where(t => t.PostTitle.Equals(title)).ToList();
+            return Ok(data);
+        }
+
+
+        [HttpGet]
 		public IActionResult GetAllPosts(int pageNumber = 1, int pageSize = 5)
 		{
 			var roles = HttpContext.Session.GetString("Role");
