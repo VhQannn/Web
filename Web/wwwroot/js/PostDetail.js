@@ -1,16 +1,23 @@
-﻿
-function loadComments(postId) {
-    if (currentUserId === postUserId || currentRole == "Customer") {
+﻿async function loadComments(postId) {
+    // Security: Ensure postId is sanitized before use
+
+    if (currentUserId === postUserId || currentRole === "Customer") {
         $('#comment-container').hide();
     }
-    $.ajax({
-        url: `/api/comments?postId=${postId}`,
-        method: "GET",
-        success: function (parentComments) {
-            let commentsHtml = "";
 
-            parentComments.forEach(parentComment => {
-                commentsHtml += `
+    try {
+        // Perform all AJAX calls in parallel
+        const [parentCommentsResponse, hasPostedResponse, paymentExists] = await Promise.all([
+            $.ajax({ url: `/api/comments?postId=${postId}`, method: "GET" }),
+            $.ajax({ url: `/api/comments/checkParentComment?postId=${postId}`, method: "GET" }),
+            $.ajax({ url: `/api/payment/check?postId=${postId}`, method: "GET" })
+        ]);
+
+        let commentsHtml = "";
+
+        // Process parent comments
+        parentCommentsResponse.forEach(parentComment => {
+            commentsHtml += `
                     <div class="comment">
                         <div class="comment-top">
                             <div class="comment-author">
@@ -23,14 +30,31 @@ function loadComments(postId) {
                         <div class="comment-top">
                         `;
 
-                commentsHtml += `
+            commentsHtml += `
                             <div class="comment-text">
                                 ${parentComment.content}
                             </div>
                         
                 `;
 
-                if (parentComment.parentCommentUser === currentUsername) {
+            if (parentComment.parentCommentUser === currentUsername) {
+                if (paymentExists != null) {
+                    console.log(paymentExists);
+                    if (paymentExists.status == "PENDING") {
+                        commentsHtml += `
+                        <div class="comment-action">
+                            <span class="waiting-transaction">Nguời đăng đã chốt và đang chờ giao dịch</span>
+                        </div>
+                    `;
+                    } else if (paymentExists.status == "COMPLETED") {
+                        commentsHtml += `
+                        <div class="comment-action">
+                            <span class="waiting-transaction">Nguời đăng đã chốt và thanh toán </span>
+                        </div>
+                    `;
+                    }
+
+                } else {
                     commentsHtml += `
                         
                             <div class="comment-action">
@@ -41,26 +65,45 @@ function loadComments(postId) {
                             </div>
                         `;
                 }
+                
+            }
 
-                if (currentUserId === postUserId) {
-                    commentsHtml += `
-                        
-                            <div class="comment-action">
-                                    <button class="accept-button">Chấp nhận giá này</button >
-                            </div>
-                        `;
-
-                }
-
-
-                commentsHtml += `</div>`;
-
-
-
-                if (parentComment.comments && parentComment.comments.length > 0) {
-                    commentsHtml += `<div class="child-comments">`;
-                    parentComment.comments.forEach(comment => {
+            if (currentUserId === postUserId) {
+                if (paymentExists != null) {
+                    console.log(paymentExists);
+                    if (paymentExists.status == "PENDING") {
                         commentsHtml += `
+                        <div class="comment-action">
+                            <span class="waiting-transaction">Đã chốt và đang chờ giao dịch cho bài đăng này</span>
+                        </div>
+                    `;
+                    } else if (paymentExists.status == "COMPLETED") {
+                        commentsHtml += `
+                        <div class="comment-action">
+                            <span class="waiting-transaction">Đã chốt và thanh toán cho bài đăng này</span>
+                        </div>
+                    `;
+                    }
+
+                } else {
+                    // If not, show the accept button
+                    commentsHtml += `
+                        <div class="comment-action">
+                            <button class="accept-button">Chấp nhận giá này</button>
+                        </div>
+                    `;
+                }
+            }
+
+
+            commentsHtml += `</div>`;
+
+
+
+            if (parentComment.comments && parentComment.comments.length > 0) {
+                commentsHtml += `<div class="child-comments">`;
+                parentComment.comments.forEach(comment => {
+                    commentsHtml += `
                             <div class="comment">
                                 <div class="comment-author">
                                     <img src="https://cdn3.iconfinder.com/data/icons/login-5/512/LOGIN_6-512.png" alt="Avatar" class="avatar">
@@ -71,13 +114,13 @@ function loadComments(postId) {
                                 </div>
                             </div>
                         `;
-                    });
-                    commentsHtml += `</div>`;
-                }
+                });
+                commentsHtml += `</div>`;
+            }
 
-                if (parentComment.parentCommentUser === currentUsername || parentComment.parentCommentUser === postUserId || currentUserId === postUserId) {
+            if (parentComment.parentCommentUser === currentUsername || parentComment.parentCommentUser === postUserId || currentUserId === postUserId) {
 
-                    commentsHtml += `
+                commentsHtml += `
                     <div class="reply-form">
                         <textarea placeholder="Phản hồi..."></textarea>
                         <button id="reply-btn-${parentComment.parentCommentId}" data-parent-id="${parentComment.parentCommentId}">Đăng</button>
@@ -85,36 +128,28 @@ function loadComments(postId) {
                     </div>
                 </div>`;
 
-                }
-
-
-                commentsHtml += `</div>`;
-            });
-
-            $("#comments-section").html(commentsHtml);
-        },
-        error: function (error) {
-            showToast("Error", error.responseText, "error");
-        }
-    });
-
-
-
-    $.ajax({
-        url: `/api/comments/checkParentComment?postId=${postId}`,
-        method: "GET",
-        success: function (hasPosted) {
-            if (hasPosted) {
-                $('#comment-container').addClass('hidden');
-            } else {
-                $('#comment-container').removeClass('hidden');
             }
-        },
-        error: function (error) {
-            showToast("Error", error.responseText, "error");
+
+
+            commentsHtml += `</div>`;
+        });
+
+        // Update the DOM once
+        $("#comments-section").html(commentsHtml);
+
+        // Handle hasPostedResponse
+        if (hasPostedResponse) {
+            $('#comment-container').addClass('hidden');
+        } else {
+            $('#comment-container').removeClass('hidden');
         }
-    });
+
+    } catch (error) {
+        // Handle errors for any of the AJAX calls
+        showToast("Error", error.responseText, "error");
+    }
 }
+
 
 
 function getParameterByName(name, url = window.location.href) {
@@ -127,6 +162,7 @@ function getParameterByName(name, url = window.location.href) {
 }
 
 var postId = getParameterByName('id');
+var paymentId = null;
 let currentUserId = null;
 let currentUsername = null;
 let currentRole = null;
@@ -191,6 +227,7 @@ connection.on("NewComment", function (comment) {
 connection.on("NewChildComment", function () {
     loadComments(postId);
 });
+
 
 $(document).on('click', '[id^="reply-btn-"]', function () {
     let parentCommentId = $(this).data('parent-id');
@@ -283,27 +320,58 @@ $(document).on('click', '.accept-button', function () {
     $overlay.show();
 });
 
+
+const connection2 = new signalR.HubConnectionBuilder()
+    .withUrl("/notificationHub")
+    .build();
+
+connection2.start().catch(err => console.error(err.toString()));
+
+connection2.on("ProcessPayment", function () {
+    showLoader();
+    $("#vietqr-popup").hide();
+    $('.popup-backdrop').removeClass('show');
+    $overlay.hide();
+    $confirmBox.hide();
+    showToast("Success", "Payment success. We have received your transaction.", "success");
+    hideLoader();
+    loadComments(postId);
+});
+
+
 $yesButton.click(function () {
-    //Hiện pop-up QR code 
-    $("#vietqr-popup").show();
-    $('.popup-backdrop').addClass('show');
-
-    var linkQRCode = "https://img.vietqr.io/image/970436-1014794186-lx65zFs.jpg?accountName=TRAN%20QUANG%20QUI&amount=";
-
     var priceValue = $(".price-display").text().replace(/[^0-9]/g, '');
-    linkQRCode += priceValue;
+    $.ajax({
+        type: "POST",
+        url: "/api/account/create-payment",
+        data: JSON.stringify({
+            Amount: priceValue,
+            RelatedId: postId,
+            ServiceType: "Post",
+            Status: "PENDING"
+        }),
 
-    linkQRCode += "&addInfo=Payment%20OrderID%20";
-
-
-    // Sau khi ghép thành công số tiền cần chuyển thì tiếp tục nối chuỗi gồm mã đơn hàng 
-    var orderID = "Donhang0001";
-    linkQRCode += orderID + "%20";
-    linkQRCode += currentUsername;
-    // Sau khi ghép thành công username thì set src cho the img
-    $("#txtQRCode").attr('src', linkQRCode);
-
-    showToast("Notification", "Don't reload the page or leave the page", "info");
+        contentType: "application/json",
+        success: function (response) {
+            console.log(response)
+            paymentId = response.paymentId;
+            $("#vietqr-popup").show();
+            $('.popup-backdrop').addClass('show');
+            var linkQRCode = "https://img.vietqr.io/image/970436-1014794186-lx65zFs.jpg?accountName=TRAN%20QUANG%20QUI&amount=";
+            linkQRCode += priceValue;
+            linkQRCode += "&addInfo=Payment%20OrderID";
+            linkQRCode += response.paymentId + "%20";
+            linkQRCode += currentUsername;
+            $("#txtQRCode").attr('src', linkQRCode);
+            showToast("Success", "The payment request has been created!", "success");
+            $('.accept-button').hide(); // Hide the accept button
+            $('.accept-button').after('<div class="payment-status">Đã chốt và đang chờ giao dịch cho bài đăng này</div>'); // Add a new div with the message
+        },
+        error: function (error) {
+            console.log(error);
+            showToast("Error", "Error creating payment: " + error.message, "error");
+        }
+    });
 });
 
 $noButton.click(function () {
@@ -312,7 +380,7 @@ $noButton.click(function () {
 });
 
 $closeBtn.click(function () {
-    showToast("Notification", "Cancel payment", "info");
+    showToast("Notification", "Track your transactions again in the my purchase section", "info");
     $("#vietqr-popup").hide();
     $('.popup-backdrop').removeClass('show');
     $overlay.hide();

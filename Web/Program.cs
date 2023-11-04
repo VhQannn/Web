@@ -73,6 +73,7 @@ app.MapRazorPages();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<PostHub>("/postHub");
+    endpoints.MapHub<NotificationHub>("/notificationHub");
     endpoints.MapRazorPages();
     endpoints.MapControllers();
 });

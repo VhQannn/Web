@@ -3,9 +3,10 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@ViewData["Title"]</title>
+	<title>Post Details</title>
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/css/loader.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/css/toastMessage.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
@@ -61,10 +62,21 @@
 	</header>
 	<div class="container">
 		<main role="main" class="pb-3">
+
 			@RenderBody()
 		</main>
 
 	</div>
+
+
+	<div class="spinner-overlay">
+		<div class="svg-frame">
+			<div class="loader"></div>
+
+		</div>
+
+	</div>
+
 
 	<footer class="border-top footer text-muted">
 		<div class="container text-center">
