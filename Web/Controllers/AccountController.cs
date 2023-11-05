@@ -39,5 +39,39 @@ namespace Web.Controllers
 		}
 
 
+		[HttpPost("create-payment")]
+		[Authorize]
+		public IActionResult CreatePayment([FromBody] PaymentDTO paymentDTO)
+		{
+			if (paymentDTO == null)
+			{
+				return BadRequest("Thông tin thanh toán không hợp lệ.");
+			}
+
+			var currentUserName = User.Identity.Name;
+			var currentUser = _context.Users.FirstOrDefault(u => u.Username == currentUserName);
+
+			if (currentUser == null)
+			{
+				return NotFound("Người dùng hiện tại không được tìm thấy trong cơ sở dữ liệu.");
+			}
+
+			var payment = new Payment
+			{
+				UserId = currentUser.UserId,
+				Amount = paymentDTO.Amount,
+				PaymentDate = DateTime.UtcNow,
+				RelatedId = paymentDTO.RelatedId,
+				ServiceType = paymentDTO.ServiceType,
+				Status = paymentDTO.Status
+			};
+
+			_context.Payments.Add(payment);
+			_context.SaveChanges();
+
+			return Ok(new { PaymentId = payment.PaymentId });
+		}
+
+
 	}
 }
