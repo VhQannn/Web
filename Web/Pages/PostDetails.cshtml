@@ -83,11 +83,6 @@
 	</div>
 </div>
 
-<div class="my-5">
-	<a asp-page="/Index">Quay về trang chủ</a>
-</div>
-
-
 <span id="regError" data-my-attribute=""></span>
 
 <div class="my-toast">
@@ -120,23 +115,24 @@
 
 
 
-<script>
-	var postUserId = @Model.Post.User.UserId;
-	const errorBox = document.getElementById('regError');
 
-	function showToast(title, message, type) {
-		toast({
-			title: title,
-			message: message,
-			type: type,
-			duration: 3000
-		});
-	}
-
-
-</script>
 
 @section Scripts {
+    <script>
+        var postUserId = @Model.Post.User.UserId;
+        const errorBox = document.getElementById('regError');
+
+        function showToast(title, message, type) {
+            toast({
+                title: title,
+                message: message,
+                type: type,
+                duration: 3000
+            });
+        }
+
+
+    </script>
 	<script src="~/js/PostDetail.js" asp-append-version="true"></script>
 }
 

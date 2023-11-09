@@ -9,6 +9,8 @@ public partial class Post
 
     public int? UserId { get; set; }
 
+    public int? ReceiverId { get; set; }
+
     public int? PostCategoryId { get; set; }
 
     public string PostTitle { get; set; } = null!;
@@ -26,6 +28,8 @@ public partial class Post
     public virtual ICollection<ParentComment> ParentComments { get; set; } = new List<ParentComment>();
 
     public virtual PostCategory? PostCategory { get; set; }
+
+    public virtual User? Receiver { get; set; }
 
     public virtual User? User { get; set; }
 }

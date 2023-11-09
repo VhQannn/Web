@@ -1,4 +1,15 @@
-﻿async function loadComments(postId) {
+﻿const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/postHub")
+    .build();
+connection.start().catch(err => console.error(err.toString()));
+
+const connection2 = new signalR.HubConnectionBuilder()
+    .withUrl("/notificationHub")
+    .build();
+
+connection2.start().catch(err => console.error(err.toString()));
+
+async function loadComments(postId) {
     // Security: Ensure postId is sanitized before use
 
     if (currentUserId === postUserId || currentRole === "Customer") {
@@ -321,11 +332,7 @@ $(document).on('click', '.accept-button', function () {
 });
 
 
-const connection2 = new signalR.HubConnectionBuilder()
-    .withUrl("/notificationHub")
-    .build();
 
-connection2.start().catch(err => console.error(err.toString()));
 
 connection2.on("ProcessPayment", function () {
     showLoader();

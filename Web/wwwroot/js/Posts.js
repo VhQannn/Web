@@ -5,6 +5,29 @@
 let currentPage = 1;
 const pageSize = 5;
 
+
+function createPostCard(post) {
+    const dateOnly = post.dateSlot.split('T')[0];
+    const displayedUsername = post.username || "Chưa có";
+    return `
+        <div class="post-card">
+            <div class="post-card-header">
+                <h3 class="post-title">${post.postTitle}</h3>
+                <div class="post-date">${dateOnly} at ${post.timeSlot}</div>
+            </div>
+            <div class="post-card-body">
+                <p class="post-content">${post.postContent}</p>
+                <div class="post-category">${post.postCategoryName}</div>
+                <div class="post-status">${post.status}</div>
+                <div class="post-username">Posted by: ${displayedUsername}</div>
+            </div>
+            <div class="post-card-footer">
+                <a href="./PostDetails?id=${post.postId}" class="post-details-link">View Details</a>
+            </div>
+        </div>
+    `;
+}
+
 function loadPosts(pageNumber) {
     $.ajax({
         url: `/api/posts?pageNumber=${pageNumber}&pageSize=${pageSize}`,
@@ -12,26 +35,13 @@ function loadPosts(pageNumber) {
         success: function (response) {
             const { data, totalRecords, totalPages } = response;
 
-            // Xóa nội dung hiện tại của bảng
-            $("table tbody").empty();
+            // Xóa nội dung hiện tại của card container
+            $(".post-card-container").empty();
 
-            // Duyệt qua mỗi bài viết và thêm vào bảng
+            // Duyệt qua mỗi bài viết và tạo card tương ứng
             data.forEach(post => {
-                const dateOnly = post.dateSlot.split('T')[0];
-                const displayedUsername = post.username || "Chưa có";
-                const row = `
-                    <tr>
-                        <td>${post.postTitle}</td>
-                        <td>${post.postContent}</td>
-                        <td>${dateOnly}</td>
-                        <td>${post.timeSlot}</td>
-                        <td>${post.status}</td>
-                        <td>${post.postCategoryName}</td>
-                        <td>${displayedUsername}</td>
-                        <td><a href="./PostDetails?id=${post.postId}">View Details</a></td>
-                    </tr>
-                `;
-                $("table tbody").append(row);
+                const postCard = createPostCard(post);
+                $(".post-card-container").append(postCard);
             });
 
             if (currentPage >= totalPages) {
