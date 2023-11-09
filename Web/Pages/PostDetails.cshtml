@@ -4,303 +4,67 @@
 @{
 	ViewData["Title"] = "PostDetails";
 }
-<style>
-	/* General Styles */
-	body {
-		font-family: Arial, sans-serif;
-		background-color: #f0f2f5;
-	}
+<link rel="stylesheet" href="~/css/PostDetail.css" asp-append-version="true" />
 
-	/* Comment Section Styles */
-	.comment-container {
-		background-color: #fff;
-		padding: 20px 25px;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		margin-top: 20px;
-	}
+<div class="details-container">
+    <!-- Post Title -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-heading"></i>
+        <span class="detail-label">Tựa bài đăng</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.PostTitle)</div>
+    </div>
 
-		.comment-container label {
-			font-size: 18px; /* Increase font-size for the label */
-			display: block;
-			margin-bottom: 15px;
-		}
+    <!-- Post Content -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-align-left"></i>
+        <span class="detail-label">Nội dung bài đăng</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.PostContent)</div>
+    </div>
 
-		.comment-container textarea {
-			width: 100%;
-			padding: 12px 15px; /* Increased padding */
-			border: 1px solid #ccd0d5;
-			border-radius: 18px;
-			font-size: 15px; /* Increased font-size */
-			resize: none;
-			transition: border 0.3s; /* Added transition */
-		}
+    <!-- Post Date -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-calendar-alt"></i>
+        <span class="detail-label">Ca thi</span>
+        <div class="detail-value">
+            (@Html.DisplayFor(model => model.Post.TimeSlot)) @Model.Post.DateSlot.ToString("dd/MM/yyyy")
+        </div>
 
-			.comment-container textarea:focus {
-				border-color: #1877f2; /* Change border color on focus */
-			}
+    </div>
 
+    <!-- Category -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-tags"></i>
+        <span class="detail-label">Loại môn</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.PostCategory.PostCategoryName)</div>
+    </div>
 
+    <!-- Status -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-info-circle"></i>
+        <span class="detail-label">Trạng thái bài đăng</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.Status)</div>
+    </div>
 
-		.comment-container button {
-			padding: 10px 20px; /* Increased padding */
-			background-color: #1877f2;
-			color: white;
-			border: none;
-			border-radius: 8px;
-			cursor: pointer;
-			font-size: 15px; /* Increased font-size */
-			margin-top: 15px; /* Increased margin-top */
-			transition: background-color 0.2s, transform 0.2s; /* Added transform transition */
-		}
+    <!-- Post Date -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-calendar-alt"></i>
+        <span class="detail-label">Ngày đăng bài</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.PostDate)</div>
+    </div>
 
-			.comment-container button:hover {
-				background-color: #165dbb;
-				transform: translateY(-2px); /* Added subtle lift on hover */
-			}
+    <!-- User -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-user"></i>
+        <span class="detail-label">Người đăng</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.User.Username)</div>
+    </div>
 
-	.comments-list {
-		margin-top: 20px;
-	}
-
-	.comment {
-		background-color: #fff;
-		padding: 12px;
-		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-		margin: 10px 0;
-	}
-
-	.comment-top {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-
-	.comment-author {
-		display: flex;
-		align-items: center;
-		margin-bottom: 0;
-	}
-
-	.comment-content {
-		display: flex;
-		align-items: center;
-		margin-bottom: 0;
-	}
-
-	.avatar {
-		width: 40px;
-		height: 40px;
-		border-radius: 50%;
-		margin-right: 10px;
-	}
-
-	.author-name {
-		font-weight: bold;
-		font-size: 14px;
-		color: #1d2129;
-	}
-
-	.comment-text {
-		font-size: 15px;
-		line-height: 2.4;
-		color: #8c8c8c;
-		font-weight: bold;
-	}
-
-	a {
-		color: #1877f2;
-		text-decoration: none;
-	}
-
-		a:hover {
-			text-decoration: underline;
-		}
-
-	.edit-price-btn {
-		background-color: #007bff;
-		color: white;
-		border: none;
-		padding: 5px 10px;
-		margin-bottom: 10px;
-		margin-left: 10px;
-		border-radius: 5px;
-		cursor: pointer;
-	}
-
-		.edit-price-btn:hover {
-			background-color: #0056b3;
-		}
-
-	.price-input {
-		padding: 10px; /* Added padding to match button */
-		border: 1px solid #ccd0d5; /* Added border */
-		border-radius: 18px; /* Added border-radius */
-		font-size: 15px; /* Increased font-size */
-		margin-top: 10px; /* Increased margin-top */
-		width: calc(100% - 28px); /* Adjust width to account for padding and border */
-		transition: border 0.3s; /* Added transition */
-	}
-
-		.price-input:focus {
-			border-color: #1877f2; /* Change border color on focus */
-		}
-
-		.price-input::placeholder {
-			color: #8c8c8c; /* Lighten placeholder color */
-		}
-
-	.hidden {
-		display: none;
-	}
-
-	.comment-price {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		flex: 1;
-		font-size: 16px; /* Tăng kích thước font cho giá */
-		color: #e74c3c; /* Màu đỏ cho giá */
-	}
-
-	.comment-action {
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
-		flex: 1;
-	}
-
-	.price-display {
-		margin-left: 5px; /* Thêm khoảng cách giữa biểu tượng và giá */
-	}
-
-	.price-icon {
-		display: inline-block;
-		width: 18px; /* Kích thước của biểu tượng */
-		height: 18px;
-		background: url('https://dl.dropbox.com/scl/fi/84tfpvsdpdoi65pvk0cre/flame_426833.png?rlkey=e1pjwoyfva95jczklwumgyv2v&dl=0') no-repeat center; /* Đường dẫn đến biểu tượng đóm lửa */
-		background-size: contain; /* Đảm bảo biểu tượng fit với kích thước */
-		margin-right: 5px; /* Thêm khoảng cách giữa biểu tượng và giá */
-	}
-
-	.popup {
-		display: none;
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		background-color: #fff;
-		border-radius: 10px;
-		box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-		z-index: 999;
-		padding: 20px;
-	}
-
-		.popup.show {
-			display: block;
-		}
-
-		.popup h2 {
-			font-size: 24px;
-			font-weight: bold;
-			margin-top: 0;
-			margin-bottom: 10px;
-		}
-
-		.popup p {
-			font-size: 18px;
-			line-height: 1.5;
-			margin-bottom: 20px;
-		}
-
-		.popup img {
-			display: block;
-			max-width: 100%;
-			height: auto;
-			margin-bottom: 20px;
-		}
-
-		.popup span {
-			background-color: #007bff;
-			color: #fff;
-			border: none;
-			padding: 10px 20px;
-			border-radius: 5px;
-			font-size: 18px;
-			cursor: pointer;
-			transition: background-color 0.3s ease;
-		}
-
-			.popup span:hover {
-				background-color: #0069d9;
-			}
-
-	.popup-backdrop {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		backdrop-filter: blur(5px);
-		z-index: 998;
-		display: none;
-	}
-
-		.popup-backdrop.show {
-			display: block;
-		}
-
-</style>
-
-
-<div>
-	<hr />
-	<dl class="row">
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.PostTitle)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.PostTitle)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.PostContent)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.PostContent)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.PostDate)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.PostDate)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.TimeSlot)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.TimeSlot)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.Status)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.Status)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.PostCategory)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.PostCategory.PostCategoryId)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.User)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.User.UserId)
-		</dd>
-	</dl>
+    <!-- Back to Home Link -->
+    <a href="@Url.Page("/Index")" class="back-link"><i class="fas fa-home"></i> Quay về trang chủ</a>
 </div>
+
+
+
 <div class="comment-container" id="comment-container">
 	<label>Bình luận và đưa giá</label>
 	<div>
@@ -371,3 +135,8 @@
 
 
 </script>
+
+@section Scripts {
+	<script src="~/js/PostDetail.js" asp-append-version="true"></script>
+}
+

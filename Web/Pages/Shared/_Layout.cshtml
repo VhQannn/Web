@@ -26,6 +26,12 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
 						</li>
+						@if (Context.User.Identity.IsAuthenticated)
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-page="/MyPayment">My Payment</a>
+							</li>
+						}
 					</ul>
 					<ul class="navbar-nav">
 						@if (Context.User.Identity.IsAuthenticated)
@@ -91,10 +97,8 @@
 	<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
 
 	<script src="~/js/site.js" asp-append-version="true"></script>
-	<script src="~/js/Posts.js" asp-append-version="true"></script>
-
-	<script src="~/js/PostDetail.js" asp-append-version="true"></script>
 	<script src="~/js/toastMessage.js" asp-append-version="true"></script>
+	
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
