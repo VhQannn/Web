@@ -1,57 +1,70 @@
-﻿@page
+@page
 @model Web.Pages.PostDetailsModel
 
 @{
 	ViewData["Title"] = "Bài đăng";
 }
+<link rel="stylesheet" href="~/css/PostDetail.css" asp-append-version="true" />
 
-<div>
-	<hr />
-	<dl class="row">
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.PostTitle)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.PostTitle)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.PostContent)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.PostContent)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.PostDate)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.PostDate)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.TimeSlot)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.TimeSlot)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.Status)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.Status)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.PostCategory)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.PostCategory.PostCategoryId)
-		</dd>
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Post.User)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Post.User.UserId)
-		</dd>
-	</dl>
+<div class="details-container">
+    <!-- Post Title -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-heading"></i>
+        <span class="detail-label">Tựa bài đăng</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.PostTitle)</div>
+    </div>
+
+    <!-- Post Content -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-align-left"></i>
+        <span class="detail-label">Nội dung bài đăng</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.PostContent)</div>
+    </div>
+
+    <!-- Post Date -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-calendar-alt"></i>
+        <span class="detail-label">Ca thi</span>
+        <div class="detail-value">
+            (@Html.DisplayFor(model => model.Post.TimeSlot)) @Model.Post.DateSlot.ToString("dd/MM/yyyy")
+        </div>
+
+    </div>
+
+    <!-- Category -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-tags"></i>
+        <span class="detail-label">Loại môn</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.PostCategory.PostCategoryName)</div>
+    </div>
+
+    <!-- Status -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-info-circle"></i>
+        <span class="detail-label">Trạng thái bài đăng</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.Status)</div>
+    </div>
+
+    <!-- Post Date -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-calendar-alt"></i>
+        <span class="detail-label">Ngày đăng bài</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.PostDate)</div>
+    </div>
+
+    <!-- User -->
+    <div class="detail-item">
+        <i class="detail-icon fas fa-user"></i>
+        <span class="detail-label">Người đăng</span>
+        <div class="detail-value">@Html.DisplayFor(model => model.Post.User.Username)</div>
+    </div>
+
+    <!-- Back to Home Link -->
+    <a href="@Url.Page("/Index")" class="back-link"><i class="fas fa-home"></i> Quay về trang chủ</a>
 </div>
+
+
+
 <div class="comment-container" id="comment-container">
 	<label>Bình luận và đưa giá</label>
 	<div>
@@ -69,11 +82,6 @@
 		<!-- Comments will be loaded here -->
 	</div>
 </div>
-
-<div class="my-5">
-	<a asp-page="/Index">Quay về trang chủ</a>
-</div>
-
 
 <span id="regError" data-my-attribute=""></span>
 
@@ -107,18 +115,24 @@
 
 
 
-<script>
-	var postUserId = @Model.Post.User.UserId;
-	const errorBox = document.getElementById('regError');
-
-	function showToast(title, message, type) {
-		toast({
-			title: title,
-			message: message,
-			type: type,
-			duration: 3000
-		});
-	}
 
 
-</script>
+@section Scripts {
+    <script>
+        var postUserId = @Model.Post.User.UserId;
+        const errorBox = document.getElementById('regError');
+
+        function showToast(title, message, type) {
+            toast({
+                title: title,
+                message: message,
+                type: type,
+                duration: 3000
+            });
+        }
+
+
+    </script>
+	<script src="~/js/PostDetail.js" asp-append-version="true"></script>
+}
+

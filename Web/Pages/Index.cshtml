@@ -1,58 +1,87 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+	ViewData["Title"] = "Home page";
 }
 
-<h1>@Model.hihi</h1>
-<form method="get" asp-page-handler="OnGetSearchByTitle">
-    <div class="my-3">
-        <div class="search-bar">
-            <input class="search-input" name="Title" type="text" placeholder="Search..." />
-            <input class="btn btn-sm btn-outline-primary text-black" type="submit" />
-        </div>
-    </div>
-</form>
-<div class="my-5 text-center">
-    <a href="#" class="btn btn-secondary">Check Legit</a>
-    <a href="/createpost" class="btn btn-primary" id="post">Đăng bài</a>
+<link rel="stylesheet" href="~/css/Index.css" asp-append-version="true" />
+<div class="slider">
+	<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+		<ol class="carousel-indicators">
+			<li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+			<li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+			<li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+		</ol>
+		<div class="carousel-inner">
+			<div class="carousel-item active">
+				<img src="https://dl.dropbox.com/scl/fi/rza9jrn1efvcvi4oukqop/slide_1.webp?rlkey=c8fb28mvgwflmydydvv5k2mvg&dl=0"
+					 class="d-block" alt="...">
+			</div>
+			<div class="carousel-item ">
+				<img src="https://dl.dropbox.com/scl/fi/nf1kxbfis0w1w95e6t5l8/slide_2.webp?rlkey=w14mm1r14w6h4ie8ovra1m3dh&dl=0" class="d-block" alt="...">
+			</div>
+			<div class="carousel-item ">
+				<img src="https://dl.dropbox.com/scl/fi/rzpo2u9s33hwnt582zkkf/slide_3.webp?rlkey=daulicxcqwkc3w6ebw60qar7m&dl=0"
+					 class="d-block" alt="...">
+			</div>
+		</div>
+		<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="sr-only">Previous</span>
+		</a>
+		<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="sr-only">Next</span>
+		</a>
+	</div>
 </div>
-    <table class="table table-striped">
-        <thead class="text-center">
-            <tr>
-                <th>
-                    Tiêu Đề
-                </th>
-                <th>
-                    Nội Dung
-                </th>
-                <th>
-                    Ngày Thi
-                </th>
-                <th>
-                    Thời gian
-                </th>
-                <th>
-                    Trạng thái
-                </th>
-                <th>
-                    Môn
-                </th>
-                <th>
-                    Người nhận
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
+
+<div class="container">
 
 
-<div class="pagination">
-    <button id="prevPage">Trước</button>
-    <span id="currentPage">1</span>
-    <button id="nextPage">Sau</button>
+	<div class="sidebar">
+		<!-- Phần lọc -->
+		<div class="my-3">
+			<form method="post">
+				<div class="search-bar">
+					<input class="search-input" type="text" placeholder="Search..." />
+					<button type="submit" class="search-button">
+						<i class="fa fa-search"></i> <!-- Font Awesome search icon -->
+					</button>
+				</div>
+			</form>
+		</div>
+		<div class="my-5 text-center">
+			<a href="#" class="btn btn-secondary">Check Legit</a>
+			<a href="/createpost" class="btn btn-primary">Đăng bài</a>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<!-- Nội dung chính với các card post -->
+		<div class="post-card-container">
+			<!-- Các card post sẽ được thêm vào đây bằng JavaScript -->
+		</div>
+
+		<p>Trang: <span id="currentPage"></span> / <span id="totalPages"></span></p>
+
+		<div class="pagination">
+			<button id="prevPage">Trước</button>
+			<span id="currentPage">1</span>
+			<button id="nextPage">Sau</button>
+		</div>
+	</div>
 </div>
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$('.carousel').carousel({
+				interval: 10000 //Thời gian chuyển đổi giữa các ảnh
+			});
+		});
+	</script>
+	<script src="~/js/Posts.js" asp-append-version="true"></script>
+}
 
 
 

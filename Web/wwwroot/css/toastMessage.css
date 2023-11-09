@@ -173,12 +173,12 @@
 }
 
 #yes-button {
-    background-color: #e74c3c;
+    background-color: #2ecc71;
     color: white;
 }
 
 #no-button {
-    background-color: #2ecc71;
+    background-color:  #e74c3c;
     color: white;
 }
 

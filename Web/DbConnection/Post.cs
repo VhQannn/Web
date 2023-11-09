@@ -1,4 +1,4 @@
-﻿namespace Web.DbConnection;
+namespace Web.DbConnection;
 
 public partial class Post
 {
@@ -6,7 +6,7 @@ public partial class Post
 
     public int? UserId { get; set; }
 
-    public int? PosterId { get; set; }
+    public int? ReceiverId { get; set; }
 
     public int? PostCategoryId { get; set; }
 
@@ -26,7 +26,7 @@ public partial class Post
 
     public virtual PostCategory? PostCategory { get; set; }
 
-    public virtual User? Poster { get; set; }
+    public virtual User? Receiver { get; set; }
 
     public virtual User? User { get; set; }
 }

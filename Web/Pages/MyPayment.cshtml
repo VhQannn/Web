@@ -1,0 +1,55 @@
+﻿@page
+@model Web.Pages.MyPaymentModel
+
+@{
+	ViewData["Title"] = "MyPayment";
+}
+<link rel="stylesheet" href="~/css/Mypayment.css" asp-append-version="true" />
+
+<h1>My Payment</h1>
+
+<table class="table">
+	<thead>
+		<tr>
+			
+			<th>
+				@Html.DisplayNameFor(model => model.Payment[0].PaymentDate)
+			</th>
+
+			<th>
+				@Html.DisplayNameFor(model => model.Payment[0].Amount)
+			</th>
+			
+			<th>
+				@Html.DisplayNameFor(model => model.Payment[0].ServiceType)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Payment[0].Status)
+			</th>
+
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.Payment)
+		{
+			<tr>
+				
+
+				<td>
+					@Html.DisplayFor(modelItem => item.PaymentDate)
+				</td>
+
+				<td>
+					@String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C}", item.Amount)
+				</td>
+
+				<td>
+					@Html.DisplayFor(modelItem => item.ServiceType)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

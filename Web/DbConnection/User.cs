@@ -1,4 +1,4 @@
-﻿namespace Web.DbConnection;
+namespace Web.DbConnection;
 
 public partial class User
 {
@@ -28,7 +28,7 @@ public partial class User
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    public virtual ICollection<Post> PostPosters { get; set; } = new List<Post>();
+    public virtual ICollection<Post> PostReceivers { get; set; } = new List<Post>();
 
     public virtual ICollection<Post> PostUsers { get; set; } = new List<Post>();
 
