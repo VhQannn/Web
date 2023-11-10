@@ -14,6 +14,12 @@ namespace Web.Repository
             _context = context;
         }
 
+        public List<User> GetAll()
+        {
+            return _context.Users.ToList();
+        }
+
+
         public User Login(string username, string password)
         {
             string hashedPassword = HashPassword(password);
@@ -41,6 +47,15 @@ namespace Web.Repository
             _context.Users.Add(user);
             return _context.SaveChanges() > 0;
         }
+
+        public User UpdateRole(int userId,string role)
+        {
+            var user = _context.Users.SingleOrDefault(x => x.UserId == userId);
+            user.UserType = role;
+            _context.SaveChanges();
+            return user;
+        }
+
         private string HashPassword(string password)
         {
             using (SHA256 sha256Hash = SHA256.Create())

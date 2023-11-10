@@ -35,32 +35,26 @@
 		</a>
 	</div>
 </div>
-
-<div class="container">
-
-
-	<div class="sidebar">
-		<!-- Phần lọc -->
-		<div class="my-3">
-			<form method="post">
-				<div class="search-bar">
-					<input class="search-input" type="text" placeholder="Search..." />
-					<button type="submit" class="search-button">
-						<i class="fa fa-search"></i> <!-- Font Awesome search icon -->
-					</button>
-				</div>
-			</form>
+<div class="row my-3 mx-auto">
+	<div class="offset-4 col-8">
+		<div class="search-bar mx-auto">
+			<input class="search-input" style="width:50%" id="search-key" type="text" placeholder="Search..." />
+			<button onclick="searchPosts()" class="search-button fa fa-search">
+			</button>
 		</div>
+	</div>
+	
+</div>
+<div class="legit-post-container">
+	<div class="sidebar">
 		<div class="my-5 text-center">
-			<a href="#" class="btn btn-secondary">Check Legit</a>
+			<a href="#" class="btn btn-secondary my-3">Check Legit</a>
 			<a href="/createpost" class="btn btn-primary">Đăng bài</a>
 		</div>
 	</div>
 
 	<div class="main-content">
-		<!-- Nội dung chính với các card post -->
-		<div class="post-card-container">
-			<!-- Các card post sẽ được thêm vào đây bằng JavaScript -->
+		<div class="post-card-container d-flex justify-content-around flex-wrap">
 		</div>
 
 		<p>Trang: <span id="currentPage"></span> / <span id="totalPages"></span></p>
@@ -82,34 +76,3 @@
 	</script>
 	<script src="~/js/Posts.js" asp-append-version="true"></script>
 }
-
-
-
-}
-else
-{
-    <p>Không tìm thấy</p>
-}
-
-<script>
-    $(document).ready(function () {
-        // Handle category change
-        $('select[name="CategoryName"]').on('change', function () {
-            let category = $(this).val();
-            $.get('/Index?handler=SearchByCategoryName', { categoryName: category }, function (data) {
-                // Update the posts list with the returned data
-                $('tbody').html(data);
-            });
-        });
-
-        // Handle search button click
-        $('.search-button').on('click', function (e) {
-            e.preventDefault(); // Prevent default form submission
-            let title = $('.search-input').val();
-            $.get('/Index?handler=SearchByTitle', { title: title }, function (data) {
-                // Update the posts list with the returned data
-                $('tbody').html(data);
-            });
-        });
-    });
-</script>

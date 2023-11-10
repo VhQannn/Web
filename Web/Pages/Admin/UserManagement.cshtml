@@ -1,0 +1,49 @@
+﻿@page
+@model Web.Pages.Admin.UserManagementModel
+@{
+    var count = 0;
+}
+
+<div class="container">
+    @for (int i = 0; i < Model.Users.Count; i++)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">ID: @Model.Users[i].UserId</h5>
+                <p>Username: @Model.Users[i].Username</p>
+                <p class="card-text">Role <span id="userType-@Model.Users[i].UserId">@Model.Users[i].UserType</span></p>
+                <select id="select-@i" class="form-select" onchange="updateRole(@Model.Users[i].UserId, 'select-@i')">
+                    @foreach (var role in Enum.GetValues(typeof(Web.RoleEnum)))
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        var updateRoleConnection = new signalR.HubConnectionBuilder().withUrl("/userUpdateHub").build();
+        updateRoleConnection.start().catch(err => console.error(err.toString()));
+
+        function updateRole(userId, roleId) {
+            var role = $(`#${roleId}`).val();
+            console.log(`Updating role for user ${userId} to ${role}`);
+            updateRoleConnection.invoke("UpdateUserType", userId, role).catch(function (err) {
+                return console.error(err.toString());
+            });
+        }
+
+        updateRoleConnection.on("UserTypeUpdated", function (userId, newRole) {
+            console.log(`Role updated for user: ${userId} to ${newRole}`);
+            var userTypeElement = $('#userType-' + userId);
+            if (userTypeElement.length) {
+                userTypeElement.text(newRole);
+            }
+           
+        });
+
+    </script>
+}

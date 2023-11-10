@@ -7,5 +7,7 @@ namespace Web.IRepository
     {
         User Login(string username, string password);
         bool Register(RegisterDTO userDTO);
+        List<User> GetAll();
+        User UpdateRole(int userId, string role);
     }
 }

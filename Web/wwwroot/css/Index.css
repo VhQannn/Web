@@ -1,4 +1,4 @@
-﻿.container {
+﻿.legit-post-container {
     display: flex;
 }
 
@@ -32,8 +32,8 @@
 }
 
 .search-button {
-    background-color: transparent; /* Đặt màu nền là trong suốt */
-    color: #007BFF; /* Màu biểu tượng kính lúp */
+    background-color: transparent;  
+    color: #007BFF;  
     border: none;
     padding: 10px 20px;
     border-radius: 0 5px 5px 0;
@@ -41,7 +41,7 @@
 }
 
     .search-button:hover {
-        color: #0056b3; /* Màu biểu tượng khi hover */
+        color: #0056b3;  
     }
 
 .btn {
@@ -69,96 +69,102 @@
     background-color: #0056b3;
 }
 
-.post-card-container {
+/*.post-card-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between; /* Điều này sẽ đảm bảo rằng có khoảng trắng giữa các card */
-    max-width: 800px;
+    justify-content: space-between;*/ /* Điều này sẽ đảm bảo rằng có khoảng trắng giữa các card */
+    /*max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     background-color: #f9f9f9;
-    border-radius: 10px; /* Bo góc cho container bên ngoài */
-}
+    border-radius: 10px;*/ /* Bo góc cho container bên ngoài */
+/*}
 
-.post-card {
+post-card:hover{
+    color: black;
+}*/
+
+/*.post-card {
+    text-decoration: none;
+    color: black;
     background: #fff;
-    border-radius: 10px; /* Bo góc cho mỗi card */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;*/ /* Bo góc cho mỗi card */
+    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    margin-bottom: 20px; /* Khoảng cách giữa các card theo chiều dọc */
-    width: calc(50% - 10px); /* Chiều rộng để 2 card vừa vặn trên một dòng, 10px là để tính khoảng cách giữa các card */
-    overflow: hidden; /* Đảm bảo nội dung không tràn ra ngoài viền bo tròn */
-}
+    margin-bottom: 20px;*/ /* Khoảng cách giữa các card theo chiều dọc */
+    /*width: calc(50% - 10px);*/ /* Chiều rộng để 2 card vừa vặn trên một dòng, 10px là để tính khoảng cách giữa các card */
+    /*overflow: hidden;*/ /* Đảm bảo nội dung không tràn ra ngoài viền bo tròn */
+/*}
 
 .post-link {
     display: block;
-    color: #333; /* Màu chữ cho link */
-    text-decoration: none; /* Bỏ gạch chân ở link */
-    margin-bottom: 10px;
+    color: #333;*/ /* Màu chữ cho link */
+    /*text-decoration: none;*/ /* Bỏ gạch chân ở link */
+    /*margin-bottom: 10px;
 }
 
 .post-title {
-    font-size: 1.5em; /* Cỡ chữ cho tiêu đề công việc */
-    color: #333; /* Màu chữ cho tiêu đề công việc */
-    margin-bottom: 5px;
+    font-size: 1.5em;*/ /* Cỡ chữ cho tiêu đề công việc */
+    /*color: #333;*/ /* Màu chữ cho tiêu đề công việc */
+    /*margin-bottom: 5px;
 }
 
 .salary {
-    font-size: 1.2em; /* Cỡ chữ cho mức lương */
-    color: #666; /* Màu chữ cho mức lương */
-    font-weight: bold;
+    font-size: 1.2em;*/ /* Cỡ chữ cho mức lương */
+    /*color: #666;*/ /* Màu chữ cho mức lương */
+    /*font-weight: bold;
 }
 
 .post-tags .tag {
-    display: inline-block; /* Hiển thị tag cạnh nhau */
-    background-color: #eef; /* Màu nền cho tag */
-    padding: 5px 10px; /* Đệm cho tag */
-    margin-right: 5px; /* Khoảng cách giữa các tag */
-    border-radius: 3px; /* Bo góc cho tag */
-    font-size: 0.85em; /* Cỡ chữ cho tag */
-}
+    display: inline-block;*/ /* Hiển thị tag cạnh nhau */
+    /*background-color: #eef;*/ /* Màu nền cho tag */
+    /*padding: 5px 10px;*/ /* Đệm cho tag */
+    /*margin-right: 5px;*/ /* Khoảng cách giữa các tag */
+    /*border-radius: 3px;*/ /* Bo góc cho tag */
+    /*font-size: 0.85em;*/ /* Cỡ chữ cho tag */
+/*}
 
 .company-info {
-    display: flex; /* Sử dụng flexbox để căn chỉnh logo và tên công ty */
-    align-items: center; /* Căn giữa các items theo chiều dọc */
-    margin-top: 10px;
+    display: flex;*/ /* Sử dụng flexbox để căn chỉnh logo và tên công ty */
+    /*align-items: center;*/ /* Căn giữa các items theo chiều dọc */
+    /*margin-top: 10px;
 }
 
 .company-logo {
-    max-width: 50px; /* Giới hạn kích thước logo công ty */
-    margin-right: 10px; /* Khoảng cách giữa logo và tên công ty */
-}
+    max-width: 50px;*/ /* Giới hạn kích thước logo công ty */
+    /*margin-right: 10px;*/ /* Khoảng cách giữa logo và tên công ty */
+/*}
 
 .company-name {
-    color: #0073e6; /* Màu sắc cho tên công ty */
-    text-decoration: none; /* Bỏ gạch chân cho link */
-}
+    color: #0073e6;*/ /* Màu sắc cho tên công ty */
+    /*text-decoration: none;*/ /* Bỏ gạch chân cho link */
+/*}
 
 .location {
-    font-size: 0.9em; /* Cỡ chữ cho địa điểm */
-    color: #777; /* Màu chữ cho địa điểm */
-    margin-top: 10px;
+    font-size: 0.9em;*/ /* Cỡ chữ cho địa điểm */
+    /*color: #777;*/ /* Màu chữ cho địa điểm */
+    /*margin-top: 10px;
 }
 
 .post-footer {
-    display: flex; /* Sử dụng flexbox để căn chỉnh các phần tử trong footer */
-    justify-content: space-between; /* Phân tách các item ra hai bên */
-    align-items: center; /* Căn giữa các items theo chiều dọc */
-    font-size: 0.85em; /* Cỡ chữ cho footer */
-    color: #777; /* Màu chữ cho footer */
-    margin-top: 15px;
+    display: flex;*/ /* Sử dụng flexbox để căn chỉnh các phần tử trong footer */
+    /*justify-content: space-between;*/ /* Phân tách các item ra hai bên */
+    /*align-items: center;*/ /* Căn giữa các items theo chiều dọc */
+    /*font-size: 0.85em;*/ /* Cỡ chữ cho footer */
+    /*color: #777;*/ /* Màu chữ cho footer */
+    /*margin-top: 15px;
 }
 
 .hot-post-badge {
-    background-color: #ff2d55; /* Màu nền cho badge HOT */
-    color: #fff; /* Màu chữ cho badge */
-    padding: 3px 7px; /* Đệm cho badge */
-    border-radius: 4px; /* Bo góc cho badge */
-}
+    background-color: #ff2d55;*/ /* Màu nền cho badge HOT */
+    /*color: #fff;*/ /* Màu chữ cho badge */
+    /*padding: 3px 7px;*/ /* Đệm cho badge */
+    /*border-radius: 4px;*/ /* Bo góc cho badge */
+/*}
 
 .updated-time {
-    color: #999; /* Màu chữ cho thời gian cập nhật */
-}
+    color: #999;*/ /* Màu chữ cho thời gian cập nhật */
+/*}*/
 
 .carousel-inner, .carousel-item {
     height: 400px; /* giả sử bạn muốn chiều cao cố định là 400px */
@@ -179,10 +185,89 @@
     max-width: 100%;
 }
 
-
-/* Đảm bảo rằng cards không dính vào nhau ở các kích thước màn hình nhỏ */
 @media (max-width: 600px) {
     .post-card {
-        width: 100%; /* Trên màn hình nhỏ, mỗi card chiếm toàn bộ chiều rộng */
+        width: 100%; 
     }
+}
+
+.post-title {
+    font-family: "Poppins";
+    font-weight: 500;
+    font-size: 18px;
+    margin: 3px 0;
+}
+
+
+.post-category-item{
+    font-family: "Avenir";
+    font-size: 14px;
+    color: rgba(34, 34, 34, 0.5);
+    margin: 5px 0;
+}
+
+.card {
+    background-color: #fff;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    padding: 30px;
+    max-width: 400px;
+    min-height: 130px;
+    margin: 20px 0;
+    transition: all 0.5s ease;
+}
+
+    .card:hover {
+        box-shadow: 8px 28px 50px rgba(39, 44, 49, 0.07), 1px 6px 12px rgba(39, 44, 49, 0.04);
+        transform: translate3D(0, -1px, 0) scale(1.02);
+        transition: all 0.5s ease;
+    }
+
+.profile_img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    object-position: 50% 50%;
+    border-radius: 100%;
+}
+
+.flag_wrapper {
+    width: 25px;
+    height: 25px;
+    background-color: #f2f2f2;
+    border-radius: 100%;
+    position: relative;
+    top: -30px;
+    left: 55px;
+}
+
+.flag {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto auto;
+}
+
+.post-category {
+    margin-top: 10px;
+}
+
+.post-category-title {
+    color: #222222;
+    margin-bottom: 5px;
+}
+
+.post-category {
+    padding: 0 15px;
+    margin-right: 5px;
+    line-height: 35px;
+    background-color: #e6e6e6;
+    border-radius: 5px;
+    display: inline-block;
 }
