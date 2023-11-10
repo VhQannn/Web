@@ -100,7 +100,7 @@ async function loadComments(postId) {
                     // If not, show the accept button
                     commentsHtml += `
                         <div class="comment-action">
-                            <button class="accept-button">Chấp nhận giá này</button>
+                            <button class="accept-button" data-receiver-id="${parentComment.parentCommentUserId}">Chấp nhận giá này</button>
                         </div>
                     `;
                 }
@@ -340,7 +340,7 @@ connection2.on("ProcessPayment", function () {
     $('.popup-backdrop').removeClass('show');
     $overlay.hide();
     $confirmBox.hide();
-    showToast("Success", "Payment success. We have received your transaction.", "success");
+    showToast("Thành công!", "Đã phát hiện giao dịch. Giao dịch cho bài đăng này đã hoàn tất. Xem lại trong lịch sử giao dịch", "success");
     hideLoader();
     loadComments(postId);
 });
@@ -348,11 +348,13 @@ connection2.on("ProcessPayment", function () {
 
 $yesButton.click(function () {
     var priceValue = $(".price-display").text().replace(/[^0-9]/g, '');
+    var receiverId = $(".accept-button").data('receiver-id');
     $.ajax({
         type: "POST",
         url: "/api/account/create-payment",
         data: JSON.stringify({
             Amount: priceValue,
+            ReceiverId: receiverId,
             RelatedId: postId,
             ServiceType: "Post",
             Status: "PENDING"
@@ -370,7 +372,7 @@ $yesButton.click(function () {
             linkQRCode += response.paymentId + "%20";
             linkQRCode += currentUsername;
             $("#txtQRCode").attr('src', linkQRCode);
-            showToast("Success", "The payment request has been created!", "success");
+            showToast("Thành công!", "Giao dịch đã được tạo và chúng tôi đang chờ giao dịch từ bạn", "success");
             $('.accept-button').hide(); // Hide the accept button
             $('.accept-button').after('<div class="payment-status">Đã chốt và đang chờ giao dịch cho bài đăng này</div>'); // Add a new div with the message
         },
@@ -387,7 +389,7 @@ $noButton.click(function () {
 });
 
 $closeBtn.click(function () {
-    showToast("Notification", "Track your transactions again in the my purchase section", "info");
+    showToast("Thông báo!", "Đơn hàng của bạn đã được tạo và đang chờ giao dịch. Bạn có thể theo dõi trong phần lịch sử giao dịch của tôi", "info");
     $("#vietqr-popup").hide();
     $('.popup-backdrop').removeClass('show');
     $overlay.hide();
@@ -395,7 +397,7 @@ $closeBtn.click(function () {
 });
 
 $backdrop.click(function () {
-    showToast("Notification", "Canceled payment", "info");
+    showToast("Thông báo!", "Hủy thao tác xác nhận thanh toán", "info");
     $("#vietqr-popup").hide();
     $('.popup-backdrop').removeClass('show');
     $overlay.hide();

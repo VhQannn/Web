@@ -36,6 +36,7 @@ namespace Web.Controllers
 				pc.Price,
 				pc.CommentDate,
 				ParentCommentUser = pc.User?.Username ?? "Unknown",
+				ParentCommentUserId = pc.User?.UserId ?? 0,
 				Comments = pc.Comments.Select(c => new
 				{
 					c.Content,

@@ -2,54 +2,80 @@
 @model Web.Pages.MyPaymentModel
 
 @{
-	ViewData["Title"] = "MyPayment";
+	ViewData["Title"] = "Lịch Sử Giao Dịch";
 }
 <link rel="stylesheet" href="~/css/Mypayment.css" asp-append-version="true" />
 
 <h1>My Payment</h1>
-
-<table class="table">
-	<thead>
-		<tr>
-			
-			<th>
-				@Html.DisplayNameFor(model => model.Payment[0].PaymentDate)
-			</th>
-
-			<th>
-				@Html.DisplayNameFor(model => model.Payment[0].Amount)
-			</th>
-			
-			<th>
-				@Html.DisplayNameFor(model => model.Payment[0].ServiceType)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.Payment[0].Status)
-			</th>
-
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model.Payment)
-		{
+<div id="payment-table-container">
+	<table class="table">
+		<thead>
 			<tr>
-				
 
-				<td>
-					@Html.DisplayFor(modelItem => item.PaymentDate)
-				</td>
+				<th>
+					Ngày Giao Dịch
+				</th>
 
-				<td>
-					@String.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C}", item.Amount)
-				</td>
+				<th>
+					
+				</th>
 
-				<td>
-					@Html.DisplayFor(modelItem => item.ServiceType)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.Status)
-				</td>
+				<th>
+					Số Tiền
+				</th>
+
+				<th>
+					Loại Dịch Vụ
+				</th>
+				<th>
+					Trạng Thái Giao Dịch
+				</th>
+
+				<th>
+					Hành Động
+				</th>
+
 			</tr>
-		}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			
+		</tbody>
+	</table>
+</div>
+<!-- Modal for Viewing Withdrawal Request -->
+<div class="modal fade" id="viewWithdrawalRequestModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Chi tiết đơn rút tiền</h5>
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<!-- Nội dung được cập nhật khi modal được mở -->
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<span id="regError" data-my-attribute=""></span>
+
+<div class="my-toast">
+	<div id="toast"></div>
+</div>
+
+
+<div id="popup-backdrop" class="popup-backdrop"></div>
+<div id="vietqr-popup" class="popup">
+	<img id="txtQRCode" alt="VietQR code">
+	<div style="margin-top: 5px;"><span id="popup-close" class="popup-close">Close</span></div>
+
+</div>
+
+
+@section Scripts {
+		<script src="~/js/MyPayment.js" asp-append-version="true"></script>
+}

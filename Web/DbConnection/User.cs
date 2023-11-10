@@ -44,4 +44,6 @@ public partial class User
     public virtual ICollection<Tool> Tools { get; set; } = new List<Tool>();
 
     public virtual ICollection<UserTool> UserTools { get; set; } = new List<UserTool>();
+
+    public virtual ICollection<WithdrawalRequest> WithdrawalRequests { get; set; } = new List<WithdrawalRequest>();
 }
