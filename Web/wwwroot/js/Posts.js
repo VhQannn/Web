@@ -3,7 +3,7 @@
     .build();
 
 let currentPage = 1;
-const pageSize = 5;
+const pageSize = 2;
 
 
 function createPostCard(post) {

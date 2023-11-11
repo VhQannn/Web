@@ -1,6 +1,6 @@
-﻿$(document).ready(function () {
-    loadListPayment();
-});
+﻿
+let currentPage = 1;
+const pageSize = 2;
 
 $(document).on('click', 'a[data-target="#modelRequest"]', function () {
     var paymentId = $(this).data('payment-id');
@@ -18,16 +18,17 @@ function showToast(title, message, type) {
         duration: 3000
     });
 }
-function loadListPayment() {
-    fetch('/api/account/my-payment')
+function loadListPayment(pageNumber) {
+    fetch(`/api/account/my-payment?pageNumber=${pageNumber}&pageSize=${pageSize}`)
         .then(response => {
             if (!response.ok) {
                 showToast("Error", "Network response was not ok", "error");
             }
             return response.json();
         })
-        .then(data => {
-            console.log('Payment Data:', data); // Log to see what data is returned
+        .then(response => {
+            const { data, totalRecords, totalPages } = response; // Log to see what data is returned
+
             var tableBody = $('#payment-table-container .table tbody');
             tableBody.empty(); 
             data.forEach(item => {
@@ -78,6 +79,7 @@ function loadListPayment() {
 
             });
             attachButtonClickEvents();
+            updatePaginationButtons(currentPage, totalPages);
         })
         .catch(error => {
             showToast("Error", "Unable to load payments: " + error, "error");
@@ -129,7 +131,7 @@ function attachButtonClickEvents() {
             });
 
         $('#modelRequest').modal('hide');
-        loadListPayment();
+        loadListPayment(currentPage);
     });
 
     $(document).on('click', '.view-withdrawal-request', function () {
@@ -161,6 +163,35 @@ function attachButtonClickEvents() {
     });
 }
 
+function updatePaginationButtons(currentPage, totalPages) {
+    if (currentPage >= totalPages) {
+        $("#nextPage").hide();
+    } else {
+        $("#nextPage").show();
+    }
+
+    if (currentPage <= 1) {
+        $("#prevPage").hide();
+    } else {
+        $("#prevPage").show();
+    }
+
+    $("#currentPage").text(currentPage);
+    $("#totalPages").text(totalPages);
+}
+$("#prevPage").click(function () {
+    if (currentPage > 1) {
+        currentPage--;
+        loadListPayment(currentPage);
+    }
+});
+
+$("#nextPage").click(function () {
+    currentPage++;
+    loadListPayment(currentPage);
+});
+
+
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/notificationHub")
     .build();
@@ -171,9 +202,11 @@ connection.on("ProcessPayment", function () {
     $("#vietqr-popup").hide();
     $('.popup-backdrop').removeClass('show');
     showToast("Thông báo!", "Đã phát hiện giao dịch mới", "info");
-    loadListPayment();
+    loadListPayment(currentPage);
 });
 
 connection.on("NewWithdrawalRequest", function () {
-    loadListPayment();
+    loadListPayment(currentPage);
 });
+
+loadListPayment(currentPage);

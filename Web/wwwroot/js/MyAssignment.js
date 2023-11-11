@@ -3,7 +3,7 @@
     .build();
 
 let currentPage = 1;
-const pageSize = 5;
+const pageSize = 2;
 
 connection.on("UpdatePosts", () => {
     loadPosts(currentPage);
@@ -18,7 +18,6 @@ function loadPosts(pageNumber) {
             $("table tbody").empty();
 
             data.forEach(post => {
-                console.log(post);
                 const dateOnly = post.dateSlot.split('T')[0];
                 let buttonHtml = '';
 
@@ -120,7 +119,6 @@ function attachButtonClickEvents() {
             RelatedId: postId,
             ServiceType: "Post"
         };
-        console.log(data);
         fetch('/api/posts/update-status-for-supporter', {
             method: 'POST',
             headers: {
@@ -141,16 +139,27 @@ function attachButtonClickEvents() {
         $('#modelRating').modal('hide');
         $('#viewRatingModal').modal('hide');
     });
+
+
 }
 
 function updatePaginationButtons(currentPage, totalPages) {
-    $("#nextPage").toggle(currentPage < totalPages);
-    $("#prevPage").toggle(currentPage > 1);
+    if (currentPage >= totalPages) {
+        $("#nextPage").hide();
+    } else {
+        $("#nextPage").show();
+    }
+
+    if (currentPage <= 1) {
+        $("#prevPage").hide();
+    } else {
+        $("#prevPage").show();
+    }
+
     $("#currentPage").text(currentPage);
     $("#totalPages").text(totalPages);
 }
 
-// Event handlers for pagination
 $("#prevPage").click(function () {
     if (currentPage > 1) {
         currentPage--;
@@ -159,10 +168,8 @@ $("#prevPage").click(function () {
 });
 
 $("#nextPage").click(function () {
-    if (currentPage < totalPages) {
-        currentPage++;
-        loadPosts(currentPage);
-    }
+    currentPage++;
+    loadPosts(currentPage);
 });
 
 

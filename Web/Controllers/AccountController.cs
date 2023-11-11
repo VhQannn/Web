@@ -80,51 +80,61 @@ namespace Web.Controllers
 
 		[HttpGet("my-payment")]
 		[Authorize]
-		public async Task<IActionResult> OnGetMyPayment()
+		public async Task<IActionResult> OnGetMyPayment(int pageNumber = 1, int pageSize = 5)
 		{
 			if (_context.Payments == null)
 			{
-				// If there are no payments, return a Not Found response.
 				return NotFound("No payment data available.");
 			}
 
-			// Get the current user's ID
 			var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
 			if (user == null)
 			{
-				// If the user is not found, return a Not Found response.
 				return NotFound("User not found.");
 			}
 
+			IQueryable<Payment> query;
+
 			if (user.UserType == "Supporter")
 			{
-				// Filter the payments to only include those for the current user and order them by the most recent
-				var payments = await _context.Payments
-					.Where(p => p.ReceiverId == user.UserId)
-					.OrderByDescending(p => p.PaymentDate) // This will sort the payments by date, most recent first
-					.Include(p => p.User) // Including User entity if necessary.
-					 .Select(p => new MyPaymentSupporterDTO // Project onto the DTO
-					 {
-						 PaymentId = p.PaymentId,
-						 Amount = p.Amount,
-						 PaymentDate = p.PaymentDate,
-						 Status = p.Status,
-						 RelatedId = p.RelatedId,
-						 ServiceType = p.ServiceType,
-						 User = new AccountDTO
-						 {
-							 Id = user.UserId,
-							 Username = user.Username,
-							 Role = user.UserType
-						 }
-						 ,
-						 Receiver = new AccountDTO
-						 {
-							 Id = p.User.UserId,
-							 Username = p.User.Username
-						 },
+				query = _context.Payments
+						.Where(p => p.ReceiverId == user.UserId)
+						.Include(p => p.User);
+			}
+			else
+			{
+				query = _context.Payments
+						.Where(p => p.UserId == user.UserId)
+						.Include(p => p.User);
+			}
 
-						 WithdrawalRequest = _context.WithdrawalRequests.Where(a => a.PaymentId == p.PaymentId)
+			var totalRecords = await query.CountAsync();
+			var skip = (pageNumber - 1) * pageSize;
+			var payments = await query.OrderByDescending(p => p.PaymentDate)
+									 .Skip(skip)
+									 .Take(pageSize)
+									  .Select(p => new MyPaymentSupporterDTO // Project onto the DTO
+									  {
+										  PaymentId = p.PaymentId,
+										  Amount = p.Amount,
+										  PaymentDate = p.PaymentDate,
+										  Status = p.Status,
+										  RelatedId = p.RelatedId,
+										  ServiceType = p.ServiceType,
+										  User = new AccountDTO
+										  {
+											  Id = user.UserId,
+											  Username = user.Username,
+											  Role = user.UserType
+										  }
+						 ,
+										  Receiver = new AccountDTO
+										  {
+											  Id = p.User.UserId,
+											  Username = p.User.Username
+										  },
+
+										  WithdrawalRequest = _context.WithdrawalRequests.Where(a => a.PaymentId == p.PaymentId)
 							.Select(r => new WithdrawalDTO
 							{
 								WithdrawalRequestId = r.WithdrawalRequestId,
@@ -132,47 +142,15 @@ namespace Web.Controllers
 								Comments = r.Comments,
 								RequestDate = r.RequestDate,
 								Status = r.Status
-								
+
 							}).FirstOrDefault()
 
-					 })
-					.ToListAsync();
+									  })
+									 .ToListAsync();
 
-				return Ok(payments);
-			}
-			else
-			{
-				// Filter the payments to only include those for the current user and order them by the most recent
-				var payments = await _context.Payments
-					.Where(p => p.UserId == user.UserId)
-					.OrderByDescending(p => p.PaymentDate) // This will sort the payments by date, most recent first
-					.Include(p => p.User) // Including User entity if necessary.
-					 .Select(p => new MyPaymentDTO // Project onto the DTO
-					 {
-						 PaymentId = p.PaymentId,
-						 Amount = p.Amount,
-						 PaymentDate = p.PaymentDate,
-						 Status = p.Status,
-						 RelatedId = p.RelatedId,
-						 ServiceType = p.ServiceType,
-						 User = new AccountDTO
-						 {
-							 Id = p.User.UserId,
-							 Username = p.User.Username
-						 }
-						 ,
-						 Receiver = _context.Users.Where(a => a.UserId == p.ReceiverId)
-							.Select(r => new AccountDTO
-							{
-								Id = r.UserId,
-								Username = r.Username
-							}).FirstOrDefault()
-					 })
-					.ToListAsync();
+			int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
-				return Ok(payments);
-			}
-
+			return Ok(new { data = payments, totalRecords, totalPages });
 
 		}
 
