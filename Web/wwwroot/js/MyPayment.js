@@ -50,30 +50,7 @@ function loadListPayment() {
                         } else {
                             actionButton = `<a class="btn btn-danger btn-sm text-white" id="btnCreateRequest" title="Withdrawal Request" data-toggle="modal" data-target="#modelRequest" data-payment-id="${item.paymentId}">
                                             Yêu Cầu Rút Tiền
-                                            </a>
-
-<div class="modal fade" id="modelRequest" tabindex="-1" role="dialog">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Yêu cầu rút tiền</h5>
-				<button type="button" class="close" data-dismiss="modal">
-					<span>&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<input type="text" class="withdraw-comment-input" placeholder="Enter comments" />
-			</div>
-
-			<div class="modal-footer">
-				<button type="submit" class="btn btn-primary" id="btn-request">Request</button>
-			</div>
-		</div>
-	</div>
-</div>
-
-
-`;
+                                            </a>`;
                         }
 
                     }

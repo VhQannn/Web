@@ -21,6 +21,8 @@ namespace Web.Controllers
 		[HttpGet]
 		public IActionResult GetCommentsByPost(int postId)
 		{
+
+
 			var parentComments = _context.ParentComments
 				.Where(pc => pc.PostId == postId)
 				.Include(pc => pc.Comments)
@@ -61,11 +63,18 @@ namespace Web.Controllers
 				return BadRequest("Người dùng hiện tại không tồn tại trong cơ sở dữ liệu.");
 			}
 
+			
+
 			var post = await _context.Posts.Include(pc => pc.User).FirstOrDefaultAsync(m => m.PostId == postId);
 			if (post == null)
 			{
 				return NotFound();
 			}
+
+			if(currentUser.UserId == post.User.UserId)
+			{
+                return BadRequest("Không được tự offer giá cho chính bài đăng của mình!");
+            }
 
 			if (currentUser.UserType == "Customer" && post.User.UserId != currentUser.UserId)
 			{

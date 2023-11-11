@@ -28,13 +28,16 @@ async function loadComments(postId) {
 
         // Process parent comments
         parentCommentsResponse.forEach(parentComment => {
+            let timeAgo = timeSince(parentComment.commentDate);
             commentsHtml += `
                     <div class="comment">
                         <div class="comment-top">
                             <div class="comment-author">
                                 <img src="https://cdn3.iconfinder.com/data/icons/login-5/512/LOGIN_6-512.png" alt="Avatar" class="avatar">
                                 <span class="author-name">${parentComment.parentCommentUser === currentUsername ? 'Bạn' : parentComment.parentCommentUser}</span>
+                                
                             </div>
+                            <div class="comment-time">${timeAgo}</div>
                              <div class="comment-price">
                                 <span class="price-icon"></span>
                                 Giá offer: <span class="price-display">${parentComment.price.toLocaleString('vi-VN')}đ</span></div></div>
@@ -76,7 +79,7 @@ async function loadComments(postId) {
                             </div>
                         `;
                 }
-                
+
             }
 
             if (currentUserId === postUserId) {
@@ -114,8 +117,11 @@ async function loadComments(postId) {
             if (parentComment.comments && parentComment.comments.length > 0) {
                 commentsHtml += `<div class="child-comments">`;
                 parentComment.comments.forEach(comment => {
+                    console.log(comment);
+                    let timeAgoCommentChild = timeSince(comment.commentDate);
                     commentsHtml += `
                             <div class="comment">
+                                <div class="comment-time">${timeAgoCommentChild}</div>
                                 <div class="comment-author">
                                     <img src="https://cdn3.iconfinder.com/data/icons/login-5/512/LOGIN_6-512.png" alt="Avatar" class="avatar">
                                     <span class="author-name">${comment.user === currentUsername ? 'Bạn' : comment.user}</span>
@@ -161,6 +167,33 @@ async function loadComments(postId) {
     }
 }
 
+function timeSince(date) {
+    var seconds = Math.floor((new Date() - new Date(date)) / 1000);
+
+    var interval = seconds / 31536000;
+
+    if (interval > 1) {
+        return Math.floor(interval) + " năm trước";
+    }
+    interval = seconds / 2592000;
+    if (interval > 1) {
+        return Math.floor(interval) + " tháng trước";
+    }
+    interval = seconds / 86400;
+    if (interval > 1) {
+        return Math.floor(interval) + " ngày trước";
+    }
+    interval = seconds / 3600;
+    if (interval > 1) {
+        return Math.floor(interval) + " giờ trước";
+    }
+    interval = seconds / 60;
+    if (interval > 1) {
+        return Math.floor(interval) + " phút trước";
+    }
+    return Math.floor(seconds) + " giây trước";
+}
+
 
 
 function getParameterByName(name, url = window.location.href) {
@@ -197,6 +230,20 @@ $('#postCommentBtn').click(function () {
     let commentContent = $('#commentText').val();
     let currentPostId = getParameterByName('id');
     let priceOffer = $('#priceOffered').val().replace(/[^0-9]/g, '');
+
+    if (!commentContent) {
+        showToast("Thông báo", "Vui lòng nhập nội dung bình luận", "info");
+        return;
+    }
+    if (!priceOffer) {
+        showToast("Thông báo", "Vui lòng nhập giá bạn offer cho bài viết này ", "info");
+        return;
+    }
+
+    if (priceOffer <= 1000) {
+        showToast("Error", "Giá phải lớn hơn 1000đ", "error");
+        return;
+    }
 
     // Gọi API để thêm comment mới
     $.ajax({
@@ -244,6 +291,11 @@ $(document).on('click', '[id^="reply-btn-"]', function () {
     let parentCommentId = $(this).data('parent-id');
     let content = $(this).siblings('textarea').val();
 
+    if (!content) {
+        showToast("Thông báo", "Vui lòng nhập nội dung bình luận", "info");
+        return;
+    }
+
     // Gọi API để thêm comment con
     $.ajax({
         url: `/api/comments/reply?parentCommentId=${parentCommentId}`,
@@ -270,10 +322,15 @@ $(document).on('click', '.edit-price-btn', function () {
 // Khi nhấp vào nút "Xác nhận"
 $(document).on('click', '.confirm-edit-btn', function () {
     // Lấy giá trị mới từ ô input
-    let newPrice = $(this).siblings('.price-input').val().replace(/[^0-9]/g, '');  // Xóa các ký tự không phải số
+    let newPrice = parseInt($(this).siblings('.price-input').val().replace(/[^0-9]/g, ''));  // Xóa các ký tự không phải số
+    let originalPrice = $(this).siblings('.price-display').text().replace(/[^0-9]/g, '');
 
     let commentId = $(this).siblings('.price-input').data('comment-id');
-
+    // So sánh giá trị mới và giá trị ban đầu
+    if (newPrice === parseInt(originalPrice)) {
+        showToast("Info", "Không có thay đổi về giá", "info");
+        return;
+    }
 
     $.ajax({
         url: `/api/comments/updatePrice?commentId=${commentId}`,
@@ -297,14 +354,30 @@ $(document).on('click', '.cancel-edit-btn', function () {
     $(this).siblings('.price-display').show();
     $(this).siblings('.price-input, .confirm-edit-btn, .cancel-edit-btn').addClass('hidden');
     $(this).siblings('.edit-price-btn').show();
+    $(this).hide();
 });
 
 $(document).on('input', '.price-vnd-format', function () {
+    let rawValue = $(this).val();
+
+    // Kiểm tra và xử lý nếu giá trị nhập vào quá lớn
+    if (rawValue.length > 15) {
+        showToast("Thông báo!", "Giá trị nhập vào quá lớn!", "error");
+        $(this).val('');
+        return;
+    }
+
     // Xóa các ký tự không phải số và dấu phẩy
-    let value = $(this).val().replace(/[^0-9,]/g, '');
+    let value = rawValue.replace(/[^0-9,]/g, '');
 
     // Xóa các dấu phẩy
     value = value.replace(/,/g, '');
+
+    // Kiểm tra nếu giá trị rỗng hoặc không phải là số
+    if (!value || isNaN(value)) {
+        $(this).val('');
+        return;
+    }
 
     // Định dạng lại giá trị theo định dạng tiền tệ VND
     let formattedValue = parseInt(value).toLocaleString('vi-VN');
@@ -312,6 +385,8 @@ $(document).on('input', '.price-vnd-format', function () {
     // Cập nhật giá trị cho ô input
     $(this).val(formattedValue + 'đ');
 });
+
+
 
 const $confirmBox = $("#confirm-box");
 const $overlay = $("#overlay");

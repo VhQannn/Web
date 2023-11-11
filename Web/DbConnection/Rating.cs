@@ -17,6 +17,10 @@ public partial class Rating
 
     public DateTime? RatingDate { get; set; }
 
+    public int? RelatedId { get; set; }
+
+    public string? ServiceType { get; set; }
+
     public virtual User? Rater { get; set; }
 
     public virtual User? Supporter { get; set; }
