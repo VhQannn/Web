@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Web.DbConnection;
 
 namespace Web
 {
@@ -9,15 +10,14 @@ namespace Web
             await Clients.Others.SendAsync("UpdatePosts");
         }
 
-		public async Task NotifyNewComment()
-		{
-			await Clients.All.SendAsync("NewComment");
-		}
+        public async Task NotifyNewComment()
+        {
+            await Clients.All.SendAsync("NewComment");
+        }
 
-		public async Task NotifyNewChildComment()
-		{
-			await Clients.All.SendAsync("NewChildComment");
-		}
-
-	}
+        public async Task NotifyNewChildComment()
+        {
+            await Clients.All.SendAsync("NewChildComment");
+        }
+    }
 }

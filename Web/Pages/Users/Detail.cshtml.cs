@@ -6,22 +6,77 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Web.DbConnection;
+using Web.Models;
 
 namespace Web.Pages.Users
 {
     public class DetailModel : PageModel
     {
-        public User User { get; set; } = default!;
+        private readonly WebContext _context;
 
-        public DetailModel()
+        // Add properties to hold the data
+        public string Username { get; set; }
+        public string? UserType { get; set; }
+        public string? Facebook { get; set; }
+        public double AverageRating { get; set; }
+
+        public List<RatingCommentDTO> Comments { get; set; }
+
+        public DetailModel(WebContext context)
         {
+            _context = context;
+            Comments = new List<RatingCommentDTO>();
         }
 
-
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(int uId)
         {
+            // Query the database for the user with the specified userId
+            var user = await _context.Users
+                                     .Where(u => u.UserId == uId)
+                                     .Select(u => new
+                                     {
+                                         u.Username,
+                                         u.UserType,
+                                         u.Facebook
+                                     })
+                                     .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var ratings = _context.Ratings.Where(r => r.SupporterId == uId);
+
+            // Check if there are any ratings and calculate average
+            if (await ratings.AnyAsync())
+            {
+                AverageRating = await ratings.AverageAsync(r => r.RatingValue ?? 0);
+                Comments = await _context.Ratings
+                                 .Where(r => r.SupporterId == uId)
+                                 .Include(r => r.Rater) // Assuming 'Rater' is the navigation property in Rating
+                                 .Select(r => new RatingCommentDTO
+                                 {
+                                     RaterName = r.Rater.Username, // Replace 'Username' with actual property name
+                                     Comment = r.Comments,
+                                     RatingValue = (double) r.RatingValue,
+                                     RatingDate = r.RatingDate
+                                 })
+                                 .ToListAsync();
+            }
+            else
+            {
+                AverageRating = 0; // Or any default value you see fit
+            }
+
+            // Assign the values
+            Username = user.Username;
+            UserType = user.UserType;
+            Facebook = user.Facebook;
+
 
             return Page();
         }
     }
+
 }
+
