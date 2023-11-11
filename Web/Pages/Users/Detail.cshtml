@@ -70,8 +70,24 @@
                         </div>
                     </li>
                 }
-
             </ul>
+            <!-- Pagination Controls -->
+            <nav aria-label="Comments Pagination">
+                <ul class="pagination">
+                    <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="?uId=@Model.UserId&currentPage=@(Model.CurrentPage - 1)">Previous</a>
+                    </li>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="?uId=@Model.UserId&currentPage=@i">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" href="?uId=@Model.UserId&currentPage=@(Model.CurrentPage + 1)">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
