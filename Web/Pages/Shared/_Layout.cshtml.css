@@ -46,3 +46,19 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+.nav-link {
+    color: #555;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+
+.nav-item {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+    .nav-item:hover {
+        background-color: #ddd;
+        border-radius: 5px;
+    }

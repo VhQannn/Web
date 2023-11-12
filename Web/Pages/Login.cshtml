@@ -13,12 +13,12 @@
 
 <div class="row align-items-center h-100">
     <div class="col-6 my-5">
-        <img src="https://www.vub.be/sites/default/files/styles/landscape/public/2022-08/2022_Administratie%20en%20inschrijven_Documenten_S_1708574428.jpg?h=b6717701&itok=_K_HqGXr" class="img-login img-fluid" />
+        <img src="~/login.png" class="img-login img-fluid" />
     </div>
     <div class="col-lg-6 col-sm-12 my-5 text-center">
-        <label class="display-4 mb-5">Đăng nhập</label>
         <div class="form-container mx-auto" style="max-width: 300px;">
             <form class="text-center" method="post">
+                <h4>Đăng nhập</h4>
                 <input type="text" placeholder="Username" asp-for="@Model.Username" class="form-control mb-3" />
                 <span asp-validation-for="@Model.Username" class="text-danger"></span>
                 <div class="password-toggle">
