@@ -10,10 +10,10 @@ using Web.Pages;
 
 namespace Web.Controllers
 {
-    [Route("api/posts")]
-    [ApiController]
-    public class PostsController : Controller
-    {
+	[Route("api/posts")]
+	[ApiController]
+	public class PostsController : Controller
+	{
 		private readonly WebContext _context;
 		private readonly IHubContext<PostHub> _postHub;
 		private readonly ILogger<PaymentController> _logger;
@@ -25,10 +25,33 @@ namespace Web.Controllers
 			_logger = logger;
 		}
 
+		[HttpGet]
+		public IActionResult GetAllPosts(int pageNumber = 1, int pageSize = 5)
+		{
+			var totalRecords = _context.Posts.Count();
+			var skip = (pageNumber - 1) * pageSize;
 
-        [HttpGet("get-by-title")]
-        public IActionResult GetPostByTitle(string title)
-        {
+			var posts = _context.Posts.Include(p => p.PostCategory).Include(p => p.User).Skip(skip).Take(pageSize).Select(p => new
+			{
+				postTitle = p.PostTitle,
+				postContent = p.PostContent,
+				postDate = p.PostDate,
+				dateSlot = p.DateSlot,
+				timeSlot = p.TimeSlot,
+				status = p.Status,
+				postCategoryName = p.PostCategory.PostCategoryName,
+				username = p.User.Username,
+				postId = p.PostId
+			}).ToList();
+			int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+			return Ok(new { data = posts, totalRecords, totalPages });
+		}
+
+
+		[HttpGet("get-by-title")]
+		public IActionResult GetPostByTitle(string title)
+		{
 			var totalRecords = _context.Posts.Count();
 
 			var posts = _context.Posts.Include(p => p.PostCategory).Include(p => p.User).Select(p => new
@@ -72,7 +95,7 @@ namespace Web.Controllers
 					return BadRequest("Chỉ có người nhận bài post mới được cập nhật trạng thái đã xong");
 				}
 
-				
+
 
 				post.Status = "COMPLETED";
 				_context.Posts.Update(post);
@@ -85,4 +108,5 @@ namespace Web.Controllers
 			return BadRequest("Loại dịch vụ không hợp lệ hoặc chưa được xử lý");
 		}
 
+	}
 }
