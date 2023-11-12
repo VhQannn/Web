@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -51,11 +51,12 @@ namespace Web.Pages
             HttpContext.Session.SetString("Role", currentUser.UserType.ToString());
 
             var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, currentUser.UserId.ToString()),
-            new Claim(ClaimTypes.Name, currentUser.Username),
-            new Claim(ClaimTypes.Role, currentUser.UserType.ToString())
-        };
+            {
+                new Claim(ClaimTypes.Name, currentUser.Username),
+                new Claim(ClaimTypes.Role, currentUser.UserType.ToString()),
+                // Add user ID as a claim
+                new Claim(ClaimTypes.NameIdentifier, currentUser.UserId.ToString())
+            };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -67,7 +68,7 @@ namespace Web.Pages
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
             return RedirectToPage("/Index");
-
         }
+
     }
 }

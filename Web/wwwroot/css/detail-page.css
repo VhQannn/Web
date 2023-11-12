@@ -1,0 +1,107 @@
+﻿/* General Container Styling */
+.container {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Column Styling */
+.detail-column {
+    background-color: #f9f9f9; /* Light grey background */
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+/* Heading Styling */
+h4 {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+}
+
+/* List Item Styling */
+.list-unstyled li {
+    font-size: 0.95em;
+    margin-bottom: 5px;
+}
+
+/* Button Styling */
+.btn-primary {
+    background-color: #004085; /* Adjust color to match your scheme */
+    border: none;
+}
+
+/* Rating Stars Styling */
+.fa-star {
+    margin-right: 4px;
+}
+
+/* Facebook Icon Styling */
+.fa-facebook-f {
+    margin-right: 5px;
+}
+
+/* Customizations for Mobile Views and Responsiveness */
+@media (max-width: 768px) {
+    .detail-column {
+        margin-top: 20px;
+    }
+}
+
+.comment-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd; /* Add a light grey bottom border */
+}
+
+.comment-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment-body {
+    flex-grow: 1;
+}
+
+.comment-rating {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Optional: Add some right margin to align with the avatar */
+.comment-rating {
+    margin-right: 60px;
+}
+
+.comment-date {
+    color: #808080; /* Light gray color */
+    font-size: 0.85em; /* Slightly smaller text */
+}
+
+.comment-author {
+    font-size: 1em; /* Slightly smaller text */
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* Avatar container */
+.avt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Avatar image styling */
+.avt-img {
+    width: 100%; /* Adjust as needed, could be 80%, etc. */
+    max-width: 150px; /* Maximum size of the avatar */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 50%; /* Circular avatar */
+}
+
