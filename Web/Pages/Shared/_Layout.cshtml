@@ -37,6 +37,13 @@
                                 <a class="nav-link text-dark" asp-area="" asp-page="/MyPayment">My Payment</a>
                             </li>
                         }
+
+                        @if (Context.User.IsInRole("Supporter") || Context.User.IsInRole("Customer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/MyAssignment">My Assignment</a>
+                            </li>
+                        }
                     </ul>
                     <ul class="navbar-nav">
                     

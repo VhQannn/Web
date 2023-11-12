@@ -5,6 +5,11 @@
 let currentPage = 1;
 const pageSize = 2;
 
+$(document).on('click', 'a[data-target="#modelRating"]', function () {
+    $('#modelRating').modal('show');
+});
+
+
 connection.on("UpdatePosts", () => {
     loadPosts(currentPage);
 });
@@ -53,7 +58,7 @@ function loadPosts(pageNumber) {
                 `;
                 $("table tbody").append(row);
             });
-            attachButtonClickEvents();
+            
             updatePaginationButtons(currentPage, totalPages);
         },
         error: function (error) {
@@ -177,3 +182,4 @@ connection.start().catch(err => console.error(err.toString()));
 
 // Load initial data
 loadPosts(currentPage);
+attachButtonClickEvents();

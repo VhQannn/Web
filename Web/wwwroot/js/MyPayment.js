@@ -101,38 +101,7 @@ function attachButtonClickEvents() {
         $("#txtQRCode").attr('src', linkQRCode);
     });
 
-    $('#btn-request').click(function () {
-        var paymentId = $('#btnCreateRequest').data('payment-id');
-        var comment = $('.withdraw-comment-input').val().trim();
-
-        // Check if the comment is not empty
-        if (comment.length === 0) {
-            showToast("Error", "Please enter a comment.", "error");
-            return; // Stop the function if no comment is entered
-        }
-
-        var requestData = {
-            PaymentId: paymentId,
-            Comments: comment
-        };
-        fetch('/api/withdrawal-requests/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData),
-        })
-            .then(response => response.json())
-            .then(data => {
-                showToast("Thành công!", "Đã yêu cầu rút tiền thành công", "success");
-            })
-            .catch(error => {
-                showToast("Error", "Failed to submit withdrawal request: " + error, "error");
-            });
-
-        $('#modelRequest').modal('hide');
-        loadListPayment(currentPage);
-    });
+    
 
     $(document).on('click', '.view-withdrawal-request', function () {
         var requestComment = $(this).data('request-comment');
@@ -162,6 +131,39 @@ function attachButtonClickEvents() {
         $('#viewWithdrawalRequestModal').modal('hide');
     });
 }
+
+$('#btn-request').click(function () {
+    var paymentId = $('#btnCreateRequest').data('payment-id');
+    var comment = $('.withdraw-comment-input').val().trim();
+
+    // Check if the comment is not empty
+    if (comment.length === 0) {
+        showToast("Error", "Please enter a comment.", "error");
+        return; // Stop the function if no comment is entered
+    }
+
+    var requestData = {
+        PaymentId: paymentId,
+        Comments: comment
+    };
+    fetch('/api/withdrawal-requests/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+    })
+        .then(response => response.json())
+        .then(data => {
+            showToast("Thành công!", "Đã yêu cầu rút tiền thành công", "success");
+        })
+        .catch(error => {
+            showToast("Error", "Failed to submit withdrawal request: " + error, "error");
+        });
+
+    $('#modelRequest').modal('hide');
+    loadListPayment(currentPage);
+});
 
 function updatePaginationButtons(currentPage, totalPages) {
     if (currentPage >= totalPages) {
