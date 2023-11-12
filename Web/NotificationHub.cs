@@ -9,5 +9,10 @@ namespace Web
 		{
 			await Clients.Others.SendAsync("ProcessPayment");
 		}
+
+		public async Task NewWithdrawalRequest()
+		{
+			await Clients.Others.SendAsync("NewWithdrawalRequest");
+		}
 	}
 }

@@ -18,22 +18,7 @@ namespace Web.Pages
             _context = context;
         }
 
-        public IList<Payment> Payment { get;set; } = default!;
-
-		public async Task OnGetAsync()
-		{
-			if (_context.Payments != null)
-			{
-				// Get the current user's ID
-				var userId = _context.Users.FirstOrDefault(u => u.Username == User.Identity.Name)?.UserId;
-
-				// Filter the payments to only include those for the current user and order them by the most recent
-				Payment = await _context.Payments
-					.Where(p => p.UserId == userId)
-					.OrderByDescending(p => p.PaymentDate) // This will sort the payments by date, most recent first
-					.Include(p => p.User).ToListAsync();
-			}
-		}
+        
 
 
 	}

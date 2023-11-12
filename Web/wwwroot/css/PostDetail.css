@@ -1,8 +1,50 @@
-﻿/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
+﻿body {
+    background: #eee
 }
+
+.date {
+    font-size: 11px
+}
+
+.comment-text {
+    font-size: 12px
+}
+
+.fs-12 {
+    font-size: 12px
+}
+
+.shadow-none {
+    box-shadow: none
+}
+
+.name {
+    color: #007bff
+}
+
+.cursor:hover {
+    color: blue
+}
+
+.cursor {
+    cursor: pointer
+}
+
+.textarea {
+    resize: none
+}
+
+.comment-time {
+    display: block;
+    position: absolute;
+    font-size: 0.8em; /* Kích thước chữ nhỏ hơn */
+    color: #6c757d; /* Màu sắc trung tính */
+    margin-left: 50px;
+    margin-top: 25px; /* Khoảng cách từ phần nội dung bình luận */
+    margin-bottom: 5px; /* Khoảng cách tới phần tiếp theo */
+    font-style: italic; /* Chữ nghiêng để nhấn mạnh là thời gian */
+}
+
 
 /* Comment Section Styles */
 .comment-container {
@@ -43,7 +85,7 @@ body {
         border-radius: 8px;
         cursor: pointer;
         font-size: 15px; /* Increased font-size */
-        margin-top: 15px; /* Increased margin-top */
+        margin: 5px; /* Increased margin-top */
         transition: background-color 0.2s, transform 0.2s; /* Added transform transition */
     }
 
@@ -90,6 +132,7 @@ body {
 }
 
 .author-name {
+    padding-bottom: 20px;
     font-weight: bold;
     font-size: 14px;
     color: #1d2129;
@@ -127,13 +170,11 @@ a {
     }
 
 .price-input {
-    padding: 10px; /* Added padding to match button */
-    border: 1px solid #ccd0d5; /* Added border */
-    border-radius: 18px; /* Added border-radius */
-    font-size: 15px; /* Increased font-size */
-    margin-top: 10px; /* Increased margin-top */
-    width: calc(100% - 28px); /* Adjust width to account for padding and border */
-    transition: border 0.3s; /* Added transition */
+    padding: 10px;
+    border: 1px solid #ccd0d5;
+    border-radius: 18px;
+    margin:5px;
+    transition: border 0.3s;
 }
 
     .price-input:focus {

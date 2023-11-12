@@ -24,6 +24,8 @@ public partial class User
 
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 
+    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
     public virtual ICollection<ParentComment> ParentComments { get; set; } = new List<ParentComment>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
@@ -41,4 +43,6 @@ public partial class User
     public virtual ICollection<Tool> Tools { get; set; } = new List<Tool>();
 
     public virtual ICollection<UserTool> UserTools { get; set; } = new List<UserTool>();
+
+    public virtual ICollection<WithdrawalRequest> WithdrawalRequests { get; set; } = new List<WithdrawalRequest>();
 }
