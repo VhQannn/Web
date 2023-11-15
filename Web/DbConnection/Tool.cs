@@ -1,4 +1,7 @@
-﻿namespace Web.DbConnection;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Web.DbConnection;
 
 public partial class Tool
 {

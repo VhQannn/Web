@@ -1,3 +1,6 @@
+﻿using System;
+using System.Collections.Generic;
+
 namespace Web.DbConnection;
 
 public partial class Post
@@ -21,6 +24,8 @@ public partial class Post
     public string? TimeSlot { get; set; }
 
     public string? Status { get; set; }
+
+    public virtual ICollection<Multimedium> Multimedia { get; set; } = new List<Multimedium>();
 
     public virtual ICollection<ParentComment> ParentComments { get; set; } = new List<ParentComment>();
 

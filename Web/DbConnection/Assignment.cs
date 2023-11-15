@@ -1,4 +1,7 @@
-﻿namespace Web.DbConnection;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Web.DbConnection;
 
 public partial class Assignment
 {
@@ -13,6 +16,8 @@ public partial class Assignment
     public DateTime? Deadline { get; set; }
 
     public string? Status { get; set; }
+
+    public virtual ICollection<Multimedium> Multimedia { get; set; } = new List<Multimedium>();
 
     public virtual User? User { get; set; }
 }

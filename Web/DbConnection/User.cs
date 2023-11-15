@@ -1,3 +1,6 @@
+﻿using System;
+using System.Collections.Generic;
+
 namespace Web.DbConnection;
 
 public partial class User
@@ -23,6 +26,10 @@ public partial class User
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+
+    public virtual ICollection<MarkReport> MarkReports { get; set; } = new List<MarkReport>();
+
+    public virtual ICollection<Multimedium> Multimedia { get; set; } = new List<Multimedium>();
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 

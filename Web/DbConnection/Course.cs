@@ -1,4 +1,7 @@
-﻿namespace Web.DbConnection;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Web.DbConnection;
 
 public partial class Course
 {
@@ -17,6 +20,8 @@ public partial class Course
     public DateTime? StartDate { get; set; }
 
     public DateTime? EndDate { get; set; }
+
+    public virtual ICollection<Multimedium> Multimedia { get; set; } = new List<Multimedium>();
 
     public virtual User? User { get; set; }
 }
