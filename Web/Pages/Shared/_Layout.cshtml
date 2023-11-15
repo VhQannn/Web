@@ -36,6 +36,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/MyPayment">My Payment</a>
                             </li>
+                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/checkscore">Kiểm tra điểm</a>
+                            </li>
                         }
 
                         @if (Context.User.IsInRole("Supporter") || Context.User.IsInRole("Customer"))

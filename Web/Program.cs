@@ -7,6 +7,7 @@ using Web.IRepository;
 using Web.Repository;
 using ProtoBuf.Meta;
 using Web.Controllers;
+using Web.Util;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
     .Build();
+
+builder.Services.AddScoped<UploadFile>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -36,6 +39,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 builder.Services.AddScoped<MarkReportServices>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<UploadFile>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<WebContext>
     (opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));

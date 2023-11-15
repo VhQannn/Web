@@ -10,7 +10,7 @@ public partial class WebContext : DbContext
     {
     }
 
-    public WebContext(DbContextOptions<WebContext> options)
+    public WebContext(DbContextOptions<HotrohoctapContext> options)
         : base(options)
     {
     }
