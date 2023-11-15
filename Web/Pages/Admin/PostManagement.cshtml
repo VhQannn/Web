@@ -1,0 +1,44 @@
+﻿@page "/admin/review-post"
+@model Web.Pages.Admin.PostManagementModel
+@{
+}
+
+
+<link rel="stylesheet" href="~/css/Index.css" asp-append-version="true" />
+
+<div class="row my-3 mx-auto">
+	<div class="offset-4 col-8">
+		<div class="search-bar mx-auto">
+			<input class="search-input" style="width:50%" id="search-key" type="text" placeholder="Search..." />
+			<button onclick="searchPosts()" class="search-button fa fa-search">
+			</button>
+		</div>
+	</div>
+
+</div>
+<div class="legit-post-container">
+	
+
+	<div class="main-content">
+		<div class="post-card-container d-flex justify-content-around flex-wrap">
+		</div>
+
+		<p>Trang: <span id="currentPage"></span> / <span id="totalPages"></span></p>
+
+		<div class="pagination">
+			<button id="prevPage">Trước</button>
+			<span id="currentPage">1</span>
+			<button id="nextPage">Sau</button>
+		</div>
+	</div>
+</div>
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$('.carousel').carousel({
+				interval: 10000 //Thời gian chuyển đổi giữa các ảnh
+			});
+		});
+	</script>
+	<script src="~/js/PostsAdmin.js" asp-append-version="true"></script>
+}

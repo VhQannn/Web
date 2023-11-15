@@ -47,7 +47,7 @@
                     </ul>
                     <ul class="navbar-nav">
                     
-                        <li class="header__navbar-list-item header__navbar-list-item--has-notify">
+                        <li class="header__navbar-list-item header__navbar-list-item--has-notify" style="display:none">
                             <a href="#" class="header__navbar-item-link" id="notificationBell">
                                 <i class="fa-regular fa-bell"></i>
                                 <span class="notification-count">2</span>
@@ -74,7 +74,7 @@
                             @if (Context.User.IsInRole("Admin"))
                             {
                                 <li>
-                                    <a class="nav-link text-dark" href="/admin">Trang quản trị</a>
+                                    <a class="nav-link text-dark" href="/admin/dashboard">Trang quản trị</a>
                                 </li>
                             }
                         }

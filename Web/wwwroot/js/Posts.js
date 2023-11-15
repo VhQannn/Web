@@ -17,7 +17,7 @@ function createPostCard(post) {
     <div class="right">
         <h2 class="post-title">${post.postTitle}</h2>
         <p class="post-time"><span class="badge bg-secondary">${dateOnly} at ${post.timeSlot}</span></p>
-        <p class="post-status">Trạng thái: <span class="badge bg-primary">${post.status}</span></p>
+      
         <p class="post-category-title">Môn học: </p>
 
         <div class="post-category">
