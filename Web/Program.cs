@@ -5,7 +5,7 @@ using System.Net;
 using Web.DbConnection;
 using Web.IRepository;
 using Web.Repository;
-using Web.Ultil;
+using Web.Util;
 
 var builder = WebApplication.CreateBuilder(args);
 

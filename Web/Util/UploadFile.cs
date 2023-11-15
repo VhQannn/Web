@@ -1,7 +1,7 @@
 ﻿using CloudinaryDotNet.Actions;
 using CloudinaryDotNet;
 
-namespace Web.Ultil
+namespace Web.Util
 {
     public class UploadFile
     {

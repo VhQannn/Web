@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Web.DbConnection;
 using Web.DTOs;
-using Web.Ultil;
+using Web.Util;
 
 namespace Web.Controllers
 {
