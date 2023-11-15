@@ -12,7 +12,7 @@
 
 
 <div class="row align-items-center h-100">
-    <div class="col-6 my-5">
+    <div class="col-sm-12 col-lg-6 my-5">
         <img src="~/login.png" class="img-login img-fluid" />
     </div>
     <div class="col-lg-6 col-sm-12 my-5 text-center">
@@ -33,7 +33,7 @@
                     </div>
                     <a href="#" class="text-decoration-underline">Quên mật khẩu?</a>
                 </div>
-                <button class="btn btn-lg btn-outline-secondary mb-3 w-100">Đăng Nhập</button>
+                <button class="btn btn-secondary mb-3">Đăng Nhập</button>
                 <div>
                     Chưa có tài khoản? <a href="/register" class="text-decoration-underline">Đăng ký ngay!</a>
                 </div>
@@ -46,26 +46,27 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    <script>
-        document.querySelectorAll('.password-toggle .toggle-icon').forEach(toggleIcon => {
-            const passwordInput = toggleIcon.parentElement.querySelector('input[type="password"]');
-            if (passwordInput) {  // Check if passwordInput exists
-                toggleIcon.addEventListener('click', function () {
-                    if (passwordInput.type === "password") {
-                        passwordInput.type = "text";
-                        this.querySelector('i').classList.remove('fa-eye');
-                        this.querySelector('i').classList.add('fa-eye-slash');
-                    } else {
-                        passwordInput.type = "password";
-                        this.querySelector('i').classList.remove('fa-eye-slash');
-                        this.querySelector('i').classList.add('fa-eye');
-                    }
-                });
-            }
-        });
+        <script>
+            document.querySelectorAll('.password-toggle .toggle-icon').forEach(toggleIcon => {
+                const passwordInput = toggleIcon.parentElement.querySelector('input[type="password"]');
+                if (passwordInput) {  // Check if passwordInput exists
+                    toggleIcon.addEventListener('click', function () {
+                        if (passwordInput.type === "password") {
+                            passwordInput.type = "text";
+                            this.querySelector('i').classList.remove('fa-eye');
+                            this.querySelector('i').classList.add('fa-eye-slash');
+                        } else {
+                            passwordInput.type = "password";
+                            this.querySelector('i').classList.remove('fa-eye-slash');
+                            this.querySelector('i').classList.add('fa-eye');
+                        }
+                    });
+                }
+            });
 
-    </script>
+        </script>
+    }
+    
 }
 
 
