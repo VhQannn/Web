@@ -1,4 +1,4 @@
-
+﻿
 /*
     Created on : Feb 21, 2023, 11:14:08 AM
     Author     : QuangQui
@@ -204,52 +204,44 @@
 
 
 @media screen and (max-width: 767px) {
-    /* Styles for mobile devices */
     .my-toast {
         top: 8px;
         right: 8px;
     }
 
-    .my-toast .toast {
-        min-width: 200px;
-        max-width: 240px;
-        padding: 12px 0;
-    }
+        .my-toast .toast {
+            min-width: auto; /* Cho phép toast tự điều chỉnh kích thước */
+            max-width: calc(100% - 16px); /* Đảm bảo không vượt quá màn hình */
+            padding: 10px 10px; /* Điều chỉnh padding cho phù hợp */
+        }
 
-    .my-toast .toast__icon,
-    .my-toast .toast__close {
-        padding: 0 4px;
-    }
+        .my-toast .toast__icon,
+        .my-toast .toast__close {
+            padding: 0 10px; /* Điều chỉnh padding cho icon và nút đóng */
+        }
 
-    .my-toast .toast__title {
-        font-size: 12px;
-    }
+        .my-toast .toast__title,
+        .my-toast .toast__msg {
+            font-size: 14px; /* Tăng kích thước font chữ để dễ đọc hơn */
+        }
 
-    .my-toast .toast__msg {
-        font-size: 10px;
-        margin-top: 4px;
-    }
-    .overlay {
-        display: none;
-    }
-
-    .confirm-box {
-        top: 30%;
-        max-width: 80%;
+    confirm-box {
+        width: 90%; /* Điều chỉnh chiều rộng cho phù hợp */
+        max-width: none; /* Bỏ giới hạn chiều rộng tối đa */
+        padding: 15px; /* Điều chỉnh padding */
     }
 
     .box-header h2 {
-        font-size: 16px;
+        font-size: 16px; /* Điều chỉnh kích thước font chữ */
     }
 
     .close-button {
-        font-size: 20px;
+        font-size: 20px; /* Điều chỉnh kích thước nút đóng */
     }
 
     .button-container button {
-        margin: 0 5px;
-        padding: 8px 16px;
-        font-size: 14px;
+        padding: 8px 15px; /* Điều chỉnh padding của nút */
+        font-size: 14px; /* Điều chỉnh kích thước font chữ */
     }
 }
 
@@ -282,10 +274,6 @@
         display: none;
     }
 
-    .confirm-box {
-        top: 30%;
-        max-width: 60%;
-    }
 
     .box-header h2 {
         font-size: 18px;

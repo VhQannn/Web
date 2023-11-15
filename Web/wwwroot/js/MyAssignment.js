@@ -25,10 +25,11 @@ function loadPosts(pageNumber) {
             data.forEach(post => {
                 const dateOnly = post.dateSlot.split('T')[0];
                 let buttonHtml = '';
-
+                let labelForRole;
                 if (post.poster.role === "Customer") {
                     // Hiển thị nút "Tôi đã làm xong" cho Supporter
                     $('#payment-table-container .table th:nth-child(1)').text('Người Cần Hỗ Trợ');
+                    labelForRole = "Người Cần Hỗ Trợ";
                     if (post.status === "APPROVED") {
 
                         buttonHtml = `<button class="view-profile-button btn btn-primary btn-sm text-white" data-service-id="${post.postId}">Tôi đã làm xong</button>`;
@@ -38,6 +39,7 @@ function loadPosts(pageNumber) {
                 } else if (post.status === "COMPLETED" && post.poster.role === "Supporter") {
                     // Hiển thị tùy chọn đánh giá cho Customer
                     $('#payment-table-container .table th:nth-child(1)').text('Người Hỗ Trợ Cho Bạn');
+                    labelForRole = "Người Hỗ Trợ";
                     if (post.rating != null) {
                         buttonHtml = `<span class="text-primary">Đã Hoàn Thành và Đánh Giá</span>`;
                     } else {
@@ -48,12 +50,12 @@ function loadPosts(pageNumber) {
 
                 const row = `
                     <tr>
-                        <td>${post.poster.username}</td>
-                        <td>${dateOnly}</td>
-                        <td>${post.timeSlot}</td>
-                        <td><a href="./PostDetails?id=${post.postId}">Post</a></td>
-                        <td>${post.status}</td>
-                        <td>${buttonHtml}</td>
+                        <td data-label="${labelForRole}">${post.poster.username}</td>
+                        <td data-label="Ngày Thi">${dateOnly}</td>
+                        <td data-label="Ca Thi">${post.timeSlot}</td>
+                        <td data-label="Loại Dịch Vụ"><a href="./PostDetails?id=${post.postId}">Post</a></td>
+                        <td data-label="Trạng Thái Bài Đăng">${post.status}</td>
+                        <td data-label="Hành Động">${buttonHtml}</td>
                     </tr>
                 `;
                 $("table tbody").append(row);
@@ -149,17 +151,8 @@ function attachButtonClickEvents() {
 }
 
 function updatePaginationButtons(currentPage, totalPages) {
-    if (currentPage >= totalPages) {
-        $("#nextPage").hide();
-    } else {
-        $("#nextPage").show();
-    }
-
-    if (currentPage <= 1) {
-        $("#prevPage").hide();
-    } else {
-        $("#prevPage").show();
-    }
+    $("#nextPage").prop('disabled', currentPage >= totalPages);
+    $("#prevPage").prop('disabled', currentPage <= 1);
 
     $("#currentPage").text(currentPage);
     $("#totalPages").text(totalPages);

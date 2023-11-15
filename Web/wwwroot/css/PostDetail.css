@@ -2,6 +2,10 @@
     background: #eee
 }
 
+body, .comment-text, .fs-12, .name, .cursor, .textarea, .comment-time, .comment-container label, .comment-container textarea, .comment-container button, .comments-list, .comment, .comment-author, .avatar, .author-name, .comment-text, a, .edit-price-btn, .price-input, .comment-price, .comment-action, .price-display, .price-icon, .popup, .detail-item, .detail-icon, .detail-label, .detail-value, .back-link {
+    transition: all 0.3s ease; /* Thêm hiệu ứng chuyển đổi mượt mà */
+}
+
 .date {
     font-size: 11px
 }
@@ -35,14 +39,12 @@
 }
 
 .comment-time {
-    display: block;
-    position: absolute;
-    font-size: 0.8em; /* Kích thước chữ nhỏ hơn */
-    color: #6c757d; /* Màu sắc trung tính */
-    margin-left: 50px;
-    margin-top: 25px; /* Khoảng cách từ phần nội dung bình luận */
-    margin-bottom: 5px; /* Khoảng cách tới phần tiếp theo */
-    font-style: italic; /* Chữ nghiêng để nhấn mạnh là thời gian */
+    position: absolute; /* Vị trí tuyệt đối để có thể đặt nó tự do */
+    top: 32px; /* Khoảng cách từ đỉnh của container bình luận */
+    left: calc(40px + 15px); /* Khoảng cách từ trái bằng kích thước avatar cộng khoảng cách */
+    font-size: 13px;
+    color: #6c757d;
+    font-style: italic;
 }
 
 
@@ -99,11 +101,9 @@
 }
 
 .comment {
-    background-color: #fff;
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 10px 0;
+    position: relative; /* Đặt vị trí tương đối cho container bình luận */
+    padding: 15px; /* Điều chỉnh padding */
+    margin-bottom: 10px; /* Khoảng cách giữa các bình luận */
 }
 
 .comment-top {
@@ -125,10 +125,10 @@
 }
 
 .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
+    width: 40px; /* Kích thước của avatar */
+    height: 40px; /* Đảm bảo rằng avatar là hình tròn */
+    border-radius: 50%; /* Làm tròn avatar */
+    margin-right: 10px; /* Khoảng cách giữa avatar và tên người dùng */
 }
 
 .author-name {
@@ -139,10 +139,11 @@
 }
 
 .comment-text {
-    font-size: 15px;
-    line-height: 2.4;
-    color: #8c8c8c;
-    font-weight: bold;
+    font-size: 15px; /* Kích thước font chuẩn */
+    line-height: 1.4; /* Khoảng cách dòng */
+    color: #333; /* Màu chữ rõ ràng */
+    margin: 5px 0; /* Khoảng cách trên dưới */
+    word-break: break-word; /* Ngắt từ để tránh vỡ layout */
 }
 
 a {
@@ -200,9 +201,18 @@ a {
 
 .comment-action {
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    align-items: center; /* Căn giữa các items theo chiều dọc */
+    justify-content: flex-end; /* Đẩy nội dung về phía cuối của container */
     flex: 1;
+}
+
+.waiting-transaction {
+    background-color: #f8f9fa; /* Màu nền nhẹ */
+    color: #333; /* Màu chữ */
+    padding: 5px 10px; /* Đệm xung quanh chữ */
+    border-radius: 5px; /* Làm tròn góc */
+    font-size: 0.9em; /* Kích thước font nhỏ hơn một chút */
+    margin-right: 10px; /* Khoảng cách với các thành phần khác */
 }
 
 .price-display {
@@ -322,3 +332,102 @@ a {
     .back-link i {
         margin-right: 5px;
     }
+
+@media (max-width: 768px) {
+    .comment-container, .comment, .detail-item {
+        padding: 15px; /* Giảm padding cho các container */
+    }
+
+        .comment-container textarea, .price-input {
+            padding: 8px 10px; /* Giảm padding cho textarea và input */
+            font-size: 14px; /* Giảm kích thước font chữ */
+        }
+
+        .comment-container button, .edit-price-btn, .accept-button {
+            padding: 8px 15px; /* Giảm padding cho nút */
+            font-size: 14px; /* Giảm kích thước font chữ */
+        }
+
+    .avatar {
+        width: 30px; /* Giảm kích thước avatar */
+        height: 30px;
+    }
+
+    .comment-price, .comment-action {
+        font-size: 14px; /* Giảm kích thước font chữ cho giá và hành động */
+    }
+
+    .popup {
+        width: 95%; /* Tăng chiều rộng của popup */
+        padding: 15px; /* Giảm padding */
+    }
+
+        .popup img {
+            max-width: 100%; /* Đảm bảo hình ảnh phù hợp với kích thước popup */
+        }
+
+    .price-input {
+        width: calc(100% - 30px); /* Đảm bảo input không vượt quá chiều rộng của container */
+        max-width: none; /* Loại bỏ giới hạn max-width nếu có */
+        margin: 5px 0; /* Thêm margin để tránh vỡ layout */
+        font-size: 14px; /* Điều chỉnh kích thước font chữ phù hợp */
+    }
+
+    .confirm-edit-btn, .cancel-edit-btn {
+        width: 100%; /* Đặt chiều rộng nút là 100% của container */
+        margin: 5px 0; /* Tạo khoảng cách giữa các nút */
+    }
+
+    .comment-action {
+        flex-direction: column; /* Chuyển thành cột để tránh chồng chéo */
+    }
+
+    .comment-text {
+        font-size: 14px; /* Giảm kích thước font chữ cho mobile */
+        padding: 8px; /* Thêm padding cho dễ đọc */
+    }
+
+    .comment {
+        margin-bottom: 10px; /* Tăng khoảng cách giữa các bình luận */
+    }
+
+    .comment-author, .comment-time, .comment-action {
+        font-size: 13px; /* Giảm kích thước font chữ cho các thành phần liên quan */
+    }
+
+    .comment-action {
+        justify-content: space-between; /* Thay đổi cách sắp xếp cho màn hình nhỏ */
+    }
+
+    .waiting-transaction {
+        font-size: 0.8em; /* Giảm kích thước font cho màn hình nhỏ */
+    }
+
+    .comment-top {
+        display: flex; /* Sử dụng flexbox */
+        flex-direction: column; /* Xếp các mục dọc theo cột */
+        align-items: flex-start; /* Căn chỉnh các mục về phía bắt đầu (trái) */
+    }
+
+    .comment-price {
+        order: 1; /* Đặt phần giá trị giá trước */
+        margin-bottom: 5px; /* Khoảng cách giữa giá và hành động */
+    }
+
+    .comment-action {
+        order: 2; /* Đặt phần hành động sau */
+    }
+
+    .comment-author {
+        margin-bottom: 5px; /* Khoảng cách giữa tên người dùng và phần giá/nút hành động */
+    }
+    
+}
+
+@media (min-width: 768px) {
+    .comment-time {
+        top: 36px;
+        left: calc(47px + 15px);
+    }
+
+}

@@ -196,13 +196,12 @@ h1 {
     background-color: #fff; /* White background */
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add shadow effect */
-    padding: 25px; /* Add padding to content */
 }
 
 .close {
     position: absolute;
-    top: 10px;
-    right: 20px;
+    top: 0px;
+    right: 0px;
     cursor: pointer;
     border: none;
     background: transparent;
@@ -278,6 +277,39 @@ a:focus, button:focus {
 
 .rating > input:checked ~ label {
     color: #ffa723;
+}
+
+@media (max-width: 768px) {
+    .table, .table thead, .table tbody, .table th, .table td, .table tr {
+        display: block;
+    }
+
+        .table thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        .table tr {
+            margin-bottom: 15px;
+        }
+
+        .table td {
+            position: relative;
+            padding-left: 50%;
+            text-align: left;
+        }
+
+            .table td:before {
+                position: absolute;
+                top: 12px;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                content: attr(data-label);
+                font-weight: bold;
+            }
 }
 
 

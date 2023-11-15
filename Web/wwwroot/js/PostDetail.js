@@ -40,7 +40,7 @@ async function loadComments(postId) {
                             <div class="comment-time">${timeAgo}</div>
                              <div class="comment-price">
                                 <span class="price-icon"></span>
-                                Giá offer: <span class="price-display">${parentComment.price.toLocaleString('vi-VN')}đ</span></div></div>
+                                Giá offer: <span class="price-display" data-comment-id="${parentComment.parentCommentId}">${parentComment.price.toLocaleString('vi-VN')}đ</span></div></div>
                         <div class="comment-top">
                         `;
 
@@ -51,63 +51,7 @@ async function loadComments(postId) {
                         
                 `;
 
-            if (parentComment.parentCommentUser === currentUsername) {
-                if (paymentExists != null) {
-                    console.log(paymentExists);
-                    if (paymentExists.status == "PENDING") {
-                        commentsHtml += `
-                        <div class="comment-action">
-                            <span class="waiting-transaction">Nguời đăng đã chốt và đang chờ giao dịch</span>
-                        </div>
-                    `;
-                    } else if (paymentExists.status == "COMPLETED") {
-                        commentsHtml += `
-                        <div class="comment-action">
-                            <span class="waiting-transaction">Nguời đăng đã chốt và thanh toán </span>
-                        </div>
-                    `;
-                    }
-
-                } else {
-                    commentsHtml += `
-                        
-                            <div class="comment-action">
-                                    <button class="edit-price-btn" > Edit</button >
-                                    <input type="text" value="${parentComment.price.toLocaleString('vi-VN')}đ" class="price-input price-vnd-format hidden" data-comment-id="${parentComment.parentCommentId}" />
-                                    <button class="confirm-edit-btn hidden">Change</button>
-                                    <button class="cancel-edit-btn hidden">Cancel</button>
-                            </div>
-                        `;
-                }
-
-            }
-
-            if (currentUserId === postUserId) {
-                if (paymentExists != null) {
-                    console.log(paymentExists);
-                    if (paymentExists.status == "PENDING") {
-                        commentsHtml += `
-                        <div class="comment-action">
-                            <span class="waiting-transaction">Đã chốt và đang chờ giao dịch cho bài đăng này</span>
-                        </div>
-                    `;
-                    } else if (paymentExists.status == "COMPLETED") {
-                        commentsHtml += `
-                        <div class="comment-action">
-                            <span class="waiting-transaction">Đã chốt và thanh toán cho bài đăng này</span>
-                        </div>
-                    `;
-                    }
-
-                } else {
-                    // If not, show the accept button
-                    commentsHtml += `
-                        <div class="comment-action">
-                            <button class="accept-button" data-receiver-id="${parentComment.parentCommentUserId}">Chấp nhận giá này</button>
-                        </div>
-                    `;
-                }
-            }
+            commentsHtml += getCommentActionHtml(parentComment, paymentExists, currentUsername, currentUserId);
 
 
             commentsHtml += `</div>`;
@@ -165,6 +109,46 @@ async function loadComments(postId) {
         // Handle errors for any of the AJAX calls
         showToast("Error", error.responseText, "error");
     }
+}
+
+function getCommentActionHtml(parentComment, paymentExists, currentUsername, currentUserId) {
+    if (parentComment.parentCommentUser === currentUsername || currentUserId === postUserId) {
+        if (paymentExists) {
+            if (parentComment.parentCommentUserId === paymentExists.receiverId) {
+                switch (paymentExists.status) {
+                    case "PENDING":
+                        return `<div class="comment-action">
+                                <span class="waiting-transaction">${currentUserId !== postUserId ? 'Đã chốt và đang chờ giao dịch' : 'Bạn đã chốt và đang chờ giao dịch'}</span>
+                            </div>`;
+                    case "COMPLETED":
+                        return `<div class="comment-action">
+                                <span class="waiting-transaction">${currentUserId !== postUserId ? 'Đã chốt và thanh toán' : 'Bạn đã chốt và thanh toán'}</span>
+                            </div>`;
+                    default:
+                        // Handle other statuses if necessary
+                        return '';
+                }
+            } else {
+                return '';
+            }
+            
+        } else {
+            // Logic for when there is no payment
+            if (parentComment.parentCommentUser === currentUsername) {
+                return `<div class="comment-action">
+                            <button class="edit-price-btn">Edit</button>
+                            <input type="text" value="${parentComment.price.toLocaleString('vi-VN')}đ" class="price-input price-vnd-format hidden" data-comment-id="${parentComment.parentCommentId}" />
+                            <button class="confirm-edit-btn hidden">Change</button>
+                            <button class="cancel-edit-btn hidden">Cancel</button>
+                        </div>`;
+            } else if (currentUserId === postUserId) {
+                return `<div class="comment-action">
+                            <button class="accept-button" data-receiver-id="${parentComment.parentCommentUserId}" data-comment-id="${parentComment.parentCommentId}">Chấp nhận giá này</button>
+                        </div>`;
+            }
+        }
+    }
+    return ''; // Return empty string if no conditions are met
 }
 
 function timeSince(date) {
@@ -314,6 +298,7 @@ $(document).on('click', '[id^="reply-btn-"]', function () {
 
 $(document).on('click', '.edit-price-btn', function () {
     $(this).siblings('.price-display').hide();
+    $('.comment-text').hide();
     $(this).siblings('.price-input, .confirm-edit-btn, .cancel-edit-btn').removeClass('hidden');
     $(this).hide();
 });
@@ -354,6 +339,7 @@ $(document).on('click', '.cancel-edit-btn', function () {
     $(this).siblings('.price-display').show();
     $(this).siblings('.price-input, .confirm-edit-btn, .cancel-edit-btn').addClass('hidden');
     $(this).siblings('.edit-price-btn').show();
+    $('.comment-text').show();
     $(this).hide();
 });
 
@@ -402,9 +388,18 @@ $overlay.click(function () {
 });
 
 $(document).on('click', '.accept-button', function () {
+    var commentId = $(this).data('comment-id');
+    var priceValue = $(`.price-display[data-comment-id='${commentId}']`).text().replace(/[^0-9]/g, '');
+
+    // Lưu giá trị vào nút xác nhận trong confirm box
+    $yesButton.data('comment-id', commentId);
+    $yesButton.data('price-value', priceValue);
+
+    // Hiển thị confirm box
     $confirmBox.show();
     $overlay.show();
 });
+
 
 
 
@@ -422,8 +417,9 @@ connection2.on("ProcessPayment", function () {
 
 
 $yesButton.click(function () {
-    var priceValue = $(".price-display").text().replace(/[^0-9]/g, '');
-    var receiverId = $(".accept-button").data('receiver-id');
+    var commentId = $(this).data('comment-id');
+    var priceValue = $(this).data('price-value');
+    var receiverId = $(`.accept-button[data-comment-id='${commentId}']`).data('receiver-id');
     $.ajax({
         type: "POST",
         url: "/api/account/create-payment",
@@ -448,8 +444,7 @@ $yesButton.click(function () {
             linkQRCode += currentUsername;
             $("#txtQRCode").attr('src', linkQRCode);
             showToast("Thành công!", "Giao dịch đã được tạo và chúng tôi đang chờ giao dịch từ bạn", "success");
-            $('.accept-button').hide(); // Hide the accept button
-            $('.accept-button').after('<div class="payment-status">Đã chốt và đang chờ giao dịch cho bài đăng này</div>'); // Add a new div with the message
+            loadComments(postId);
         },
         error: function (error) {
             console.log(error);

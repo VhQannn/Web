@@ -20,3 +20,61 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+/* CSS cho phần hiển thị trang */
+.pagination-info {
+    text-align: center;
+    font-size: 16px; /* Nhỏ hơn cho mobile */
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* CSS cho các nút phân trang */
+.pagination {
+    text-align: center;
+    margin: 15px 0;
+    font-size: 0; /* Loại bỏ khoảng trắng giữa inline-block elements */
+}
+
+    .pagination button {
+        background-color: #f2f2f2;
+        color: #333;
+        border: 1px solid #ddd;
+        padding: 8px 15px; /* Đệm nhỏ hơn cho mobile */
+        margin: 0 5px; /* Khoảng cách nhỏ hơn giữa các nút */
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 14px; /* Font nhỏ hơn cho mobile */
+    }
+
+        .pagination button:disabled {
+            background-color: #eaeaea;
+            color: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background-color: #eaeaea;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+    .pagination span {
+        font-size: 16px;
+        color: #666;
+        margin: 0 5px;
+        vertical-align: middle;
+    }
+
+/* Thêm kiểu cho mobile */
+@media (max-width: 768px) {
+    .pagination {
+        font-size: 14px; /* Kích thước font nhỏ hơn cho mobile */
+    }
+
+        .pagination button {
+            padding: 8px 12px; /* Đệm nhỏ hơn cho phù hợp với màn hình nhỏ */
+        }
+}

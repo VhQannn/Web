@@ -27,7 +27,7 @@ namespace Web.Controllers
                 .Include(pc => pc.Comments)
                 .ThenInclude(c => c.User)
                 .Include(pc => pc.User)
-                .OrderByDescending(pc => pc.Price)  // Sắp xếp comment theo giá từ cao xuống thấp
+                .OrderBy(pc => pc.Price)  // Sắp xếp comment theo giá từ cao xuống thấp
                 .ToList();
 
             var result = parentComments.Select(pc => new
