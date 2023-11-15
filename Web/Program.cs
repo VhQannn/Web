@@ -5,6 +5,7 @@ using System.Net;
 using Web.DbConnection;
 using Web.IRepository;
 using Web.Repository;
+using Web.Ultil;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
     .Build();
+
+builder.Services.AddScoped<UploadFile>();
 
 builder.Services.AddAuthentication(options =>
 {
