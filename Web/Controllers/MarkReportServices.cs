@@ -14,18 +14,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Web.Controllers
 {
-    [Route("api/markreport")]
-    [ApiController]
-    public class MarkReportController : Controller
+    public class MarkReportServices
     {
         private readonly WebContext _context;
-        public MarkReportController(WebContext context)
+        public MarkReportServices(WebContext context)
         {
             _context = context;
         }
 
-        [HttpPost("get-mark")]
-        public async Task<IActionResult> GetMark([FromBody] MarkReportRequest markReportRequest)
+        public async Task<MarkReportReponse> CalculateMark(MarkReportRequest markReportRequest)
         {
             List<MarkReportDTO> markReportDTOs = new List<MarkReportDTO>();
             MarkReportReponse markReportReponse = new MarkReportReponse();
@@ -126,7 +123,7 @@ namespace Web.Controllers
             markReportReponse.totalMark = mark.ToString("#.###");
             markReportReponse.markReportDTOs = markReportDTOs;
 
-            return Ok(markReportReponse);
+            return markReportReponse;
         }
     }
 }

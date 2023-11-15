@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Hosting;
+using Web.Models;
 
 namespace Web.Controllers
 {
@@ -16,16 +18,18 @@ namespace Web.Controllers
 		private readonly WebContext _context;
 		private readonly IHubContext<NotificationHub> _notificationHub;
 		private readonly ILogger<PaymentController> _logger;
+        private readonly MarkReportServices _markReportServices;
 
-		public PaymentController(WebContext context, IHubContext<NotificationHub> notificationHub, ILogger<PaymentController> logger)
-		{
-			_context = context;
-			_notificationHub = notificationHub;
-			_logger = logger;
-		}
+        public PaymentController(WebContext context, IHubContext<NotificationHub> notificationHub, ILogger<PaymentController> logger, MarkReportServices markReportServices)
+        {
+            _context = context;
+            _notificationHub = notificationHub;
+            _logger = logger;
+            _markReportServices = markReportServices;
+        }
 
 
-		[HttpPost]
+        [HttpPost]
 		public async Task<IActionResult> HandlePaymentWebhook()
 		{
 			// 1. Kiểm tra header Secure-Token
@@ -157,6 +161,27 @@ namespace Web.Controllers
 					_logger.LogWarning($"Post related to payment ID: {paymentId} not found.");
 				}
 			}
+            else if(payment.ServiceType == "Check-Score")
+
+            {
+				var mark_report = await _context.MarkReports.FirstOrDefaultAsync(p => p.MarkReportId == payment.RelatedId);
+				if(mark_report != null)
+				{
+                    _logger.LogInformation($"Processing calcualate score with ID: {mark_report.MarkReportId} to have receiver ID: {payment.ReceiverId}.");
+                    var file = await _context.Multimedia.FirstOrDefaultAsync(p => p.MarkReportId == mark_report.MarkReportId);
+					if(file != null)
+					{
+						MarkReportRequest reportRequest = new MarkReportRequest
+						{
+							markReportId = mark_report.MarkReportId,
+							url = file.MultimediaUrl
+                        };
+                       await _markReportServices.CalculateMark(reportRequest);
+                    }
+
+                }
+
+            }
 
 
 			try

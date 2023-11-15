@@ -5,6 +5,8 @@ using System.Net;
 using Web.DbConnection;
 using Web.IRepository;
 using Web.Repository;
+using ProtoBuf.Meta;
+using Web.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +35,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
+builder.Services.AddScoped<MarkReportServices>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<WebContext>
     (opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
