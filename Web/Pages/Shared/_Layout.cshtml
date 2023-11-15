@@ -22,10 +22,6 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -46,47 +42,33 @@
                         }
                     </ul>
                     <ul class="navbar-nav">
-                    
-                        <li class="header__navbar-list-item header__navbar-list-item--has-notify" style="display:none">
-                            <a href="#" class="header__navbar-item-link" id="notificationBell">
-                                <i class="fa-regular fa-bell"></i>
-                                <span class="notification-count">2</span>
-                            </a>
-                            <div class="notification-dropdown" id="notificationDropdown">
-                                <!-- Notifications go here -->
-                                <p>Notification 1</p>
-                                <p>Notification 2</p>
-                                <!-- More notifications -->
-                            </div>
-                        </li>
-
                         @if (Context.User.Identity.IsAuthenticated)
-                        {
-                            <li>
-                                <span class="nav-link text-dark">
-                                    <a href="./users/detail?uId=@uId">@Context.User.Identity.Name</a>
-                                </span>
+                                {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Cài đặt tài khoản
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                
+                                    <a class="dropdown-item" href="./users/detail?uId=@uId">Trang cá nhân</a>
+                                    <a class="dropdown-item" href="/logout">Đăng Xuất</a>
+                                    @if (Context.User.IsInRole("Admin"))
+                                    {
+                                        <a class="dropdown-item" href="/admin/dashboard">Trang quản trị</a>
+                                    }
+                            </div>
                             </li>
-                            <li>
-                                <a class="nav-link text-dark" href="/logout">Đăng Xuất</a>
-                            </li>
-
-                            @if (Context.User.IsInRole("Admin"))
-                            {
-                                <li>
-                                    <a class="nav-link text-dark" href="/admin/dashboard">Trang quản trị</a>
-                                </li>
-                            }
                         }
                         else
                         {
-                            <li>
-                                <a class="nav-link text-dark" href="/login">Đăng Nhập</a>
-                            </li>
-                            <li>
-                                <a class="nav-link text-dark" href="/register">Đăng Kí</a>
-                            </li>
+                        <li>
+                            <a class="nav-link text-dark" href="/login">Đăng Nhập</a>
+                        </li>
+                        <li>
+                            <a class="nav-link text-dark" href="/register">Đăng Kí</a>
+                        </li>
                         }
+
                     </ul>
                 </div>
             </div>
