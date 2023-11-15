@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing.Printing;
 using Web.DbConnection;
 using Web.Models;
-using Web.Pages;
 
 namespace Web.Controllers
 {
@@ -65,7 +63,7 @@ namespace Web.Controllers
 				postCategoryName = p.PostCategory.PostCategoryName,
 				username = p.User.Username,
 				postId = p.PostId
-			}).Where(x => x.postTitle.Contains(title)).ToList();
+			}).Where(x => x.postTitle.Contains(title) || x.postCategoryName.Contains(title)).ToList();
 
 			return Ok(new { data = posts });
 		}

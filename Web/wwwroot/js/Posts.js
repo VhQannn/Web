@@ -10,6 +10,7 @@ const pageSize = 2;
 function createPostCard(post) {
     const dateOnly = post.dateSlot.split('T')[0];
     const displayedUsername = post.username || "Chưa có";
+    //post.status
     return `<a href="./PostDetails?id=${post.postId}" class="card" style="width:40%;text-decoration:none;color:black">
     <div class="left">
         <img class="profile_img" src="https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg" alt="">
@@ -17,7 +18,7 @@ function createPostCard(post) {
     <div class="right">
         <h2 class="post-title">${post.postTitle}</h2>
         <p class="post-time"><span class="badge bg-secondary">${dateOnly} at ${post.timeSlot}</span></p>
-        <p class="post-status">Trạng thái: <span class="badge bg-primary">${post.status}</span></p>
+      
         <p class="post-category-title">Môn học: </p>
 
         <div class="post-category">
