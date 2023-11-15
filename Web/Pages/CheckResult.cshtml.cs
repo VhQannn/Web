@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Web.DTOs;
 
 namespace Web.Pages
 {
+    [Authorize]
     public class CheckResultModel : PageModel
     {
         [BindProperty(SupportsGet = true)]

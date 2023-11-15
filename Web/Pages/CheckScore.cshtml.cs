@@ -1,11 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
-using Web.DbConnection;
 using Web.DTOs;
 
 namespace Web.Pages
 {
+    [Authorize]
     public class CheckScoreModel : PageModel
     {
         private readonly IHttpClientFactory _clientFactory;
