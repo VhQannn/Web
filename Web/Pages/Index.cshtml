@@ -14,14 +14,13 @@
 		</ol>
 		<div class="carousel-inner">
 			<div class="carousel-item active">
-				<img src="~/img2.png" style="max-width:60%" class="d-block" alt="...">
+				<img src="~/img2.png" class="d-block w-100" alt="First Slide">
 			</div>
-			<div class="carousel-item ">
-				<img src="~/main-images.png" style="max-width:50%" class="d-block" alt="...">
+			<div class="carousel-item">
+				<img src="~/main-images.png" class="d-block w-100" alt="Second Slide">
 			</div>
-			<div class="carousel-item ">
-				<img src="https://dl.dropbox.com/scl/fi/rzpo2u9s33hwnt582zkkf/slide_3.webp?rlkey=daulicxcqwkc3w6ebw60qar7m&dl=0"
-					 class="d-block" alt="...">
+			<div class="carousel-item">
+				<img src="https://dl.dropbox.com/scl/fi/rzpo2u9s33hwnt582zkkf/slide_3.webp" class="d-block w-100" alt="Third Slide">
 			</div>
 		</div>
 		<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -34,38 +33,57 @@
 		</a>
 	</div>
 </div>
-<div class="row my-3 mx-auto">
-	<div class="offset-4 col-8">
-		<div class="search-bar mx-auto">
-			<input class="search-input" style="width:50%" id="search-key" type="text" placeholder="Search..." />
-			<button onclick="searchPosts()" class="search-button fa fa-search">
-			</button>
-		</div>
-	</div>
-	
-</div>
-<div class="legit-post-container">
-	<div class="sidebar">
-		<div class="my-5 text-center">
-			<a href="#" class="btn btn-secondary my-3">Check Legit</a>
-			<a href="/createpost" class="btn btn-primary">Đăng bài</a>
-		</div>
-	</div>
 
-	<div class="main-content">
-		<div class="post-card-container d-flex justify-content-around flex-wrap">
-		</div>
-
-		<p>Trang: <span id="currentPage"></span> / <span id="totalPages"></span></p>
-
-		<div class="pagination">
-			<button id="prevPage">Trước</button>
-			<span id="currentPage">1</span>
-			<button id="nextPage">Sau</button>
+<div class="container my-3">
+	<div class="row">
+		<div class="col-md-6 offset-md-3">
+			<div class="SearchButtonContainer">
+				<div class="InputContainer">
+					<input type="text" name="text" class="input" id="input" placeholder="Search">
+					<label for="input" class="labelforsearch">
+						<svg viewBox="0 0 512 512" class="searchIcon"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path></svg>
+					</label>
+				</div>
+				<button class="post-button" id="post-button">
+					<div class="svg-wrapper-1">
+						<div class="svg-wrapper">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+								<path fill="none" d="M0 0h24v24H0z"></path>
+								<path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
+							</svg>
+						</div>
+					</div>
+					<span>Đăng Bài</span>
+				</button>
+			</div>
 		</div>
 	</div>
 </div>
+
+
+
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="post-card-container ">
+				<!-- Các thẻ card của bài viết sẽ được thêm vào đây -->
+			</div>
+
+			<p>Trang: <span id="currentPage"></span> / <span id="totalPages"></span></p>
+
+			<div class="pagination">
+				<button id="prevPage">Trước</button>
+				<span id="currentPage">1</span>
+				<button id="nextPage">Sau</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 @section Scripts {
+	
 	<script>
 		$(document).ready(function () {
 			$('.carousel').carousel({

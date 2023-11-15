@@ -1,196 +1,142 @@
-﻿.legit-post-container {
-    display: flex;
+﻿
+.carousel-item img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
 }
 
-.sidebar {
-    flex: 1; /* Cho phần lọc chiếm 1 phần không gian */
-    margin-right: 20px; /* Khoảng cách giữa sidebar và main content */
+/* CSS cho container */
+.container.my-3 {
+    border-radius: 10px; /* Làm tròn các góc */
 }
 
-.main-content {
-    flex: 3; /* Cho phần nội dung chính chiếm 3 phần không gian */
-}
-/* Add your custom CSS styles here */
-.my-3 {
-    margin: 20px 0;
-}
-
-.text-center {
-    text-align: center;
+/* CSS cho thanh tìm kiếm và nút */
+.SearchButtonContainer {
+    display: flex; /* Hiển thị thành dạng flex để căn chỉnh nội dung bên trong */
+    align-items: center; /* Căn chỉnh nội dung theo chiều dọc */
+    justify-content: space-between; /* Đặt khoảng cách ngang giữa Input Container và Button Container */
 }
 
-.search-bar {
+.InputContainer {
+    flex-grow: 1; /* Cho phép Input Container mở rộng để chiếm hết không gian còn lại */
+    display: flex; /* Hiển thị thành dạng flex để căn chỉnh nội dung bên trong */
+    align-items: center; /* Căn chỉnh nội dung theo chiều dọc */
+    background-color: rgb(255, 255, 255); /* Màu nền của ô tìm kiếm */
+    border-radius: 10px; /* Làm tròn góc của ô tìm kiếm */
+    overflow: hidden;
+    cursor: pointer;
+    padding-left: 15px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.075); /* Đổ bóng cho ô tìm kiếm */
+    height: 40px;
+}
+
+.input {
+    width: 100%; /* Mở rộng input để lấp đầy không gian còn lại */
+    border: none;
+    outline: none;
+    font-size: 0.9em;
+    caret-color: rgb(255, 81, 0); /* Màu con trỏ */
+}
+
+.labelforsearch {
+    cursor: text;
+    padding: 0px 12px;
+}
+
+.searchIcon {
+    width: 13px;
+}
+
+    .searchIcon path {
+        fill: rgb(114, 114, 114); /* Màu biểu tượng tìm kiếm */
+    }
+
+.post-button {
+    font-family: inherit;
+    font-size: 14px;
+    background: linear-gradient(to bottom, #4dc7d9 0%,#66a6ff 100%);
+    color: white;
+    padding: 10px 10px;
     display: flex;
     align-items: center;
-}
-
-.search-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px 0 0 5px;
-}
-
-.search-button {
-    background-color: transparent;  
-    color: #007BFF;  
+    justify-content: center;
     border: none;
-    padding: 10px 20px;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
+    border-radius: 15px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    margin: 10px 10px;
 }
 
-    .search-button:hover {
-        color: #0056b3;  
+    .post-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
     }
 
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 0 10px;
-    text-decoration: none;
-    color: #fff;
-    border-radius: 5px;
+    .post-button:active {
+        transform: scale(0.95);
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .post-button span {
+        display: block;
+        margin-left: 0.4em;
+        transition: all 0.3s;
+    }
+
+    .post-button svg {
+        width: 13px;
+        height: 13px;
+        fill: white;
+        transition: all 0.3s;
+    }
+
+    .post-button .svg-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.2);
+        margin-right: 0.5em;
+        transition: all 0.3s;
+    }
+
+    .post-button:hover .svg-wrapper {
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .post-button:hover svg {
+        transform: rotate(45deg);
+    }
+/* CSS Chung cho Card */
+.card {
+    background-color: #fff;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    display: flex;
+    padding: 15px;
+    transition: all 0.5s ease;
+    flex-direction: column; /* Mặc định là dạng cột */
+    margin: 10px; /* Khoảng cách xung quanh card */
 }
 
-.btn-secondary {
-    background-color: #6c757d;
-}
+    .card:hover {
+        box-shadow: 8px 28px 50px rgba(39, 44, 49, 0.07), 1px 6px 12px rgba(39, 44, 49, 0.04);
+        transform: translate3D(0, -1px, 0) scale(1.02);
+    }
 
-.btn-primary {
-    background-color: #007BFF;
-}
-
-.btn-secondary:hover {
-    background-color: #545b62;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-}
-
-/*.post-card-container {
+/* CSS Chung cho Container */
+.post-card-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;*/ /* Điều này sẽ đảm bảo rằng có khoảng trắng giữa các card */
-    /*max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;*/ /* Bo góc cho container bên ngoài */
-/*}
-
-post-card:hover{
-    color: black;
-}*/
-
-/*.post-card {
-    text-decoration: none;
-    color: black;
-    background: #fff;
-    border-radius: 10px;*/ /* Bo góc cho mỗi card */
-    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;*/ /* Khoảng cách giữa các card theo chiều dọc */
-    /*width: calc(50% - 10px);*/ /* Chiều rộng để 2 card vừa vặn trên một dòng, 10px là để tính khoảng cách giữa các card */
-    /*overflow: hidden;*/ /* Đảm bảo nội dung không tràn ra ngoài viền bo tròn */
-/*}
-
-.post-link {
-    display: block;
-    color: #333;*/ /* Màu chữ cho link */
-    /*text-decoration: none;*/ /* Bỏ gạch chân ở link */
-    /*margin-bottom: 10px;
+    justify-content: space-around; /* Cân đối khoảng cách giữa các card */
+    margin: 20px 0; /* Tạo khoảng cách trên và dưới container */
+    gap: 20px; /* Thêm khoảng cách giữa các card */
 }
 
-.post-title {
-    font-size: 1.5em;*/ /* Cỡ chữ cho tiêu đề công việc */
-    /*color: #333;*/ /* Màu chữ cho tiêu đề công việc */
-    /*margin-bottom: 5px;
-}
 
-.salary {
-    font-size: 1.2em;*/ /* Cỡ chữ cho mức lương */
-    /*color: #666;*/ /* Màu chữ cho mức lương */
-    /*font-weight: bold;
-}
-
-.post-tags .tag {
-    display: inline-block;*/ /* Hiển thị tag cạnh nhau */
-    /*background-color: #eef;*/ /* Màu nền cho tag */
-    /*padding: 5px 10px;*/ /* Đệm cho tag */
-    /*margin-right: 5px;*/ /* Khoảng cách giữa các tag */
-    /*border-radius: 3px;*/ /* Bo góc cho tag */
-    /*font-size: 0.85em;*/ /* Cỡ chữ cho tag */
-/*}
-
-.company-info {
-    display: flex;*/ /* Sử dụng flexbox để căn chỉnh logo và tên công ty */
-    /*align-items: center;*/ /* Căn giữa các items theo chiều dọc */
-    /*margin-top: 10px;
-}
-
-.company-logo {
-    max-width: 50px;*/ /* Giới hạn kích thước logo công ty */
-    /*margin-right: 10px;*/ /* Khoảng cách giữa logo và tên công ty */
-/*}
-
-.company-name {
-    color: #0073e6;*/ /* Màu sắc cho tên công ty */
-    /*text-decoration: none;*/ /* Bỏ gạch chân cho link */
-/*}
-
-.location {
-    font-size: 0.9em;*/ /* Cỡ chữ cho địa điểm */
-    /*color: #777;*/ /* Màu chữ cho địa điểm */
-    /*margin-top: 10px;
-}
-
-.post-footer {
-    display: flex;*/ /* Sử dụng flexbox để căn chỉnh các phần tử trong footer */
-    /*justify-content: space-between;*/ /* Phân tách các item ra hai bên */
-    /*align-items: center;*/ /* Căn giữa các items theo chiều dọc */
-    /*font-size: 0.85em;*/ /* Cỡ chữ cho footer */
-    /*color: #777;*/ /* Màu chữ cho footer */
-    /*margin-top: 15px;
-}
-
-.hot-post-badge {
-    background-color: #ff2d55;*/ /* Màu nền cho badge HOT */
-    /*color: #fff;*/ /* Màu chữ cho badge */
-    /*padding: 3px 7px;*/ /* Đệm cho badge */
-    /*border-radius: 4px;*/ /* Bo góc cho badge */
-/*}
-
-.updated-time {
-    color: #999;*/ /* Màu chữ cho thời gian cập nhật */
-/*}*/
-
-.carousel-inner, .carousel-item {
-    height: 400px; /* giả sử bạn muốn chiều cao cố định là 400px */
-    position: relative;
-}
-
-    .carousel-item img {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        min-height: 100%;
-        width: auto;
-        transform: translateX(-50%);
-    }
-
-
-.slider {
-    max-width: 100%;
-}
-
-@media (max-width: 600px) {
-    .post-card {
-        width: 100%; 
-    }
-}
-
+/* Phong cách cho tiêu đề và danh mục */
 .post-title {
     font-family: "Poppins";
     font-weight: 500;
@@ -198,76 +144,93 @@ post-card:hover{
     margin: 3px 0;
 }
 
-
-.post-category-item{
+.post-category-item {
     font-family: "Avenir";
     font-size: 14px;
     color: rgba(34, 34, 34, 0.5);
     margin: 5px 0;
 }
 
-.card {
-    background-color: #fff;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
-    display: flex;
-    flex-direction: row;
-    padding: 30px;
-    max-width: 400px;
-    min-height: 130px;
-    margin: 20px 0;
-    transition: all 0.5s ease;
-}
-
-    .card:hover {
-        box-shadow: 8px 28px 50px rgba(39, 44, 49, 0.07), 1px 6px 12px rgba(39, 44, 49, 0.04);
-        transform: translate3D(0, -1px, 0) scale(1.02);
-        transition: all 0.5s ease;
-    }
-
-.profile_img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    object-position: 50% 50%;
-    border-radius: 100%;
-}
-
-.flag_wrapper {
-    width: 25px;
-    height: 25px;
-    background-color: #f2f2f2;
-    border-radius: 100%;
-    position: relative;
-    top: -30px;
-    left: 55px;
-}
-
-.flag {
-    width: 15px;
-    height: 15px;
-    position: absolute;
-    right: 0;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    margin: auto auto;
-}
-
 .post-category {
     margin-top: 10px;
-}
-
-.post-category-title {
-    color: #222222;
-    margin-bottom: 5px;
-}
-
-.post-category {
     padding: 0 15px;
-    margin-right: 5px;
     line-height: 35px;
     background-color: #e6e6e6;
     border-radius: 5px;
     display: inline-block;
+}
+
+
+/* Bố cục cho màn hình Desktop */
+@media (min-width: 1024px) {
+    .post-card-container .card {
+        width: calc(33% - 40px); /* Thiết lập chiều rộng cho mỗi card, trừ đi khoảng cách */
+        flex-direction: row; /* Card dạng ngang */
+    }
+
+    .profile_img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* Bố cục cho màn hình Tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .post-card-container .card {
+        width: calc(50% - 40px); /* Thiết lập chiều rộng cho mỗi card, trừ đi khoảng cách */
+        flex-direction: row; /* Card dạng ngang */
+    }
+
+    .profile_img {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+/* Bố cục dành cho màn hình nhỏ (Mobile) */
+@media (max-width: 768px) {
+    .post-card-container {
+        flex-direction: column; /* Chuyển container sang dạng cột */
+    }
+
+        .post-card-container .card {
+            width: 100%; /* Mỗi card chiếm toàn bộ chiều rộng của container */
+            margin: 10px 0;
+        }
+
+    .profile_img {
+        width: 60px; /* Điều chỉnh kích thước hình ảnh nhỏ hơn */
+        height: 60px;
+    }
+
+    /* Điều chỉnh container */
+    .container.my-3 {
+        padding: 5px; 
+        border-radius: 5px; 
+    }
+
+    .InputContainer {
+        height: 60px; 
+    }
+
+    .input {
+        font-size: 1.2em; /* Giảm kích thước font của input */
+    }
+
+    .post-button {
+        font-size: 14px; /* Giảm kích thước font của nút */
+        margin: 0 10px;
+    }
+
+        .post-button .svg-wrapper {
+            display: none;
+        }
+
+        .post-button svg {
+            display: none;
+        }
+
+    .searchIcon {
+        width: 20px;
+    }
 }

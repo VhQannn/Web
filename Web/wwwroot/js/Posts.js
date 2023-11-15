@@ -3,14 +3,14 @@
     .build();
 
 let currentPage = 1;
-const pageSize = 2;
+const pageSize = 3;
 
 
 
 function createPostCard(post) {
     const dateOnly = post.dateSlot.split('T')[0];
     const displayedUsername = post.username || "Chưa có";
-    return `<a href="./PostDetails?id=${post.postId}" class="card" style="width:40%;text-decoration:none;color:black">
+    return `<a href="./PostDetails?id=${post.postId}" class="card" style="text-decoration:none;color:black">
     <div class="left">
         <img class="profile_img" src="https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg" alt="">
     </div>
@@ -32,7 +32,7 @@ function createPostCard2(post) {
     const displayedUsername = post.username || "Chưa có";
     return `
 
-        <a class="post-card" href="./PostDetails?id=${post.postId}">
+        <a class="card" href="./PostDetails?id=${post.postId}">
             <div class="post-card-header">
                 <h3 class="post-title">${post.postTitle}</h3>
                 <div class="post-date">${dateOnly} at ${post.timeSlot}</div>
@@ -110,7 +110,7 @@ loadPosts(currentPage);
 
 
 function searchPosts() {
-    var title = $("#search-key").val();
+    var title = $("#input").val();
 
     $.ajax({
         url: `/api/posts/get-by-title?title=${title}`,
@@ -131,3 +131,11 @@ function searchPosts() {
         }
     });
 }
+
+    $("#input").on("input", function () {
+        searchPosts(); // Gọi hàm searchPosts mỗi khi nội dung ô tìm kiếm thay đổi
+    });
+
+$("#post-button").click(function () {
+    window.location.href = "/createpost"; // Chuyển hướng người dùng đến "/createpost"
+});
