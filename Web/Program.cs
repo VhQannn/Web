@@ -5,6 +5,8 @@ using System.Net;
 using Web.DbConnection;
 using Web.IRepository;
 using Web.Repository;
+using ProtoBuf.Meta;
+using Web.Controllers;
 using Web.Util;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +38,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddScoped<MarkReportServices>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<UploadFile>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
