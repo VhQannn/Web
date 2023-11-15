@@ -38,7 +38,6 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<WebContext>
     (opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddSignalR();
-
 builder.Services.AddSession();
 var app = builder.Build();
 
