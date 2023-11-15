@@ -60,6 +60,7 @@ namespace Web.Controllers
                             UpdatedDate = check.Entity.UpdatedDate,
                             MarkScore = check.Entity.MarkScore,
                             UserId = userId,
+                            Uri = result.SecureUri.ToString()
                         };
                         return Ok(respone);
                     }
