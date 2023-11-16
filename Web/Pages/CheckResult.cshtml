@@ -2,5 +2,12 @@
 @model Web.Pages.CheckResultModel
 @{
 }
+@if (Model.Status.Equals("COMPLETED"))
+{
+    @foreach (var item in Model.MarkReports)
+    {
+        <h1>@item.MarkScore</h1>
+    }
+}
 
-@Model.Uri
+<h1>Chờ thanh toán</h1>

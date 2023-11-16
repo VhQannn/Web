@@ -40,7 +40,7 @@ namespace Web.Pages
                 if (response.IsSuccessStatusCode)
                 {
                     var responseUri = await response.Content.ReadFromJsonAsync<MarkReport1DTO>();
-                    return RedirectToPage("/CheckResult", new { uri = responseUri.Uri, id = responseUri.MarkReportId });
+                    return RedirectToPage("/MyPayment");
                 }
                 else
                 {
