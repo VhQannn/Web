@@ -40,7 +40,7 @@ namespace Web.Controllers
 			}
 
 			// Nên lấy expectedToken từ biến môi trường hoặc cấu hình an toàn
-			var expectedToken = "quangqui";
+			var expectedToken = "dtqUyDjtUaJd2GuT2oQ4350g8Nte79Os";
 			if (!string.Equals(receivedToken, expectedToken, StringComparison.Ordinal))
 			{
 				return Unauthorized("Invalid Secure-Token header.");
