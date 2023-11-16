@@ -4,7 +4,9 @@
 }
 @if (Model.Status.Equals("COMPLETED"))
 {
-    <h1>Tổng số điểm của bạn là: @Model.markReportReponse.totalMark</h1>
+    var count = Model.markReportReponse.markReportDTOs.Where(x => x.status.Equals("Correct")).Count();
+    var total = Model.markReportReponse.markReportDTOs.Count();
+    <h1>Tổng số điểm của bạn là: @Model.markReportReponse.totalMark (@count/@total)</h1>
     <table class="table table-striped">
         <thead>
         <th>Kết quả</th>
