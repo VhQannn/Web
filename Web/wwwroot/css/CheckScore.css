@@ -1,0 +1,86 @@
+﻿.custom-file-upload {
+    height: 200px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+    gap: 20px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #cacaca;
+    background-color: rgba(255, 255, 255, 1);
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0px 48px 35px -48px rgba(0,0,0,0.1);
+}
+
+    .custom-file-upload .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .custom-file-upload .icon svg {
+            height: 80px;
+            fill: rgba(75, 85, 99, 1);
+        }
+
+    .custom-file-upload .text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .custom-file-upload .text span {
+            font-weight: 400;
+            color: rgba(75, 85, 99, 1);
+        }
+
+    .custom-file-upload input {
+        display: none;
+    }
+
+
+    .custom-file-upload.drag-over {
+        /* Hiệu ứng thay đổi màu sắc */
+        background-color: rgba(200, 200, 255, 0.8); /* Màu sắc khi có file được kéo vào */
+        border: 2px dashed #ad5389;
+        /* Hoặc hiệu ứng nhấp nháy */
+        animation: blinkingBackground 1s linear infinite;
+    }
+
+@keyframes blinkingBackground {
+    50% {
+        background-color: rgba(200, 200, 255, 0.8);
+    }
+}
+
+
+.cssbuttons-io-button {
+    display: flex;
+    align-items: center;
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 17px;
+    padding: 0.8em 1.5em 0.8em 1.2em;
+    color: white;
+    background: #ad5389;
+    background: linear-gradient(0deg, rgb(120, 47, 255) 0%, rgb(185, 132, 255) 100%);
+    border: none;
+    box-shadow: 0 0.7em 1.5em -0.5em rgb(184, 146, 255);
+    letter-spacing: 0.05em;
+    border-radius: 20em;
+}
+
+    .cssbuttons-io-button svg {
+        margin-right: 8px;
+    }
+
+    .cssbuttons-io-button:hover {
+        box-shadow: 0 0.5em 1.5em -0.5em rgb(149, 91, 255);
+    }
+
+    .cssbuttons-io-button:active {
+        box-shadow: 0 0.3em 1em -0.5em rgb(160, 109, 255);
+    }
