@@ -30,13 +30,12 @@ function loadPosts(pageNumber) {
                     // Hiển thị nút "Tôi đã làm xong" cho Supporter
                     $('#payment-table-container .table th:nth-child(1)').text('Người Cần Hỗ Trợ');
                     labelForRole = "Người Cần Hỗ Trợ";
-                    if (post.status === "APPROVED") {
-
+                    if (post.status === "approved" || post.status === "APPROVED") {
                         buttonHtml = `<button class="view-profile-button btn btn-primary btn-sm text-white" data-service-id="${post.postId}">Tôi đã làm xong</button>`;
-                    } else {
+                    } else if (post.status === "completed") {
                         buttonHtml = `<span class="text-primary">Đã Hoàn Thành</span>`;
                     }
-                } else if (post.status === "COMPLETED" && post.poster.role === "Supporter") {
+                } else if (post.status === "completed" && post.poster.role === "Supporter") {
                     // Hiển thị tùy chọn đánh giá cho Customer
                     $('#payment-table-container .table th:nth-child(1)').text('Người Hỗ Trợ Cho Bạn');
                     labelForRole = "Người Hỗ Trợ";
@@ -119,28 +118,30 @@ function attachButtonClickEvents() {
             });
     });
 
-    $('.view-profile-button').click(function () {
+    $(document).on('click', '.view-profile-button', function () {
         var postId = $(this).data('service-id');
-        
+
         var data = {
             RelatedId: postId,
             ServiceType: "Post"
         };
-        fetch('/api/posts/update-status-for-supporter', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-            .then(response => response.json())
-            .then(data => {
+
+        $.ajax({
+            url: '/api/posts/update-status-for-supporter',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
                 showToast("Thành công!", "Đã cập nhật trạng thái bài đăng sang đã xong", "success");
-            })
-            .catch(error => {
-                showToast("Error", "Lỗi khi cập nhật: " + error, "error");
-            });
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText
+                showToast("Error", "Lỗi khi cập nhật: " + errorMessage, "error");
+            }
+        });
     });
+
+
 
     $('.close').click(function () {
         $('#modelRating').modal('hide');

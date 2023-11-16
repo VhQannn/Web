@@ -59,6 +59,7 @@ function loadListPayment(pageNumber) {
                 } else {
                     $('#payment-table-container .table th:nth-child(2)').text('Người Nhận Bài');
                     labelForRole = "Người Nhận Bài";
+                    console.log(item);
                     // For regular users
                     if (item.status === "PENDING") {
                         actionButton = `<button class="view-qr-button btn btn-danger btn-sm text-white" data-payment-id="${item.paymentId}" data-payment-amount="${item.amount}" data-payment-username="${item.user.username}">View Again QR Code</button>`;
@@ -135,7 +136,9 @@ function attachButtonClickEvents() {
 
 
     $('.view-profile-button').click(function () {
-        // Logic for viewing profile
+        var receiverId = $(this).data('receiver-id');
+        console.log(receiverId);
+        window.location.href = "/users/detail?uId=" + receiverId;
     });
 
     $('#popup-close').click(function () {

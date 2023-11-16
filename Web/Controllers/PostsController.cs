@@ -99,7 +99,7 @@ namespace Web.Controllers
 				_context.Posts.Update(post);
 				await _context.SaveChangesAsync();
 				await _postHub.Clients.All.SendAsync("UpdatePosts");
-				return Ok("Bài đăng đã được cập nhật thành trạng thái 'COMPLETED'");
+				return Ok("Bài đăng đã được cập nhật thành trạng thái");
 			}
 
 			// Xử lý cho các loại ServiceType khác nếu cần

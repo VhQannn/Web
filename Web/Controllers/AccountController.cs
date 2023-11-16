@@ -126,13 +126,13 @@ namespace Web.Controllers
 											  Id = user.UserId,
 											  Username = user.Username,
 											  Role = user.UserType
-										  }
-						 ,
-										  Receiver = new AccountDTO
-										  {
-											  Id = p.User.UserId,
-											  Username = p.User.Username
 										  },
+										  Receiver = _context.Users.Where(u => u.UserId == p.ReceiverId).Select(r => new AccountDTO
+										  {
+											  Id = r.UserId,
+											  Username = r.Username
+										  }).FirstOrDefault()
+										  ,
 
 										  WithdrawalRequest = _context.WithdrawalRequests.Where(a => a.PaymentId == p.PaymentId)
 							.Select(r => new WithdrawalDTO
