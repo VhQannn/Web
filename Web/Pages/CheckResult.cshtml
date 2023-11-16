@@ -4,10 +4,40 @@
 }
 @if (Model.Status.Equals("COMPLETED"))
 {
-    @foreach (var item in Model.MarkReports)
-    {
-        <h1>@item.MarkScore</h1>
-    }
+    <h1>Tổng số điểm của bạn là: @Model.markReportReponse.totalMark</h1>
+    <table class="table table-striped">
+        <thead>
+        <th>Trạng thái</th>
+        <th>Kết quả</th>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.markReportReponse.markReportDTOs)
+            {
+                <tr>
+                    <td>
+                        @item.status
+                    </td>
+                    <td>
+                        @if (item.imageUrl == null)
+                        {
+                            <p>Hổng có hình rùi <i class="fa-regular fa-face-sad-tear"></i></p>
+                        }
+                        else
+                        {
+                        <img src="@item.imageUrl" style="max-width:150px" />
+                        }
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+
+    </table>
+
+}
+else
+{
+    <h1>Chờ thanh toán</h1>
 }
 
-<h1>Chờ thanh toán</h1>

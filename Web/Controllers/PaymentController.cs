@@ -162,7 +162,6 @@ namespace Web.Controllers
 				}
 			}
             else if(payment.ServiceType == "Check-Score")
-
             {
 				var mark_report = await _context.MarkReports.FirstOrDefaultAsync(p => p.MarkReportId == payment.RelatedId);
 				if(mark_report != null)

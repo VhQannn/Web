@@ -70,7 +70,7 @@ namespace Web.Controllers
                                     int QID = int.Parse(grammarQuestion1.QID.ToString());
                                     int index = 0;
                                     int QAID = 6;
-                                    String QAIDX = "";
+                                    string QAIDX = "";
                                     QuestionTemplate questionTemplateCheck = _context.QuestionTemplates.FirstOrDefault(q => q.QuestionTemplateCode == examCode);
                                     QuestionTemplatesDetail QTcheck = _context.QuestionTemplatesDetails.FirstOrDefault(qtd => qtd.QId == QID);
                                     Multimedium multimedium = _context.Multimedia.FirstOrDefault(q => q.QuestionTemplatesDetailId == QTcheck.QuestionTemplatesDetailId);
@@ -92,7 +92,7 @@ namespace Web.Controllers
                                         }
                                     }
                                     // Add MarkReportDTO based on the flag value
-                                    string status = flag == 1 ? "True" : "False";
+                                    string status = flag == 1 ? "Đúm <3" : "Khum đúm :<";
                                     markReportDTOs.Add(new MarkReportDTO
                                     {
                                         imageUrl = multimedium?.MultimediaUrl,
