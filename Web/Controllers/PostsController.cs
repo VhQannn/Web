@@ -40,14 +40,59 @@ namespace Web.Controllers
 				postCategoryName = p.PostCategory.PostCategoryName,
 				username = p.User.Username,
 				postId = p.PostId
-			}).ToList();
+			}).Where(x => x.status.Equals("approved")).ToList();
 			int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
 			return Ok(new { data = posts, totalRecords, totalPages });
 		}
 
+        [HttpGet("admin/get-by-title")]
+        public IActionResult GetPostByTitleAdmin(string title)
+        {
+            var totalRecords = _context.Posts.Count();
 
-		[HttpGet("get-by-title")]
+            var posts = _context.Posts.Include(p => p.PostCategory).Include(p => p.User).Select(p => new
+            {
+                postTitle = p.PostTitle,
+                postContent = p.PostContent,
+                postDate = p.PostDate,
+                dateSlot = p.DateSlot,
+                timeSlot = p.TimeSlot,
+                status = p.Status,
+                postCategoryName = p.PostCategory.PostCategoryName,
+                username = p.User.Username,
+                postId = p.PostId
+            }).Where(x => (x.postTitle.Contains(title) || x.postCategoryName.Contains(title))).ToList();
+
+            return Ok(new { data = posts });
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAllPostsAdmin(int pageNumber = 1, int pageSize = 5)
+        {
+            var totalRecords = _context.Posts.Count();
+            var skip = (pageNumber - 1) * pageSize;
+
+            var posts = _context.Posts.Include(p => p.PostCategory).Include(p => p.User).Skip(skip).Take(pageSize).Select(p => new
+            {
+                postTitle = p.PostTitle,
+                postContent = p.PostContent,
+                postDate = p.PostDate,
+                dateSlot = p.DateSlot,
+                timeSlot = p.TimeSlot,
+                status = p.Status,
+                postCategoryName = p.PostCategory.PostCategoryName,
+                username = p.User.Username,
+                postId = p.PostId
+            }).ToList();
+            int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+            return Ok(new { data = posts, totalRecords, totalPages });
+        }
+
+
+
+        [HttpGet("get-by-title")]
 		public IActionResult GetPostByTitle(string title)
 		{
 			var totalRecords = _context.Posts.Count();
@@ -63,7 +108,7 @@ namespace Web.Controllers
 				postCategoryName = p.PostCategory.PostCategoryName,
 				username = p.User.Username,
 				postId = p.PostId
-			}).Where(x => x.postTitle.Contains(title) || x.postCategoryName.Contains(title)).ToList();
+			}).Where(x => (x.postTitle.Contains(title) || x.postCategoryName.Contains(title)) && x.status.Equals("approved") ).ToList();
 
 			return Ok(new { data = posts });
 		}
