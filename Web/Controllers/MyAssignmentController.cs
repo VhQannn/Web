@@ -33,7 +33,7 @@ namespace Web.Controllers
 
 			if (currentUser == null)
 			{
-				return NotFound("Người dùng hiện tại không được tìm thấy trong cơ sở dữ liệu.");
+				return NotFound("Vui lòng đăng nhập để thực hiện thao tác!");
 			}
 
 			IQueryable<Post> query;

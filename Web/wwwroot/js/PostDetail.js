@@ -205,7 +205,7 @@ if (postId) {
             loadComments(postId);
         },
         error: function (error) {
-            showToast("Error", error.responseText, "error");
+            showToast("Thông báo", "Bạn cần đăng nhập để thực hiện bình luận deal giá nếu bạn là người hỗ trợ", "info");
         }
     });
 }

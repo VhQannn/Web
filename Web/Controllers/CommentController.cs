@@ -59,8 +59,8 @@ namespace Web.Controllers
 
             if (currentUser == null)
             {
-                return BadRequest("Người dùng hiện tại không tồn tại trong cơ sở dữ liệu.");
-            }
+				return NotFound("Vui lòng đăng nhập để thực hiện thao tác!");
+			}
 
             var post = await _context.Posts.Include(pc => pc.User).FirstOrDefaultAsync(m => m.PostId == postId);
             if (post == null)
@@ -129,8 +129,8 @@ namespace Web.Controllers
             var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == userName);
             if (currentUser == null)
             {
-                return BadRequest("Người dùng hiện tại không tồn tại trong cơ sở dữ liệu.");
-            }
+				return NotFound("Vui lòng đăng nhập để thực hiện thao tác!");
+			}
 
             var parentComment = await _context.ParentComments.Include(pc => pc.User).FirstOrDefaultAsync(m => m.ParentCommentId == parentCommentId);
             if (parentComment == null)

@@ -42,7 +42,6 @@ namespace Web.Controllers
                         CreatedDate = DateTime.UtcNow,
                         UpdatedDate = DateTime.UtcNow,
                         MultimediaUrl = result.SecureUri.ToString(),
-                        UserId = userId,
                         MarkReportId = check.Entity.MarkReportId,
                         MultimediaType = "file"
 
