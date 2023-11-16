@@ -62,7 +62,7 @@ function loadListPayment(pageNumber) {
                     console.log(item);
                     // For regular users
                     if (item.status === "PENDING") {
-                        actionButton = `<button class="view-qr-button btn btn-danger btn-sm text-white" data-payment-id="${item.paymentId}" data-payment-amount="${item.amount}" data-payment-username="${item.user.username}">View Again QR Code</button>`;
+                        actionButton = `<button class="view-qr-button btn btn-danger btn-sm text-white" data-payment-id="${item.paymentId}" data-payment-amount="${item.amount}" data-payment-username="${item.user.username}">View QR Code</button>`;
                     } else if (item.status === "COMPLETED") {
                         if (item.serviceType == "Post") {
                             actionButton = `<button class="view-profile-button btn btn-primary btn-sm text-white" data-receiver-id="${item.receiver.id}">Contact With Supporter</button>`;
