@@ -1,6 +1,6 @@
 ﻿namespace Web.DTOs
 {
-    public class MarkReportDTO
+    public class MarkReport1DTO
     {
         public int MarkReportId { get; set; }
 

@@ -29,7 +29,7 @@ namespace Web.Pages
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
                 UserId = userIdClaim != null ? int.Parse(userIdClaim.Value) : 1;
                 var client = _clientFactory.CreateClient();
-                var absoluteUri = "https://localhost:7247/api/upload";
+                var absoluteUri = "http://localhost:5227/api/upload";
                 using var content = new MultipartFormDataContent();
                 using var fileStream = file.OpenReadStream();
                 using var streamContent = new StreamContent(fileStream);
@@ -39,7 +39,7 @@ namespace Web.Pages
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var responseUri = await response.Content.ReadFromJsonAsync<MarkReportDTO>();
+                    var responseUri = await response.Content.ReadFromJsonAsync<MarkReport1DTO>();
                     return RedirectToPage("/CheckResult", new { uri = responseUri.Uri, id = responseUri.MarkReportId });
                 }
                 else

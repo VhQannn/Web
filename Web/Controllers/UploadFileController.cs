@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Web.DbConnection;
 using Web.DTOs;
+using Web.Models;
 using Web.Util;
 
 namespace Web.Controllers
@@ -51,18 +52,33 @@ namespace Web.Controllers
                     
                     if (isSuccess)
                     {
-                        var respone = new MarkReportDTO
+                        var payment = new Payment
                         {
-                            MarkReportId = check.Entity.MarkReportId,
-                            CreatedBy = check.Entity.CreatedBy,
-                            CreatedDate = check.Entity.CreatedDate,
-                            UpdatedBy = check.Entity.UpdatedBy,
-                            UpdatedDate = check.Entity.UpdatedDate,
-                            MarkScore = check.Entity.MarkScore,
                             UserId = userId,
-                            Uri = result.SecureUri.ToString()
+                            Amount = 50000,
+                            PaymentDate = DateTime.UtcNow,
+                            RelatedId = check.Entity.MarkReportId,
+                            ServiceType = "Check-Score",
+                            Status = "PENDING"
                         };
-                        return Ok(respone);
+
+                        await _context.Payments.AddAsync(payment);
+                        isSuccess = await _context.SaveChangesAsync() > 0;
+                        if (isSuccess)
+                        {
+                            var respone = new MarkReport1DTO
+                            {
+                                MarkReportId = check.Entity.MarkReportId,
+                                CreatedBy = check.Entity.CreatedBy,
+                                CreatedDate = check.Entity.CreatedDate,
+                                UpdatedBy = check.Entity.UpdatedBy,
+                                UpdatedDate = check.Entity.UpdatedDate,
+                                MarkScore = check.Entity.MarkScore,
+                                UserId = userId,
+                                Uri = result.SecureUri.ToString()
+                            };
+                            return Ok(respone);
+                        }
                     }
                 }
 

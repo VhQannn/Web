@@ -216,5 +216,13 @@ namespace Web.Controllers
 			var paymentExists = await _context.Payments.FirstOrDefaultAsync(p => p.RelatedId == postId && p.ServiceType == "Post");
 			return Ok(paymentExists);
 		}
+		
+		[HttpGet("check-score")]
+		[Authorize]
+		public async Task<IActionResult> CheckPaymentScore(int markReportId)
+		{
+			var paymentExists = await _context.Payments.FirstOrDefaultAsync(p => p.RelatedId == markReportId && p.ServiceType == "Check-Score");
+			return Ok(paymentExists);
+		}
 	}
 }

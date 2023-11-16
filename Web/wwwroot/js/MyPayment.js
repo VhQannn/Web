@@ -63,7 +63,12 @@ function loadListPayment(pageNumber) {
                     if (item.status === "PENDING") {
                         actionButton = `<button class="view-qr-button btn btn-danger btn-sm text-white" data-payment-id="${item.paymentId}" data-payment-amount="${item.amount}" data-payment-username="${item.user.username}">View Again QR Code</button>`;
                     } else if (item.status === "COMPLETED") {
-                        actionButton = `<button class="view-profile-button btn btn-primary btn-sm text-white" data-receiver-id="${item.receiver.id}">Contact With Supporter</button>`;
+                        if (item.serviceType == "Post") {
+                            actionButton = `<button class="view-profile-button btn btn-primary btn-sm text-white" data-receiver-id="${item.receiver.id}">Contact With Supporter</button>`;
+                        } else if (item.serviceType == "Check-Score") {
+                            actionButton = `<span class="text-primary">Giao dịch hoàn tất, theo dõi kết quả ở trang kết quả</span>`;;
+                        }
+                        
                     }
                 }
 
@@ -76,6 +81,16 @@ function loadListPayment(pageNumber) {
                     <td data-label="Trạng Thái Giao Dịch">${item.status}</td>
                     <td data-label="Hành Động">${actionButton}</td>
                 </tr>`);
+                } else if (item.serviceType == "Check-Score") {
+                    tableBody.append(`<tr>
+                    <td data-label="Ngày Giao Dịch">${paymentDate}</td>
+                    <td data-label="Số Tiền">${amountFormatted}</td>
+                    <td data-label="Loại Dịch Vụ"><a href="./CheckResult?id=${item.relatedId}" class="post-details-link">${item.serviceType}</a></td>
+                    <td data-label="Trạng Thái Giao Dịch">${item.status}</td>
+                    <td data-label="Hành Động">${actionButton}</td>
+                </tr>`);
+                    $('#payment-table-container .table th:nth-child(2)').hide();
+
                 }
 
 
