@@ -58,7 +58,7 @@ namespace Web.Controllers
                                 Console.WriteLine("Filling Question...\n");
                             }
 
-                            // su ly ket qua Grammar
+                            // xu ly ket qua Grammar
                             if (d.SPaper.GrammarQuestions.Count > 0)
                             {
                                 Console.WriteLine("Grammar Question...\n");
@@ -92,11 +92,12 @@ namespace Web.Controllers
                                         }
                                     }
                                     // Add MarkReportDTO based on the flag value
-                                    string status = flag == 1 ? "Đúm <3" : "Khum đúm :<";
+                                    string status = flag == 1 ? "Correct" : "Incorrect";
                                     markReportDTOs.Add(new MarkReportDTO
                                     {
                                         imageUrl = multimedium?.MultimediaUrl,
-                                        status = status
+                                        status = status,
+                                        qtext = QTcheck.QText
                                     });
                                 }
                             }

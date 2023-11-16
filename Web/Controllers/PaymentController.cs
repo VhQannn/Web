@@ -197,8 +197,9 @@ namespace Web.Controllers
 			try
 			{
 				_logger.LogInformation($"Notifying clients about the payment status update for payment ID: {paymentId}.");
-				await _notificationHub.Clients.All.SendAsync("ProcessPayment");
-			}
+                var user = await _context.Users.FirstOrDefaultAsync(p => p.UserId == payment.UserId);
+                await _notificationHub.Clients.Group(user.Username).SendAsync("ProcessPayment");
+            }
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error sending notification for payment ID: {paymentId}.");

@@ -7,17 +7,19 @@
     <h1>Tổng số điểm của bạn là: @Model.markReportReponse.totalMark</h1>
     <table class="table table-striped">
         <thead>
-        <th>Trạng thái</th>
         <th>Kết quả</th>
+        <th>QText</th>
+        <th>Hình ảnh</th>
         </thead>
         <tbody>
 
             @foreach (var item in Model.markReportReponse.markReportDTOs)
             {
                 <tr>
-                    <td>
+                    <td style="color:@(item.status.Equals("Correct")?"green":"red")">
                         @item.status
                     </td>
+                    <td>@item.qtext</td>
                     <td>
                         @if (item.imageUrl == null)
                         {
