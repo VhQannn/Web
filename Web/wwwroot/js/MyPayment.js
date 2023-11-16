@@ -1,6 +1,6 @@
 ﻿
 let currentPage = 1;
-const pageSize = 2;
+const pageSize = 5;
 
 $(document).on('click', 'a[data-target="#modelRequest"]', function () {
     var paymentId = $(this).data('payment-id');
@@ -110,7 +110,8 @@ function attachButtonClickEvents() {
         var paymentId = $(this).data('payment-id');
         var amount = $(this).data('payment-amount');
         var username = $(this).data('payment-username');
-        var linkQRCode = "https://img.vietqr.io/image/970436-1014794186-lx65zFs.jpg?accountName=TRAN%20QUANG%20QUI&amount=" + amount;
+        
+        var linkQRCode = "https://api.vietqr.io/image/970422-0911589806-BHJrmo8.jpg?accountName=MA%20VAN%20TUONG&amount=" + amount;
         linkQRCode += "&addInfo=Payment%20OrderID" + paymentId + "%20" + encodeURIComponent(username);
 
         $("#vietqr-popup").show();

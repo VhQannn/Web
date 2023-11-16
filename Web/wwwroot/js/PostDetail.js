@@ -437,7 +437,7 @@ $yesButton.click(function () {
             paymentId = response.paymentId;
             $("#vietqr-popup").show();
             $('.popup-backdrop').addClass('show');
-            var linkQRCode = "https://img.vietqr.io/image/970436-1014794186-lx65zFs.jpg?accountName=TRAN%20QUANG%20QUI&amount=";
+            var linkQRCode = "https://api.vietqr.io/image/970422-0911589806-BHJrmo8.jpg?accountName=MA%20VAN%20TUONG&amount=";
             linkQRCode += priceValue;
             linkQRCode += "&addInfo=Payment%20OrderID";
             linkQRCode += response.paymentId + "%20";
