@@ -14,49 +14,49 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Web.Controllers
 {
-	public class MarkReportServices
-	{
-		private readonly WebContext _context;
-		public MarkReportServices(WebContext context)
-		{
-			_context = context;
-		}
+    public class MarkReportServices
+    {
+        private readonly WebContext _context;
+        public MarkReportServices(WebContext context)
+        {
+            _context = context;
+        }
 
-		public async Task<MarkReportReponse> CalculateMark(MarkReportRequest markReportRequest)
-		{
-			List<MarkReportDTO> markReportDTOs = new List<MarkReportDTO>();
-			MarkReportReponse markReportReponse = new MarkReportReponse();
-			string fileUrl = markReportRequest.url;
-			int count = 0;
-			float mark = 0.000f;
-			try
-			{
-				using (HttpClient client = new HttpClient())
-				{
-					// Reading the file for checking scores
-					using (HttpResponseMessage response = await client.GetAsync(fileUrl))
-					{
-						using (Stream scoreFileStream = await response.Content.ReadAsStreamAsync())
-						{
-							BinaryFormatter formatter = new BinaryFormatter();
-							SubmitPaper d = (SubmitPaper)formatter.Deserialize(scoreFileStream);
-							/*Console.WriteLine("File Name: {0}", d.LoginId);*/
-							string examCode = d.SPaper.ExamCode;
-							/*Console.WriteLine("Test Type: {0}", d.SPaper.TestType.ToString());*/
-							int duration = int.Parse(d.SPaper.Duration.ToString());
-							int totalMark = int.Parse(d.SPaper.Mark.ToString());
-							Console.WriteLine("Login ID: {0}", d.LoginId);
+        public async Task<MarkReportReponse> CalculateMark(MarkReportRequest markReportRequest)
+        {
+            List<MarkReportDTO> markReportDTOs = new List<MarkReportDTO>();
+            MarkReportReponse markReportReponse = new MarkReportReponse();
+            string fileUrl = markReportRequest.url;
+            int count = 0;
+            float mark = 0.000f;
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    // Reading the file for checking scores
+                    using (HttpResponseMessage response = await client.GetAsync(fileUrl))
+                    {
+                        using (Stream scoreFileStream = await response.Content.ReadAsStreamAsync())
+                        {
+                            BinaryFormatter formatter = new BinaryFormatter();
+                            SubmitPaper d = (SubmitPaper)formatter.Deserialize(scoreFileStream);
+                            /*Console.WriteLine("File Name: {0}", d.LoginId);*/
+                            string examCode = d.SPaper.ExamCode;
+                            /*Console.WriteLine("Test Type: {0}", d.SPaper.TestType.ToString());*/
+                            int duration = int.Parse(d.SPaper.Duration.ToString());
+                            int totalMark = int.Parse(d.SPaper.Mark.ToString());
+                            Console.WriteLine("Login ID: {0}", d.LoginId);
 
-							scoreFileStream.Close();
-							Console.WriteLine("log.........................");
+                            scoreFileStream.Close();
+                            Console.WriteLine("log.........................");
 
-							Console.WriteLine("Load du lieu hoan tat");
-							// bat dau check ket qua
+                            Console.WriteLine("Load du lieu hoan tat");
+                            // bat dau check ket qua
 
-							if (d.SPaper.FillBlankQuestions.Count > 0)
-							{
-								Console.WriteLine("Filling Question...\n");
-							}
+                            if (d.SPaper.FillBlankQuestions.Count > 0)
+                            {
+                                Console.WriteLine("Filling Question...\n");
+                            }
 
                             // xu ly ket qua Grammar
                             if (d.SPaper.GrammarQuestions.Count > 0)
@@ -119,9 +119,9 @@ namespace Web.Controllers
                                         //                    flag = 0;
                                         //                }
                                         //            }
-                                                    
+
                                         //        }
-                                                
+
                                         //    }
 
                                         //    ++index;
@@ -143,24 +143,27 @@ namespace Web.Controllers
                                 }
                             }
 
-							if (d.SPaper.IndicateMQuestions.Count > 0)
-							{
-								Console.WriteLine("Indicate Question...\n");
-							}
-							mark = ((float)count * 10f) / (float)totalMark;
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine("Error: " + ex.Message);
-			}
+                            if (d.SPaper.IndicateMQuestions.Count > 0)
+                            {
+                                Console.WriteLine("Indicate Question...\n");
+                            }
+                            mark = ((float)count * 10f) / (float)totalMark;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
 
-			MarkReport markReport = _context.MarkReports.FirstOrDefault(x => x.MarkReportId == markReportRequest.markReportId);
-			markReport.MarkScore = mark;
-			_context.MarkReports.Update(markReport);
-			_context.SaveChanges();
+            MarkReport markReport = _context.MarkReports.FirstOrDefault(x => x.MarkReportId == markReportRequest.markReportId);
+            markReport.MarkScore = mark;
+            _context.MarkReports.Update(markReport);
+            _context.SaveChanges();
+
+            markReportReponse.totalMark = mark.ToString("#.###");
+            markReportReponse.markReportDTOs = markReportDTOs;
 
             return markReportReponse;
         }

@@ -27,81 +27,86 @@ namespace Web.Controllers
         public async Task<IActionResult> CreateQuestionTemplateWithDetails()
         {
             var formData = await Request.ReadFormAsync();
-            var questionTemplateCode = formData["QuestionTemplateCode"];
+            var questionTemplateCode = formData["QuestionTemplateCode"].ToString();
             var jsonFile = formData.Files.GetFile("jsonFile");
 
             if (jsonFile == null || string.IsNullOrEmpty(questionTemplateCode))
             {
                 return BadRequest("Json file or QuestionTemplateCode is missing.");
             }
+            var questionTemplateCodeCheck = _context.QuestionTemplates.FirstOrDefault(q => q.QuestionTemplateCode == questionTemplateCode);
 
-            List<QuestionTemplatesDetailDto> questionTemplateDto;
-            using (var stream = jsonFile.OpenReadStream())
-            using (var reader = new StreamReader(stream))
+            if (questionTemplateCodeCheck == null)
             {
-                var jsonString = await reader.ReadToEndAsync();
-                questionTemplateDto = JsonConvert.DeserializeObject<List<QuestionTemplatesDetailDto>>(jsonString);
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var questionTemplate = new QuestionTemplate
-            {
-                QuestionTemplateCode = questionTemplateCode,
-                CreatedDate = DateTime.UtcNow
-            };
-
-            _context.QuestionTemplates.Add(questionTemplate);
-            await _context.SaveChangesAsync();
-
-            foreach (var detailDto in questionTemplateDto)
-            {
-                var detail = new QuestionTemplatesDetail
+                List<QuestionTemplatesDetailDto> questionTemplateDto;
+                using (var stream = jsonFile.OpenReadStream())
+                using (var reader = new StreamReader(stream))
                 {
-                    QuestionTemplateId = questionTemplate.QuestionTemplateId,
-                    QId = detailDto.QID,
-                    QText = detailDto.Qtext
+                    var jsonString = await reader.ReadToEndAsync();
+                    questionTemplateDto = JsonConvert.DeserializeObject<List<QuestionTemplatesDetailDto>>(jsonString);
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                var questionTemplate = new QuestionTemplate
+                {
+                    QuestionTemplateCode = questionTemplateCode,
+                    CreatedDate = DateTime.UtcNow
                 };
 
-                _context.QuestionTemplatesDetails.Add(detail);
+                _context.QuestionTemplates.Add(questionTemplate);
                 await _context.SaveChangesAsync();
 
-                // Thêm các QAid vào bảng phụ
-                foreach (var qaid in detailDto.QAIDs)
+                foreach (var detailDto in questionTemplateDto)
                 {
-                    var detailQAid = new QuestionTemplateDetailQaid
+                    var detail = new QuestionTemplatesDetail
                     {
-                        QuestionTemplatesDetailId = detail.QuestionTemplatesDetailId,
-                        QAid = detailDto.QID + qaid
+                        QuestionTemplateId = questionTemplate.QuestionTemplateId,
+                        QId = detailDto.QID,
+                        QText = detailDto.Qtext
                     };
 
-                    _context.QuestionTemplateDetailQaids.Add(detailQAid);
-                }
-                await _context.SaveChangesAsync();
-
-                var imageUrl = detailDto.ImageURL;
-                if (!string.IsNullOrEmpty(imageUrl))
-                {
-                    var multimedia = new Multimedium
-                    {
-                        QuestionTemplatesDetailId = detail.QuestionTemplatesDetailId,
-                        MultimediaUrl = imageUrl,
-                        MultimediaType = "image",
-                        CreatedDate = DateTime.UtcNow
-                    };
-
-                    _context.Multimedia.Add(multimedia);
+                    _context.QuestionTemplatesDetails.Add(detail);
                     await _context.SaveChangesAsync();
+
+                    // Thêm các QAid vào bảng phụ
+                    foreach (var qaid in detailDto.QAIDs)
+                    {
+                        var detailQAid = new QuestionTemplateDetailQaid
+                        {
+                            QuestionTemplatesDetailId = detail.QuestionTemplatesDetailId,
+                            QAid = detailDto.QID + qaid
+                        };
+
+                        _context.QuestionTemplateDetailQaids.Add(detailQAid);
+                    }
+                    await _context.SaveChangesAsync();
+
+                    var imageUrl = detailDto.ImageURL;
+                    if (!string.IsNullOrEmpty(imageUrl))
+                    {
+                        var multimedia = new Multimedium
+                        {
+                            QuestionTemplatesDetailId = detail.QuestionTemplatesDetailId,
+                            MultimediaUrl = imageUrl,
+                            MultimediaType = "image",
+                            CreatedDate = DateTime.UtcNow
+                        };
+
+                        _context.Multimedia.Add(multimedia);
+                        await _context.SaveChangesAsync();
+                    }
                 }
+
+                return Ok(new { Message = "Question template và chi tiết đã được tạo thành công." });
             }
-
-            return Ok(new { Message = "Question template và chi tiết đã được tạo thành công." });
+            else
+            {
+                return BadRequest(new { Message = "Question template code already exists." });
+            }
         }
-
     }
-
-
 }
