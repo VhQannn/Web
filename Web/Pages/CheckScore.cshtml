@@ -18,9 +18,7 @@
     <select class="form-control">
         @foreach (var course in Model.CurrentCourses)
         {
-            int endIndex = course.IndexOf("_FE");
-            var result = course.Substring(0, endIndex);
-            <option class="course-option">@result</option>
+            <option class="course-option">@course</option>
         }
     </select>
     <h3>Upload bài làm ở đây</h3>
