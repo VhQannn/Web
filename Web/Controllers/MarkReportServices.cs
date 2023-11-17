@@ -72,32 +72,65 @@ namespace Web.Controllers
                                     int QAID = 6;
                                     string QAIDX = "";
                                     QuestionTemplate questionTemplateCheck = _context.QuestionTemplates.FirstOrDefault(q => q.QuestionTemplateCode == examCode);
-                                    QuestionTemplatesDetail QTcheck = _context.QuestionTemplatesDetails.FirstOrDefault(qtd => qtd.QId == QID);
+                                    QuestionTemplatesDetail QTcheck = _context.QuestionTemplatesDetails.FirstOrDefault(qtd => qtd.QId == QID && qtd.QuestionTemplateId == questionTemplateCheck.QuestionTemplateId);
                                     Multimedium multimedium = _context.Multimedia.FirstOrDefault(q => q.QuestionTemplatesDetailId == QTcheck.QuestionTemplatesDetailId);
                                     if (QTcheck != null && questionTemplateCheck != null)
                                     {
-                                        foreach (QuestionAnswer questionAnswer in grammarQuestion1.QuestionAnswers)
+                                        var Qaids = _context.QuestionTemplateDetailQaids.Where(q => q.QuestionTemplatesDetailId == QTcheck.QuestionTemplatesDetailId).ToArray();
+
+                                        int[] userAnswers = grammarQuestion1.QuestionAnswers
+                                                            .Cast<QuestionAnswer>()
+                                                            .Where(qa => qa.Selected)
+                                                            .Select(qa => qa.QAID)
+                                                            .ToArray();
+
+
+                                        int[] correctAnswers = Qaids.Select(q => q.QAid).ToArray();
+
+                                        bool areAnswersCorrect = AreArraysEqual(userAnswers, correctAnswers);
+
+
+                                        if (areAnswersCorrect)
                                         {
-                                            if (questionAnswer.Selected)
-                                            {
-                                                var Qaids = _context.QuestionTemplateDetailQaids.Where(q => q.QuestionTemplatesDetailId == QTcheck.QuestionTemplatesDetailId).ToArray();
-                                                if(Qaids.Length > 0)
-                                                {
-                                                    foreach (var Qaid in Qaids)
-                                                    {
-                                                        if (int.Parse(questionAnswer.QAID.ToString()).Equals(Qaid))
-                                                        {
-                                                            QAIDX = questionAnswer.QAID.ToString();
-                                                            flag = 1;
-                                                            count++;
-                                                        }
-                                                    }
-                                                    
-                                                }
-                                                
-                                            }
-                                            ++index;
+                                            flag = 1;
+                                            count++;
                                         }
+
+
+                                        //foreach (QuestionAnswer questionAnswer in grammarQuestion1.QuestionAnswers)
+                                        //{
+                                        //    if (questionAnswer.Selected)
+                                        //    {
+                                        //        userAnswers.Add
+
+                                        //        var Qaids = _context.QuestionTemplateDetailQaids.Where(q => q.QuestionTemplatesDetailId == QTcheck.QuestionTemplatesDetailId).ToArray();
+                                        //        if(Qaids.Length > 0)
+                                        //        {
+                                        //            foreach (var Qaid in Qaids)
+                                        //            {
+                                        //                if (int.Parse(questionAnswer.QAID.ToString()).Equals(Qaid.QAid))
+                                        //                {
+                                        //                    QAIDX = questionAnswer.QAID.ToString();
+                                        //                    flag = 1;
+                                        //                    break;
+                                        //                }
+                                        //                else
+                                        //                {
+                                        //                    flag = 0;
+                                        //                }
+                                        //            }
+                                                    
+                                        //        }
+                                                
+                                        //    }
+
+                                        //    ++index;
+                                        //}
+
+                                        //if(flag == 1)
+                                        //{
+                                        //    count++;
+                                        //}
                                     }
                                     // Add MarkReportDTO based on the flag value
                                     string status = flag == 1 ? "Correct" : "Incorrect";
@@ -133,6 +166,18 @@ namespace Web.Controllers
             markReportReponse.markReportDTOs = markReportDTOs;
 
             return markReportReponse;
+        }
+
+        static bool AreArraysEqual(int[] array1, int[] array2)
+        {
+            // Kiểm tra độ dài của hai mảng
+            if (array1.Length != array2.Length)
+            {
+                return false;
+            }
+
+            // Sử dụng SequenceEqual để so sánh hai mảng
+            return array1.SequenceEqual(array2);
         }
     }
 }

@@ -75,7 +75,7 @@ namespace Web.Controllers
                     var detailQAid = new QuestionTemplateDetailQaid
                     {
                         QuestionTemplatesDetailId = detail.QuestionTemplatesDetailId,
-                        QAid = qaid
+                        QAid = detailDto.QID + qaid
                     };
 
                     _context.QuestionTemplateDetailQaids.Add(detailQAid);
