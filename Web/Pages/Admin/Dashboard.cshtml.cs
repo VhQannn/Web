@@ -7,6 +7,7 @@ namespace Web.Pages.Admin
     {
         public void OnGet()
         {
+
         }
     }
 }

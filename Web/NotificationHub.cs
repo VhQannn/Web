@@ -5,7 +5,15 @@ namespace Web
 {
 	public class NotificationHub : Hub
 	{
-		public async Task ReceivedWebHook()
+        public override Task OnConnectedAsync()
+        {
+            var userId = Context.User.Identity.Name;
+            Groups.AddToGroupAsync(Context.ConnectionId, userId);
+
+            return base.OnConnectedAsync();
+        }
+
+        public async Task ReceivedWebHook()
 		{
 			await Clients.Others.SendAsync("ProcessPayment");
 		}
@@ -14,5 +22,7 @@ namespace Web
 		{
 			await Clients.Others.SendAsync("NewWithdrawalRequest");
 		}
+
+
 	}
 }

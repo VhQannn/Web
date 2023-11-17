@@ -80,13 +80,21 @@ namespace Web.Controllers
                                         {
                                             if (questionAnswer.Selected)
                                             {
-                                                if (int.Parse(questionAnswer.QAID.ToString()) == QTcheck.QAid)
+                                                var Qaids = _context.QuestionTemplateDetailQaids.Where(q => q.QuestionTemplatesDetailId == QTcheck.QuestionTemplatesDetailId).ToArray();
+                                                if(Qaids.Length > 0)
                                                 {
-                                                    QAIDX = questionAnswer.QAID.ToString();
-                                                    //Console.WriteLine(QAIDX);
-                                                    flag = 1;
-                                                    count++;
+                                                    foreach (var Qaid in Qaids)
+                                                    {
+                                                        if (int.Parse(questionAnswer.QAID.ToString()).Equals(Qaid))
+                                                        {
+                                                            QAIDX = questionAnswer.QAID.ToString();
+                                                            flag = 1;
+                                                            count++;
+                                                        }
+                                                    }
+                                                    
                                                 }
+                                                
                                             }
                                             ++index;
                                         }

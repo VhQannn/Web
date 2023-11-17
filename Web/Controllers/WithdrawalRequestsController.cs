@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Web.DbConnection;
 using Web.Models;
 
@@ -68,7 +69,7 @@ namespace Web.Controllers
 
             _context.WithdrawalRequests.Add(withdrawalRequest);
             await _context.SaveChangesAsync();
-			await _notificationHub.Clients.All.SendAsync("NewWithdrawalRequest");
+            await _notificationHub.Clients.Group(currentUser.Username).SendAsync("NewWithdrawalRequest");
 			return Ok(new { Message = "Withdrawal request created successfully.", RequestId = withdrawalRequest.WithdrawalRequestId });
         }
 
