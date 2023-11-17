@@ -14,7 +14,6 @@ public partial class WebContext : DbContext
         : base(options)
     {
     }
-
     public virtual DbSet<Assignment> Assignments { get; set; }
 
     public virtual DbSet<Comment> Comments { get; set; }
@@ -38,6 +37,8 @@ public partial class WebContext : DbContext
     public virtual DbSet<Purchase> Purchases { get; set; }
 
     public virtual DbSet<QuestionTemplate> QuestionTemplates { get; set; }
+
+    public virtual DbSet<QuestionTemplateDetailQaid> QuestionTemplateDetailQaids { get; set; }
 
     public virtual DbSet<QuestionTemplatesDetail> QuestionTemplatesDetails { get; set; }
 
@@ -404,6 +405,22 @@ public partial class WebContext : DbContext
                 .HasColumnName("question_template_code");
         });
 
+        modelBuilder.Entity<QuestionTemplateDetailQaid>(entity =>
+        {
+            entity.HasKey(e => e.QuestionTemplatesDetailQaidsId).HasName("PK__Question__3214EC27A4E22912");
+
+            entity.ToTable("Question_template_detail_qaids");
+
+            entity.Property(e => e.QuestionTemplatesDetailQaidsId).HasColumnName("question_templates_detail_qaids_id");
+            entity.Property(e => e.QAid).HasColumnName("q_aid");
+            entity.Property(e => e.QuestionTemplatesDetailId).HasColumnName("question_templates_detail_id");
+
+            entity.HasOne(d => d.QuestionTemplatesDetail).WithMany(p => p.QuestionTemplateDetailQaids)
+                .HasForeignKey(d => d.QuestionTemplatesDetailId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__QuestionT__Quest__51300E55");
+        });
+
         modelBuilder.Entity<QuestionTemplatesDetail>(entity =>
         {
             entity.HasKey(e => e.QuestionTemplatesDetailId).HasName("PK__question__50851D49666E7B47");
@@ -411,7 +428,6 @@ public partial class WebContext : DbContext
             entity.ToTable("question_templates_detail");
 
             entity.Property(e => e.QuestionTemplatesDetailId).HasColumnName("question_templates_detail_id");
-            entity.Property(e => e.QAid).HasColumnName("q_aid");
             entity.Property(e => e.QId).HasColumnName("q_id");
             entity.Property(e => e.QText)
                 .HasMaxLength(255)

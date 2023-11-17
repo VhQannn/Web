@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using QuestionLib;
@@ -58,48 +58,90 @@ namespace Web.Controllers
 								Console.WriteLine("Filling Question...\n");
 							}
 
-							// su ly ket qua Grammar
-							if (d.SPaper.GrammarQuestions.Count > 0)
-							{
-								Console.WriteLine("Grammar Question...\n");
-								for (int i = 0; i < totalMark; i++)
-								{
-									Console.WriteLine("------------------ Count : " + count);
-									int flag = 0;
-									Question grammarQuestion1 = (Question)d.SPaper.GrammarQuestions[index: i];
-									int QID = int.Parse(grammarQuestion1.QID.ToString());
-									int index = 0;
-									int QAID = 6;
-									String QAIDX = "";
-									QuestionTemplate questionTemplateCheck = _context.QuestionTemplates.FirstOrDefault(q => q.QuestionTemplateCode == examCode);
-									QuestionTemplatesDetail QTcheck = _context.QuestionTemplatesDetails.FirstOrDefault(qtd => qtd.QId == QID);
-									Multimedium multimedium = _context.Multimedia.FirstOrDefault(q => q.QuestionTemplatesDetailId == QTcheck.QuestionTemplatesDetailId);
-									if (QTcheck != null && questionTemplateCheck != null)
-									{
-										foreach (QuestionAnswer questionAnswer in grammarQuestion1.QuestionAnswers)
-										{
-											if (questionAnswer.Selected)
-											{
-												if (int.Parse(questionAnswer.QAID.ToString()) == QTcheck.QAid)
-												{
-													QAIDX = questionAnswer.QAID.ToString();
-													//Console.WriteLine(QAIDX);
-													flag = 1;
-													count++;
-												}
-											}
-											++index;
-										}
-									}
-									// Add MarkReportDTO based on the flag value
-									string status = flag == 1 ? "True" : "False";
-									markReportDTOs.Add(new MarkReportDTO
-									{
-										imageUrl = multimedium?.MultimediaUrl,
-										status = status
-									});
-								}
-							}
+                            // xu ly ket qua Grammar
+                            if (d.SPaper.GrammarQuestions.Count > 0)
+                            {
+                                Console.WriteLine("Grammar Question...\n");
+                                for (int i = 0; i < totalMark; i++)
+                                {
+                                    Console.WriteLine("------------------ Count : " + count);
+                                    int flag = 0;
+                                    Question grammarQuestion1 = (Question)d.SPaper.GrammarQuestions[index: i];
+                                    int QID = int.Parse(grammarQuestion1.QID.ToString());
+                                    int index = 0;
+                                    int QAID = 6;
+                                    string QAIDX = "";
+                                    QuestionTemplate questionTemplateCheck = _context.QuestionTemplates.FirstOrDefault(q => q.QuestionTemplateCode == examCode);
+                                    QuestionTemplatesDetail QTcheck = _context.QuestionTemplatesDetails.FirstOrDefault(qtd => qtd.QId == QID && qtd.QuestionTemplateId == questionTemplateCheck.QuestionTemplateId);
+                                    Multimedium multimedium = _context.Multimedia.FirstOrDefault(q => q.QuestionTemplatesDetailId == QTcheck.QuestionTemplatesDetailId);
+                                    if (QTcheck != null && questionTemplateCheck != null)
+                                    {
+                                        var Qaids = _context.QuestionTemplateDetailQaids.Where(q => q.QuestionTemplatesDetailId == QTcheck.QuestionTemplatesDetailId).ToArray();
+
+                                        int[] userAnswers = grammarQuestion1.QuestionAnswers
+                                                            .Cast<QuestionAnswer>()
+                                                            .Where(qa => qa.Selected)
+                                                            .Select(qa => qa.QAID)
+                                                            .ToArray();
+
+
+                                        int[] correctAnswers = Qaids.Select(q => q.QAid).ToArray();
+
+                                        bool areAnswersCorrect = AreArraysEqual(userAnswers, correctAnswers);
+
+
+                                        if (areAnswersCorrect)
+                                        {
+                                            flag = 1;
+                                            count++;
+                                        }
+
+
+                                        //foreach (QuestionAnswer questionAnswer in grammarQuestion1.QuestionAnswers)
+                                        //{
+                                        //    if (questionAnswer.Selected)
+                                        //    {
+                                        //        userAnswers.Add
+
+                                        //        var Qaids = _context.QuestionTemplateDetailQaids.Where(q => q.QuestionTemplatesDetailId == QTcheck.QuestionTemplatesDetailId).ToArray();
+                                        //        if(Qaids.Length > 0)
+                                        //        {
+                                        //            foreach (var Qaid in Qaids)
+                                        //            {
+                                        //                if (int.Parse(questionAnswer.QAID.ToString()).Equals(Qaid.QAid))
+                                        //                {
+                                        //                    QAIDX = questionAnswer.QAID.ToString();
+                                        //                    flag = 1;
+                                        //                    break;
+                                        //                }
+                                        //                else
+                                        //                {
+                                        //                    flag = 0;
+                                        //                }
+                                        //            }
+                                                    
+                                        //        }
+                                                
+                                        //    }
+
+                                        //    ++index;
+                                        //}
+
+                                        //if(flag == 1)
+                                        //{
+                                        //    count++;
+                                        //}
+                                    }
+                                    // Add MarkReportDTO based on the flag value
+                                    string status = flag == 1 ? "Correct" : "Incorrect";
+                                    markReportDTOs.Add(new MarkReportDTO
+                                    {
+                                        imageUrl = multimedium?.MultimediaUrl,
+                                        status = status,
+                                        qtext = QTcheck.QText
+                                    });
+                                }
+                            }
 
 							if (d.SPaper.IndicateMQuestions.Count > 0)
 							{
@@ -120,10 +162,19 @@ namespace Web.Controllers
 			_context.MarkReports.Update(markReport);
 			_context.SaveChanges();
 
-			markReportReponse.totalMark = mark.ToString("#.###");
-			markReportReponse.markReportDTOs = markReportDTOs;
+            return markReportReponse;
+        }
 
-			return markReportReponse;
-		}
-	}
+        static bool AreArraysEqual(int[] array1, int[] array2)
+        {
+            // Kiểm tra độ dài của hai mảng
+            if (array1.Length != array2.Length)
+            {
+                return false;
+            }
+
+            // Sử dụng SequenceEqual để so sánh hai mảng
+            return array1.SequenceEqual(array2);
+        }
+    }
 }

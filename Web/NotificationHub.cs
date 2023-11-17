@@ -5,7 +5,8 @@ namespace Web
 {
 	public class NotificationHub : Hub
 	{
-		public async Task ReceivedWebHook()
+
+        public async Task ReceivedWebHook()
 		{
 			await Clients.Others.SendAsync("ProcessPayment");
 		}

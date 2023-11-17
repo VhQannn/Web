@@ -2,10 +2,9 @@
 {
     public class QuestionTemplatesDetailDto
     {
-        public int QId { get; set; }
-        public int QAid { get; set; }
-        public string QText { get; set; }
-
-        public IFormFile ImageFile { get; set; }
+        public int QID { get; set; }
+        public int[] QAIDs { get; set; }
+        public string ImageURL { get; set; }
+        public string Qtext { get; set; }
     }
 }
