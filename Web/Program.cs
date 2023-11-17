@@ -28,6 +28,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 }).AddCookie(options =>
 {
+    options.LoginPath = "/login";
     options.AccessDeniedPath = "/forbidden";
     options.LogoutPath = "/logout";  // Add this line for logout path
 });

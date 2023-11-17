@@ -23,6 +23,11 @@ namespace Web
 			await Clients.Others.SendAsync("NewWithdrawalRequest");
 		}
 
-
-	}
+        public override Task OnConnectedAsync()
+        {
+            var userId = Context.User.Identity.Name;
+            Groups.AddToGroupAsync(Context.ConnectionId, userId);
+            return base.OnConnectedAsync();
+        }
+    }
 }

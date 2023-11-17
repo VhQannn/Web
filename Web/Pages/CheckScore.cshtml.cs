@@ -29,7 +29,7 @@ namespace Web.Pages
                 var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
                 UserId = userIdClaim != null ? int.Parse(userIdClaim.Value) : 1;
                 var client = _clientFactory.CreateClient();
-                var absoluteUri = "http://localhost:5227/api/upload";
+                var absoluteUri = "https://hotrohoctap.azurewebsites.net/api/upload";
                 using var content = new MultipartFormDataContent();
                 using var fileStream = file.OpenReadStream();
                 using var streamContent = new StreamContent(fileStream);

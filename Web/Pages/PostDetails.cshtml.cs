@@ -7,9 +7,9 @@ namespace Web.Pages
 {
     public class PostDetailsModel : PageModel
     {
-        private readonly Web.DbConnection.WebContext _context;
+        private readonly WebContext _context;
 
-        public PostDetailsModel(Web.DbConnection.WebContext context)
+        public PostDetailsModel(WebContext context)
         {
             _context = context;
         }

@@ -162,7 +162,6 @@ namespace Web.Controllers
 				}
 			}
             else if(payment.ServiceType == "Check-Score")
-
             {
 				var mark_report = await _context.MarkReports.FirstOrDefaultAsync(p => p.MarkReportId == payment.RelatedId);
 				if(mark_report != null)
@@ -198,10 +197,9 @@ namespace Web.Controllers
 			try
 			{
 				_logger.LogInformation($"Notifying clients about the payment status update for payment ID: {paymentId}.");
-
-				var user = await _context.Users.FirstOrDefaultAsync(p => p.UserId == payment.UserId);
+                var user = await _context.Users.FirstOrDefaultAsync(p => p.UserId == payment.UserId);
                 await _notificationHub.Clients.Group(user.Username).SendAsync("ProcessPayment");
-			}
+            }
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Error sending notification for payment ID: {paymentId}.");

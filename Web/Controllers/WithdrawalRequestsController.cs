@@ -70,7 +70,7 @@ namespace Web.Controllers
             _context.WithdrawalRequests.Add(withdrawalRequest);
             await _context.SaveChangesAsync();
             await _notificationHub.Clients.Group(currentUser.Username).SendAsync("NewWithdrawalRequest");
-			return Ok(new { Message = "Withdrawal request created successfully.", RequestId = withdrawalRequest.WithdrawalRequestId });
+            return Ok(new { Message = "Withdrawal request created successfully.", RequestId = withdrawalRequest.WithdrawalRequestId });
         }
 
 	}
