@@ -1,7 +1,9 @@
 ﻿@page
 @model Web.Pages.CheckResultModel
 @{
+    ViewData["Title"] = "Kết quả bài thi";
 }
+
 @if (Model.Status.Equals("COMPLETED"))
 {
     var count = Model.markReportReponse.markReportDTOs.Where(x => x.status.Equals("Correct")).Count();
