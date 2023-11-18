@@ -2,6 +2,7 @@
 @model Web.Pages.CheckScoreModel
 @{
     ViewData["Title"] = "Check điểm bài thi";
+    var alertMessage = TempData["AlertMessage"] as string;
 }
 
 <link rel="stylesheet" href="~/css/CheckScore.css" asp-append-version="true" />
@@ -103,5 +104,19 @@
             }
         });
 
+    </script>
+
+    <script>
+        // ... Existing JavaScript code ...
+
+        $(document).ready(function () {
+            // ... Existing jQuery code ...
+
+            // Check for alert message and display
+            var alertMessage = '@Html.Raw(alertMessage)';
+            if (alertMessage) {
+                alert(alertMessage);
+            }
+        });
     </script>
 }
