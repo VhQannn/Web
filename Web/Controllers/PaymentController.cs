@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Hosting;
 using Web.Models;
+using System.Text.RegularExpressions;
 
 namespace Web.Controllers
 {
@@ -74,15 +75,13 @@ namespace Web.Controllers
 						var description = transactionData["description"].Value<string>();
 						var amount = transactionData["amount"].Value<decimal>();
 
-						var paymentOrderIdPrefix = "Payment OrderID";
-						var start = description.IndexOf(paymentOrderIdPrefix);
-						if (start != -1)
-						{
-							var paymentIdStr = description.Substring(start + paymentOrderIdPrefix.Length).Trim();
-							var paymentId = new string(paymentIdStr.SkipWhile(c => !char.IsDigit(c)).TakeWhile(char.IsDigit).ToArray());
-
-							if (int.TryParse(paymentId, out int paymentIdInt))
-							{
+                        var regex = new Regex(@"P\W*a\W*y\W*m\W*e\W*n\W*t\W*O\W*r\W*d\W*e\W*r\W*I\W*D\W*(\d+)", RegexOptions.IgnoreCase);
+                        var match = regex.Match(description);
+                        if (match.Success)
+                        {
+                            var paymentIdStr = match.Groups[1].Value;
+                            if (int.TryParse(paymentIdStr, out int paymentIdInt))
+                            {
 								var updateResult = await ValidateAndUpdatePayment(paymentIdInt, amount);
 								if (!updateResult)
 								{
