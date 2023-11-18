@@ -43,20 +43,25 @@ namespace Web.Pages
             Status = _context.Payments.FirstOrDefault(x => x.RelatedId == Id).Status;
 
             var mark_report = await _context.MarkReports.FirstOrDefaultAsync(p => p.MarkReportId == Id);
-            if (mark_report != null)
+            var payment = await _context.Payments.SingleOrDefaultAsync(x => x.RelatedId == Id);
+            if (!payment.Status.Equals("PENDING"))
             {
-                var file = await _context.Multimedia.FirstOrDefaultAsync(p => p.MarkReportId == mark_report.MarkReportId);
-                if (file != null)
+                if (mark_report != null)
                 {
-                    MarkReportRequest reportRequest = new MarkReportRequest
+                    var file = await _context.Multimedia.FirstOrDefaultAsync(p => p.MarkReportId == mark_report.MarkReportId);
+                    if (file != null)
                     {
-                        markReportId = mark_report.MarkReportId,
-                        url = file.MultimediaUrl
-                    };
-                    markReportReponse = await _markReportServices.CalculateMark(reportRequest);
-                }
+                        MarkReportRequest reportRequest = new MarkReportRequest
+                        {
+                            markReportId = mark_report.MarkReportId,
+                            url = file.MultimediaUrl
+                        };
+                        markReportReponse = await _markReportServices.CalculateMark(reportRequest);
+                    }
 
+                }
             }
+
 
         }
 

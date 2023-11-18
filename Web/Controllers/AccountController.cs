@@ -193,16 +193,8 @@ namespace Web.Controllers
             if (file != null)
             {
                 var subjectCode = await _markReportServices.GetTemplateCodeFromLink(file.MultimediaUrl);
-                if (mark_report.MarkScore == 0 || mark_report.MarkScore == null)
-                {
-                    response = $"Điểm: Đang chờ thanh toán\nThời gian: {timeString}\nMã môn: {subjectCode}";
-                }
-                else
-                {
-                    double roundedScore = Math.Round(mark_report.MarkScore.Value, 2);
-
-                    response = $"Điểm: {roundedScore}\nThời gian: {timeString}\nMã môn: {subjectCode}";
-                }
+            
+                    response = $"Thời gian: {timeString}\nMã môn: {subjectCode}";
             }
             else
             {

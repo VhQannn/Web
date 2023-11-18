@@ -1,6 +1,6 @@
 ﻿
 let currentPage = 1;
-const pageSize = 2;
+const pageSize = 10;
 
 $(document).on('click', 'a[data-target="#modelRequest"]', function () {
     var paymentId = $(this).data('payment-id');
@@ -119,6 +119,7 @@ async function loadListPayment(pageNumber) {
                 </tr>`);
             }
         };
+        attachButtonClickEvents();
         updatePaginationButtons(currentPage, totalPages);
     } catch (error) {
         console.log(error);
@@ -127,7 +128,7 @@ async function loadListPayment(pageNumber) {
 
 }
 
-attachButtonClickEvents();
+
 
 function attachButtonClickEvents() {
     // Đính kèm sự kiện click cho các nút vừa thêm vào

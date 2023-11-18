@@ -29,12 +29,12 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Trang chủ</a>
                         </li>
                         @if (Context.User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/MyPayment">My Payment</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/MyPayment">Lịch sử giao dịch</a>
                             </li>
                              <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/checkscore">Kiểm tra điểm</a>
@@ -44,7 +44,7 @@
                         @if (Context.User.IsInRole("Supporter") || Context.User.IsInRole("Customer"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/MyAssignment">My Assignment</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/MyAssignment">Assignments</a>
                             </li>
                         }
                     </ul>
