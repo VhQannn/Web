@@ -31,9 +31,17 @@ namespace Web.Repository
             return null;
         }
 
+        public bool IsExist(string username)
+        {
+            return _context.Users.Any(x => x.Username == username);
+        }
 
         public bool Register(RegisterDTO userDTO)
-        {
+        {   
+            if(IsExist(userDTO.Username))
+            {
+                return false;
+            }
             User user = new User
             {
                 Username = userDTO.Username,
