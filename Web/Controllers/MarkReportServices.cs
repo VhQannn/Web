@@ -95,42 +95,6 @@ namespace Web.Controllers
                                             flag = 1;
                                             count++;
                                         }
-
-
-                                        //foreach (QuestionAnswer questionAnswer in grammarQuestion1.QuestionAnswers)
-                                        //{
-                                        //    if (questionAnswer.Selected)
-                                        //    {
-                                        //        userAnswers.Add
-
-                                        //        var Qaids = _context.QuestionTemplateDetailQaids.Where(q => q.QuestionTemplatesDetailId == QTcheck.QuestionTemplatesDetailId).ToArray();
-                                        //        if(Qaids.Length > 0)
-                                        //        {
-                                        //            foreach (var Qaid in Qaids)
-                                        //            {
-                                        //                if (int.Parse(questionAnswer.QAID.ToString()).Equals(Qaid.QAid))
-                                        //                {
-                                        //                    QAIDX = questionAnswer.QAID.ToString();
-                                        //                    flag = 1;
-                                        //                    break;
-                                        //                }
-                                        //                else
-                                        //                {
-                                        //                    flag = 0;
-                                        //                }
-                                        //            }
-
-                                        //        }
-
-                                        //    }
-
-                                        //    ++index;
-                                        //}
-
-                                        //if(flag == 1)
-                                        //{
-                                        //    count++;
-                                        //}
                                     }
                                     // Add MarkReportDTO based on the flag value
                                     string status = flag == 1 ? "Correct" : "Incorrect";
@@ -178,6 +142,38 @@ namespace Web.Controllers
 
             // Sử dụng SequenceEqual để so sánh hai mảng
             return array1.SequenceEqual(array2);
+        }
+
+        public async Task<string> GetTemplateCodeFromFile(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                throw new ArgumentException("File is not provided or is empty.");
+            }
+
+            try
+            {
+                string examCode = string.Empty;
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    memoryStream.Position = 0; // Reset the position to the beginning of the stream
+
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    memoryStream.Seek(0, SeekOrigin.Begin); // Ensure the stream position is at the beginning
+                    SubmitPaper d = (SubmitPaper)formatter.Deserialize(memoryStream);
+                    examCode = d.SPaper.ExamCode;
+
+                    return examCode;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle or log the exception as needed
+                Console.WriteLine("Error in GetTemplateCodeFromFile: " + ex.Message);
+                throw;
+            }
         }
     }
 }
