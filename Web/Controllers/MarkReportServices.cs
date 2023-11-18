@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using Web.DTOs;
 
 namespace Web.Controllers
 {
@@ -174,6 +175,35 @@ namespace Web.Controllers
                 Console.WriteLine("Error in GetTemplateCodeFromFile: " + ex.Message);
                 throw;
             }
+        }
+
+
+        public async Task<string> GetTemplateCodeFromLink(string fileUrl)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    // Reading the file for checking scores
+                    using (HttpResponseMessage response = await client.GetAsync(fileUrl))
+                    {
+                        using (Stream scoreFileStream = await response.Content.ReadAsStreamAsync())
+                        {
+                            BinaryFormatter formatter = new BinaryFormatter();
+                            SubmitPaper d = (SubmitPaper)formatter.Deserialize(scoreFileStream);
+                            string examCode = d.SPaper.ExamCode;
+                            return examCode + " \n MSSV: " +d.LoginId;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
+
+            return "Không tìm thấy mã môn";
+
         }
     }
 }

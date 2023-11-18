@@ -66,17 +66,8 @@ function loadPosts(pageNumber) {
                 $(".post-card-container").append(postCard);
             });
 
-            if (currentPage >= totalPages) {
-                $("#nextPage").hide();
-            } else {
-                $("#nextPage").show();
-            }
-
-            if (currentPage <= 1) {
-                $("#prevPage").hide();
-            } else {
-                $("#prevPage").show();
-            }
+            $("#nextPage").prop('disabled', currentPage >= totalPages);
+            $("#prevPage").prop('disabled', currentPage <= 1);
 
             $("#currentPage").text(currentPage);
             $("#totalPages").text(totalPages);
