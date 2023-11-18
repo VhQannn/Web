@@ -75,11 +75,17 @@ namespace Web.Controllers
                     // Thêm các QAid vào bảng phụ
                     foreach (var qaid in detailDto.QAIDs)
                     {
-                        var detailQAid = new QuestionTemplateDetailQaid
+                        var detailQAid = new QuestionTemplateDetailQaid();
+                        if (qaid - detailDto.QID <= 0)
                         {
-                            QuestionTemplatesDetailId = detail.QuestionTemplatesDetailId,
-                            QAid = detailDto.QID + qaid
-                        };
+                            detailQAid.QuestionTemplatesDetailId = detail.QuestionTemplatesDetailId;
+                            detailQAid.QAid = detailDto.QID + qaid;
+                        }
+                        else
+                        {
+                            detailQAid.QuestionTemplatesDetailId = detail.QuestionTemplatesDetailId;
+                            detailQAid.QAid = qaid;
+                        }
 
                         _context.QuestionTemplateDetailQaids.Add(detailQAid);
                     }
