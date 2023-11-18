@@ -5,7 +5,7 @@
 }
 
 @if (Model.Status.Equals("COMPLETED"))
-{
+{   
     var count = Model.markReportReponse.markReportDTOs.Where(x => x.status.Equals("Correct")).Count();
     var total = Model.markReportReponse.markReportDTOs.Count();
     @if (total == 0)
