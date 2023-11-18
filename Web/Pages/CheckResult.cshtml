@@ -8,38 +8,47 @@
 {
     var count = Model.markReportReponse.markReportDTOs.Where(x => x.status.Equals("Correct")).Count();
     var total = Model.markReportReponse.markReportDTOs.Count();
-    <h1>Tổng số điểm của bạn là: @Model.markReportReponse.totalMark (@count/@total)</h1>
-    <table class="table table-striped">
-        <thead>
-        <th>Kết quả</th>
-        <th>QText</th>
-        <th>Hình ảnh</th>
-        </thead>
-        <tbody>
+    @if (total == 0)
+    {
+        <h3>Mã đề đang được cập nhật.</h3>
+        <p>Vui lòng quay lại sau 3 - 4 tiếng</p>
+    }
+    else
+    {
+        <h1>Tổng số điểm của bạn là: @Model.markReportReponse.totalMark (@count/@total)</h1>
+        <table class="table table-striped">
+            <thead>
+            <th>Kết quả</th>
+            <th>QText</th>
+            <th>Hình ảnh</th>
+            </thead>
+            <tbody>
 
-            @foreach (var item in Model.markReportReponse.markReportDTOs)
-            {
-                <tr>
-                    <td style="color:@(item.status.Equals("Correct")?"green":"red")">
-                        @item.status
-                    </td>
-                    <td>@item.qtext</td>
-                    <td>
-                        @if (item.imageUrl == null)
-                        {
-                            <p>Hổng có hình rùi <i class="fa-regular fa-face-sad-tear"></i></p>
-                        }
-                        else
-                        {
-                        <img src="@item.imageUrl" style="max-width:150px" />
-                        }
-                    </td>
-                </tr>
+                @foreach (var item in Model.markReportReponse.markReportDTOs)
+                {
+                    <tr>
+                        <td style="color:@(item.status.Equals("Correct")?"green":"red")">
+                            @item.status
+                        </td>
+                        <td>@item.qtext</td>
+                        <td>
+                            @if (item.imageUrl == null)
+                            {
+                                <p>Hổng có hình rùi <i class="fa-regular fa-face-sad-tear"></i></p>
+                            }
+                            else
+                            {
+                                <img src="@item.imageUrl" style="max-width:150px" />
+                            }
+                        </td>
+                    </tr>
 
-            }
-        </tbody>
+                }
+            </tbody>
 
-    </table>
+        </table>
+    }
+    
 
 }
 else
