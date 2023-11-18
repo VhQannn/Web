@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Web.DbConnection;
 using Web.IRepository;
 using Web.Models;
 
@@ -29,12 +28,14 @@ namespace Web.Pages
         {
           if (!ModelState.IsValid || User == null)
             {
+                TempData["Error"] = "Đăng kí thất bại! Vui lòng thử lại";
                 return Page();
             }
 
             bool isSuccess = _userRepository.Register(User);
             if(!isSuccess)
             {
+                TempData["Error"] = "Đăng kí thất bại! Vui lòng thử lại";
                 return Page();
             }
 

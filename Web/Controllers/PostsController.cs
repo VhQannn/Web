@@ -26,7 +26,7 @@ namespace Web.Controllers
 		[HttpGet]
 		public IActionResult GetAllPosts(int pageNumber = 1, int pageSize = 5)
 		{
-			var totalRecords = _context.Posts.Count();
+			var totalRecords = _context.Posts.Where(x => x.Status.Equals("approved")).Count();
 			var skip = (pageNumber - 1) * pageSize;
 
 			var posts = _context.Posts.Include(p => p.PostCategory).Include(p => p.User).Skip(skip).Take(pageSize).Select(p => new

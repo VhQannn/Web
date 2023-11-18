@@ -55,13 +55,13 @@ namespace Web.Pages
                     }
                     else
                     {
-                        TempData["AlertMessage"] = "Mã đề này chưa hỗ trợ";
+                        TempData["AlertMessage"] = $"Có lỗi xảy ra";
                         return Page();
                     }
                 }
                 else
                 {
-                    TempData["AlertMessage"] = "Mã đề này chưa hỗ trợ";
+                    TempData["AlertMessage"] = $"Mã đề {examCode} chưa hỗ trợ";
                     return Page();
                 }   
             }

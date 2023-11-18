@@ -26,6 +26,10 @@
                 </div>
                 <input type="email" placeholder="Email" asp-for="User.Email" class="form-control mb-3" />
                 <span asp-validation-for="User.Email" class="text-danger"></span>
+                @if (TempData["Error"] != null)
+                {
+                    <p style="color:red" class="badge badge-error">@TempData["Error"].ToString()</p>
+                }
                 <button class="btn btn-lg btn-outline-secondary mb-3 w-100">Đăng ký</button>
                 <div>
                     Đã có tài khoản? <a href="/login" class="text-decoration-underline">Đăng nhập ngay!</a>
