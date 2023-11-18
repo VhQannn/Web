@@ -12,17 +12,20 @@
         <div class="form-container mx-auto" style="max-width: 300px;">
             <form class="text-center" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
                 <input type="text" placeholder="Tên người dùng" asp-for="User.Username" class="form-control mb-3" />
+                <span asp-validation-for="User.Username" class="text-danger"></span>
                 <div class="password-toggle mb-3">
                     <input type="password" placeholder="Mật khẩu" asp-for="User.Password" class="form-control" />
+                    <span asp-validation-for="User.Password" class="text-danger"></span>
                     <span class="toggle-icon"><i class="fa fa-eye"></i></span>
                 </div>
                 <div class="password-toggle mb-3">
                     <input type="password" placeholder="Xác nhận mật khẩu" asp-for="User.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="User.ConfirmPassword" class="text-danger"></span>
                     <span class="toggle-icon"><i class="fa fa-eye"></i></span>
                 </div>
                 <input type="email" placeholder="Email" asp-for="User.Email" class="form-control mb-3" />
+                <span asp-validation-for="User.Email" class="text-danger"></span>
                 <button class="btn btn-lg btn-outline-secondary mb-3 w-100">Đăng ký</button>
                 <div>
                     Đã có tài khoản? <a href="/login" class="text-decoration-underline">Đăng nhập ngay!</a>

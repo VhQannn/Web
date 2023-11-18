@@ -28,8 +28,9 @@
                 </div>
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
-                        <input type="checkbox" asp-for="@Model.IsRemember" />
-                        <label class="text-decoration-underline ms-2">Nhớ mật khẩu</label>
+                        <input type="checkbox" id="rememberSwitch" asp-for="@Model.IsRemember" />
+                        
+                        <label for="rememberSwitch" class="text-decoration-underline ms-2">Nhớ mật khẩu</label>
                     </div>
                     <a href="#" class="text-decoration-underline">Quên mật khẩu?</a>
                 </div>
