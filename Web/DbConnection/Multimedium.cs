@@ -33,11 +33,15 @@ public partial class Multimedium
 
     public string? UpdatedBy { get; set; }
 
+    public int? MessageId { get; set; }
+
     public virtual Assignment? Assignment { get; set; }
 
     public virtual Course? Course { get; set; }
 
     public virtual MarkReport? MarkReport { get; set; }
+
+    public virtual Message? Message { get; set; }
 
     public virtual Post? Post { get; set; }
 

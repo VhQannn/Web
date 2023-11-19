@@ -19,9 +19,17 @@ public partial class HotrohoctapContext : DbContext
 
     public virtual DbSet<Comment> Comments { get; set; }
 
+    public virtual DbSet<Conversation> Conversations { get; set; }
+
+    public virtual DbSet<ConversationMember> ConversationMembers { get; set; }
+
     public virtual DbSet<Course> Courses { get; set; }
 
     public virtual DbSet<MarkReport> MarkReports { get; set; }
+
+    public virtual DbSet<Message> Messages { get; set; }
+
+    public virtual DbSet<MessageReadStatus> MessageReadStatuses { get; set; }
 
     public virtual DbSet<Multimedium> Multimedia { get; set; }
 
@@ -105,6 +113,58 @@ public partial class HotrohoctapContext : DbContext
                 .HasConstraintName("FK__Comments__user_i__123EB7A3");
         });
 
+        modelBuilder.Entity<Conversation>(entity =>
+        {
+            entity.HasKey(e => e.ConversationId).HasName("PK__Conversa__311E7E9ABB4D7030");
+
+            entity.Property(e => e.ConversationId).HasColumnName("conversation_id");
+            entity.Property(e => e.CreatedTime)
+                .HasColumnType("datetime")
+                .HasColumnName("created_time");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("isActive");
+            entity.Property(e => e.IsArchived)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("isArchived");
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("isDeleted");
+            entity.Property(e => e.UpdatedTime)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_time");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Conversations)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Conversat__user___5BAD9CC8");
+        });
+
+        modelBuilder.Entity<ConversationMember>(entity =>
+        {
+            entity.HasKey(e => e.ConversationMemberId).HasName("PK__Conversa__A390F78D2CE8C4FD");
+
+            entity.ToTable("Conversation_Members");
+
+            entity.Property(e => e.ConversationMemberId).HasColumnName("conversation_member_id");
+            entity.Property(e => e.ConversationId).HasColumnName("conversation_id");
+            entity.Property(e => e.JoinTime)
+                .HasColumnType("datetime")
+                .HasColumnName("join_time");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.Conversation).WithMany(p => p.ConversationMembers)
+                .HasForeignKey(d => d.ConversationId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Conversat__conve__6AEFE058");
+
+            entity.HasOne(d => d.User).WithMany(p => p.ConversationMembers)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Conversat__user___6BE40491");
+        });
+
         modelBuilder.Entity<Course>(entity =>
         {
             entity.HasKey(e => e.CourseId).HasName("PK__Courses__8F1EF7AED9538176");
@@ -165,6 +225,55 @@ public partial class HotrohoctapContext : DbContext
                 .HasConstraintName("FK__mark_repo__user___395884C4");
         });
 
+        modelBuilder.Entity<Message>(entity =>
+        {
+            entity.HasKey(e => e.MessageId).HasName("PK__Messages__0BBF6EE6844778CC");
+
+            entity.Property(e => e.MessageId).HasColumnName("message_id");
+            entity.Property(e => e.ConversationId).HasColumnName("conversation_id");
+            entity.Property(e => e.MessageText).HasColumnName("message_text");
+            entity.Property(e => e.MessageType)
+                .HasMaxLength(50)
+                .HasColumnName("message_type");
+            entity.Property(e => e.ReceiverId).HasColumnName("receiver_id");
+            entity.Property(e => e.SenderId).HasColumnName("sender_id");
+            entity.Property(e => e.SentTime)
+                .HasColumnType("datetime")
+                .HasColumnName("sent_time");
+
+            entity.HasOne(d => d.Conversation).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.ConversationId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Messages__messag__5E8A0973");
+
+            entity.HasOne(d => d.Sender).WithMany(p => p.Messages)
+                .HasForeignKey(d => d.SenderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Messages__sender__5F7E2DAC");
+        });
+
+        modelBuilder.Entity<MessageReadStatus>(entity =>
+        {
+            entity.HasKey(e => e.StatusId).HasName("PK__Message___3683B531800A81B0");
+
+            entity.ToTable("Message_Read_Status");
+
+            entity.Property(e => e.StatusId).HasColumnName("status_id");
+            entity.Property(e => e.MessageId).HasColumnName("message_id");
+            entity.Property(e => e.ReadTime)
+                .HasColumnType("datetime")
+                .HasColumnName("read_time");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.Message).WithMany(p => p.MessageReadStatuses)
+                .HasForeignKey(d => d.MessageId)
+                .HasConstraintName("FK__Message_R__messa__6442E2C9");
+
+            entity.HasOne(d => d.User).WithMany(p => p.MessageReadStatuses)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__Message_R__user___65370702");
+        });
+
         modelBuilder.Entity<Multimedium>(entity =>
         {
             entity.HasKey(e => e.MultimediaId).HasName("PK__multimed__C5029F69D77E13EB");
@@ -183,6 +292,7 @@ public partial class HotrohoctapContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("created_date");
             entity.Property(e => e.MarkReportId).HasColumnName("mark_report_id");
+            entity.Property(e => e.MessageId).HasColumnName("message_id");
             entity.Property(e => e.MultimediaType)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -215,6 +325,10 @@ public partial class HotrohoctapContext : DbContext
             entity.HasOne(d => d.MarkReport).WithMany(p => p.Multimedia)
                 .HasForeignKey(d => d.MarkReportId)
                 .HasConstraintName("FK__multimedi__mark___498EEC8D");
+
+            entity.HasOne(d => d.Message).WithMany(p => p.Multimedia)
+                .HasForeignKey(d => d.MessageId)
+                .HasConstraintName("FK__multimedi__messa__6166761E");
 
             entity.HasOne(d => d.PostCategory).WithMany(p => p.Multimedia)
                 .HasForeignKey(d => d.PostCategoryId)
@@ -431,7 +545,6 @@ public partial class HotrohoctapContext : DbContext
             entity.Property(e => e.QuestionTemplatesDetailId).HasColumnName("question_templates_detail_id");
             entity.Property(e => e.QId).HasColumnName("q_id");
             entity.Property(e => e.QText)
-                .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("q_text");
             entity.Property(e => e.QuestionTemplateId).HasColumnName("question_template_id");
