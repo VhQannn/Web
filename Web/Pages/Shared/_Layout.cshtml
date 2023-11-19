@@ -2,119 +2,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/loader.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/toastMessage.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/navbar.css" asp-append-version="true" />
-    
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"]</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/css/loader.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/css/toastMessage.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/Web.styles.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/css/navbar.css" asp-append-version="true" />
+
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
-    @{
-        var uId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-    }
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        @if (Context.User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/MyPayment">My Payment</a>
-                            </li>
-                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/checkscore">Kiểm tra điểm</a>
-                            </li>
-                        }
+	@{
+		var uId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+	}
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+			<div class="container">
+				<a class="navbar-brand" asp-area="" asp-page="/Index">Web</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+					<ul class="navbar-nav flex-grow-1">
+						<li class="nav-item">
+							<a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+						</li>
+						@if (Context.User.Identity.IsAuthenticated)
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-page="/MyPayment">My Payment</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-page="/checkscore">Kiểm tra điểm</a>
+							</li>
+						}
 
-                        @if (Context.User.IsInRole("Supporter") || Context.User.IsInRole("Customer"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/MyAssignment">My Assignment</a>
-                            </li>
-                        }
-                    </ul>
-                    <ul class="navbar-nav">
-                        @if (Context.User.Identity.IsAuthenticated)
-                                {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Cài đặt tài khoản
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                
-                                    <a class="dropdown-item" href="./users/detail?uId=@uId">Trang cá nhân</a>
-                                    <a class="dropdown-item" href="/logout">Đăng Xuất</a>
-                                    @if (Context.User.IsInRole("Admin"))
-                                    {
-                                        <a class="dropdown-item" href="/admin/dashboard">Trang quản trị</a>
-                                    }
-                            </div>
-                            </li>
-                        }
-                        else
-                        {
-                        <li>
-                            <a class="nav-link text-dark" href="/login">Đăng Nhập</a>
-                        </li>
-                        <li>
-                            <a class="nav-link text-dark" href="/register">Đăng Kí</a>
-                        </li>
-                        }
+						@if (Context.User.IsInRole("Supporter") || Context.User.IsInRole("Customer"))
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-page="/MyAssignment">My Assignment</a>
+							</li>
+						}
+					</ul>
+					<ul class="navbar-nav">
+						@if (Context.User.Identity.IsAuthenticated)
+						{
+							<li class="nav-item dropdown">
+								<a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									Cài đặt tài khoản
+								</a>
+								<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+									<a class="dropdown-item" href="./users/detail?uId=@uId">Trang cá nhân</a>
+									<a class="dropdown-item" href="/logout">Đăng Xuất</a>
+									@if (Context.User.IsInRole("Admin"))
+									{
+										<a class="dropdown-item" href="/admin/dashboard">Trang quản trị</a>
+									}
+								</div>
+							</li>
+						}
+						else
+						{
+							<li>
+								<a class="nav-link text-dark" href="/login">Đăng Nhập</a>
+							</li>
+							<li>
+								<a class="nav-link text-dark" href="/register">Đăng Kí</a>
+							</li>
+						}
 
-            @RenderBody()
-        </main>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container">
+		<main role="main" class="pb-3">
 
-    </div>
+			@RenderBody()
+		</main>
 
-
-    <div class="spinner-overlay">
-        <div class="svg-frame">
-            <div class="loader"></div>
-
-        </div>
-
-    </div>
+	</div>
 
 
-    <footer class="border-top footer text-muted">
-        <div class="container text-center">
-            &copy; 2023 - Web
-        </div>
-    </footer>
+	@if (Context.User.Identity.IsAuthenticated)
+	{
+
+		@if (Context.User.IsInRole("Customer"))
+		{
+			<div id="chatBox" class="center">
+				<div class="contacts">
+					<div class="contact">
+						<div class="pic rogers"></div>
+						<div class="badge">
+							14
+						</div>
+						<div class="name">
+							Steve Rogers
+						</div>
+						<div class="message">
+							That is America's ass 🇺🇸🍑
+						</div>
+					</div>
+					<div class="contact">
+						<div class="pic stark"></div>
+						<div class="name">
+							Tony Stark
+						</div>
+						<div class="message">
+							Uh, he's from space, he came here to steal a necklace from a wizard.
+						</div>
+					</div>
+					<div class="contact">
+						<div class="pic banner"></div>
+						<div class="badge">
+							1
+						</div>
+						<div class="name">
+							Bruce Banner
+						</div>
+						<div class="message">
+							There's an Ant-Man *and* a Spider-Man?
+						</div>
+					</div>
+					<div class="contact">
+						<div class="pic thor"></div>
+						<div class="name">
+							Thor Odinson
+						</div>
+						<div class="badge">
+							3
+						</div>
+						<div class="message">
+							I like this one
+						</div>
+					</div>
+					<div class="contact">
+						<div class="pic danvers"></div>
+						<div class="badge">
+							2
+						</div>
+						<div class="name">
+							Carol Danvers
+						</div>
+						<div class="message">
+							Hey Peter Parker, you got something for me?
+						</div>
+					</div>
+				</div>
+				<div class="chat">
+					<div class="contact bar">
+						<div class="pic stark"></div>
+						<div class="name">
+							Tony Stark
+						</div>
+						<div class="seen">
+							Today at 12:56
+						</div>
+						<div id="minimize-chat" class="minimize">
+							<span class="material-symbols-outlined">
+								close_fullscreen
+							</span>
+						</div>
+					</div>
+					<div class="messages" id="chat">
+						<div class="time">
+							Today at 11:41
+						</div>
+						<div class="message parker">
+							Hey, man! What's up, Mr Stark? 👋
+						</div>
+						<div class="message stark">
+							Kid, where'd you come from?
+						</div>
+						<div class="message parker">
+							Field trip! 🤣
+						</div>
+						<div class="message parker">
+							Uh, what is this guy's problem, Mr. Stark? 🤔
+						</div>
+						<div class="message stark">
+							Uh, he's from space, he came here to steal a necklace from a wizard.
+						</div>
+					</div>
+					<div class="input">
+						<input placeholder="Type your message here!" type="text" /><span class="material-symbols-outlined" style=" margin-right: 16px;">
+							send
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<div id="chat-bubble" style="display: none;">
+				<span>💬</span>
+			</div>
+		}
+		@*else if (Context.User.IsInRole("Customer"))
+		{
+
+		}*@
+	}
+
+
+	<div class="spinner-overlay">
+		<div class="svg-frame">
+			<div class="loader"></div>
+
+		</div>
+
+	</div>
+
+
+	<footer class="border-top footer text-muted">
+		<div class="container text-center">
+			&copy; 2023 - Web
+		</div>
+	</footer>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
 
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/toastMessage.js" asp-append-version="true"></script>
-    <script src="~/js/Notification.js" asp-append-version="true"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="~/js/toastMessage.js" asp-append-version="true"></script>
+	<script src="~/js/Notification.js" asp-append-version="true"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
