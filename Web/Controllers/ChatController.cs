@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.ComponentModel.Design;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -77,15 +78,24 @@ namespace Web.Controllers
 				MessageType = messageDto.MessageType
 			};
 
-			await _context.Messages.AddAsync(message);
+			var savedMessage = await _context.Messages.AddAsync(message);
 			await _context.SaveChangesAsync();
 
-			// Gửi thông báo đến tất cả admin
-			var adminUsers = _context.Users.Where(u => u.UserType == "Admin").ToList();
-			foreach (var admin in adminUsers)
-			{
-				await _chatHub.Clients.User(admin.UserId.ToString()).SendAsync("ReceiveMessage", message);
-			}
+			// Gửi tin nhắn tới group tương ứng với cuộc trò chuyện
+			await _chatHub.Clients.Group($"Conversation-{messageDto.ConversationId}")
+				.SendAsync("ReceiveMessage", new MessageDto
+				{
+					MessageId = savedMessage.Entity.MessageId,
+					SenderName = savedMessage.Entity.Sender.Username,
+					SenderRole = savedMessage.Entity.Sender.UserType,
+					IsRead = false,
+					MessageText = savedMessage.Entity.MessageText,
+					SentTime = savedMessage.Entity.SentTime,
+					MessageType = savedMessage.Entity.MessageType
+				}, messageDto.ConversationId);
+
+			await _chatHub.Clients.Group("Admins").SendAsync("NewMessageNotification", messageDto.ConversationId);
+
 
 			return Ok();
 		}
@@ -97,20 +107,29 @@ namespace Web.Controllers
 
 			var systemConversations = await _context.Conversations
 				.Include(c => c.ConversationMembers)
-				.Where(c => c.IsActive.GetValueOrDefault() && !c.IsArchived.GetValueOrDefault() && !c.IsDeleted.GetValueOrDefault())
+				.Where(c => (c.IsActive == true || c.IsActive == null)
+							&& (c.IsArchived == false || c.IsArchived == null)
+							&& (c.IsDeleted == false || c.IsDeleted == null))
 				.Where(c => !c.ConversationMembers.Any())
 				.Select(c => new
 				{
 					ConversationId = c.ConversationId,
+					ConversationName = _context.Users.Where(u => u.UserId == c.UserId).Select(u => u.Username).FirstOrDefault(),
 					UpdatedTime = c.UpdatedTime,
 					UnreadMessagesCount = _context.Messages.Count(m => m.ConversationId == c.ConversationId &&
-										  !_context.MessageReadStatuses.Any(s => s.MessageId == m.MessageId && s.UserId.ToString() == userId))
+											  !_context.MessageReadStatuses.Any(s => s.MessageId == m.MessageId) &&
+											  m.Sender.UserType == "Customer"),
+					LastMessage = _context.Messages.Where(m => m.ConversationId == c.ConversationId)
+						   .OrderByDescending(m => m.SentTime)
+						   .Select(m => m.MessageText)
+						   .FirstOrDefault()
 				})
 				.OrderByDescending(c => c.UpdatedTime)
 				.ToListAsync();
 
 			return Ok(systemConversations);
 		}
+
 
 
 		[HttpGet("conversation-messages/{conversationId}")]
@@ -125,6 +144,7 @@ namespace Web.Controllers
 					MessageId = m.MessageId,
 					SenderName = m.Sender.Username,
 					SenderRole = m.Sender.UserType,
+					IsRead = _context.MessageReadStatuses.Any(s => s.MessageId == m.MessageId),
 					MessageText = m.MessageText,
 					SentTime = m.SentTime,
 					MessageType = m.MessageType
@@ -133,6 +153,49 @@ namespace Web.Controllers
 
 			return Ok(messages);
 		}
+
+
+		[HttpPost("mark-messages-as-read")]
+		public async Task<IActionResult> MarkMessagesAsRead([FromBody] MarkAsReadDto dto)
+		{
+			var currentUserName = User.Identity.Name;
+			var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == currentUserName);
+
+			if (currentUser != null)
+			{
+				foreach (var messageId in dto.MessageIds)
+				{
+					// Kiểm tra xem tin nhắn đã được đánh dấu là đã đọc bởi người dùng này chưa
+					var existingStatus = await _context.MessageReadStatuses
+						.FirstOrDefaultAsync(s => s.MessageId == messageId && s.UserId == currentUser.UserId);
+
+					if (existingStatus == null)
+					{
+						var status = new MessageReadStatus
+						{
+							MessageId = messageId,
+							UserId = currentUser.UserId,
+							ReadTime = DateTime.UtcNow
+						};
+						_context.MessageReadStatuses.Add(status);
+
+						var message = await _context.Messages.Where(m => m.MessageId == messageId).FirstOrDefaultAsync();
+						if(message != null)
+						{
+							await _chatHub.Clients.Group($"Conversation-{message.ConversationId}")
+								.SendAsync("MessageRead", messageId);
+						}
+
+						
+					}
+				}
+
+				await _context.SaveChangesAsync();
+			}
+			return Ok();
+		}
+
+
 
 
 

@@ -36,4 +36,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\sound\" />
+  </ItemGroup>
+
 </Project>

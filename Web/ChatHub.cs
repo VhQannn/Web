@@ -4,10 +4,34 @@ namespace Web
 {
 	public class ChatHub : Hub
 	{
-		public async Task SendMessage(string receiverId)
+		public override async Task OnConnectedAsync()
 		{
-			// Gửi tin nhắn đến người nhận cụ thể
-			await Clients.User(receiverId).SendAsync("ReceiveMessage");
+			var user = Context.User;
+			if (user.IsInRole("Admin"))
+			{
+				await Groups.AddToGroupAsync(Context.ConnectionId, "Admins");
+			}
+			await base.OnConnectedAsync();
+		}
+
+		public async Task SendMessageToGroup(string groupName, string message)
+		{
+			await Clients.Group(groupName).SendAsync("ReceiveMessage", message);
+		}
+
+		public async Task JoinGroup(string groupName)
+		{
+			await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+		}
+
+		public async Task LeaveGroup(string groupName)
+		{
+			await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+		}
+
+		public async Task NotifyMessageRead(string groupName, int messageId)
+		{
+			await Clients.Group(groupName).SendAsync("MessageRead", messageId);
 		}
 	}
 }

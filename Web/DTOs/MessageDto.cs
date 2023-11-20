@@ -7,6 +7,8 @@
 		public string SenderName { get; set; }	
 		public string SenderRole { get; set; }	
 
+		public Boolean IsRead { get; set; }
+
 		public string MessageText { get; set; }	
 
 		public string MessageType { get; set; }
