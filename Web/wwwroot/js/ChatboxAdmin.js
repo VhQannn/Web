@@ -81,7 +81,13 @@ async function loadConversations() {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        const conversations = await response.json();
+        let conversations = await response.json();
+        conversations = conversations.sort((a, b) => {
+            if (b.unreadMessagesCount !== a.unreadMessagesCount) {
+                return b.unreadMessagesCount - a.unreadMessagesCount; // Ưu tiên conversation có nhiều tin nhắn chưa đọc hơn
+            }
+            return new Date(b.UpdatedTime) - new Date(a.UpdatedTime); // Nếu số tin nhắn chưa đọc bằng nhau, sắp xếp theo thời gian cập nhật
+        });
         displayConversations(conversations);
         conversationsList = conversations;
     } catch (error) {
@@ -100,7 +106,6 @@ function displayConversations(conversations) {
     const contactsContainer = document.getElementById('contacts');
     contactsContainer.innerHTML = ''; // Xóa danh sách cũ
     conversations.forEach(conversation => {
-        console.log(conversation);
         const contactDiv = document.createElement('div');
         contactDiv.className = 'contact';
         contactDiv.innerHTML = `
@@ -143,8 +148,6 @@ async function openConversation(conversation) {
     if (currentConversationId) {
         await connectionChat.invoke("LeaveGroup", `Conversation-${currentConversationId}`);
     }
-
-
 
     const messages = await getMessagesForConversation(conversation.conversationId);
     clearMessages();

@@ -18,7 +18,6 @@ function setupEventListeners() {
     connectionChat.on("ReceiveMessage", function (message, _conversationId) {
         if (currentConversationId === _conversationId) {
             if (chatBox.style.display === 'none') {
-                console.log("hello");
                 playNewMessageSound();
             } else {
                 addMessageToUI(message);

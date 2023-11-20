@@ -79,7 +79,6 @@ async function loadListPayment(pageNumber) {
                 }
             } else {
                 labelForRole = "Người Nhận Bài";
-                console.log(item);
                 // For regular users
                 if (item.status === "PENDING") {
                     actionButton = `<button class="view-qr-button btn btn-danger btn-sm text-white" data-payment-id="${item.paymentId}" data-payment-amount="${item.amount}" data-payment-username="${item.user.username}">View QR Code</button>`;
@@ -107,7 +106,6 @@ async function loadListPayment(pageNumber) {
                     <td data-label="Hành Động">${actionButton}</td>
                 </tr>`);
             } else if (item.serviceType == "Check-Score") {
-                console.log(item.paymentId);
                 var subjectInfo = await checkScoreDetails(item.paymentId);
                 tableBody.append(`<tr>
                     <td data-label="Ngày Giao Dịch">${paymentDate}</td>
@@ -122,7 +120,6 @@ async function loadListPayment(pageNumber) {
         attachButtonClickEvents();
         updatePaginationButtons(currentPage, totalPages);
     } catch (error) {
-        console.log(error);
         showToast("Error", "Unable to load payments: " + error, "error");
     }
 
@@ -163,7 +160,6 @@ function attachButtonClickEvents() {
 
     $('.view-profile-button').click(function () {
         var receiverId = $(this).data('receiver-id');
-        console.log(receiverId);
         window.location.href = "/users/detail?uId=" + receiverId;
     });
 
