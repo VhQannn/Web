@@ -15,10 +15,13 @@ namespace Web.Controllers
 
 		private readonly WebContext _context;
 		private readonly IHubContext<ChatHub> _chatHub;
+		private readonly  TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+		private readonly DateTime vietnamTime;
 		public ChatController(WebContext context, IHubContext<ChatHub> chatHub)
 		{
 			_context = context;
 			_chatHub = chatHub;
+			vietnamTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vietnamTimeZone);
 		}
 
 
@@ -45,8 +48,8 @@ namespace Web.Controllers
 			var newConversation = new Conversation
 			{
 				UserId = currentUser.UserId,
-				CreatedTime = DateTime.UtcNow,
-				UpdatedTime = DateTime.UtcNow,
+				CreatedTime = vietnamTime,
+				UpdatedTime = vietnamTime,
 				IsActive = true,
 				IsArchived = false,
 				IsDeleted = false
@@ -68,13 +71,13 @@ namespace Web.Controllers
 			{
 				return NotFound("Không tìm thấy người dùng!");
 			}
-
+			
 			var message = new Message
 			{
 				ConversationId = messageDto.ConversationId,
 				SenderId = currentUser.UserId,
 				MessageText = messageDto.MessageText,
-				SentTime = DateTime.UtcNow,
+				SentTime = vietnamTime,
 				MessageType = messageDto.MessageType
 			};
 
@@ -171,11 +174,12 @@ namespace Web.Controllers
 
 					if (existingStatus == null)
 					{
+						
 						var status = new MessageReadStatus
 						{
 							MessageId = messageId,
 							UserId = currentUser.UserId,
-							ReadTime = DateTime.UtcNow
+							ReadTime = vietnamTime
 						};
 						_context.MessageReadStatuses.Add(status);
 
