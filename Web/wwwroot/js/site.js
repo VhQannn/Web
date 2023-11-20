@@ -6,3 +6,7 @@ function hideLoader() {
     document.querySelector(".spinner-overlay").style.display = "none";
 }
 hideLoader();
+
+
+
+
