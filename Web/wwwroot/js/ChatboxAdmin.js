@@ -3,36 +3,46 @@ const connectionChat = new signalR.HubConnectionBuilder()
     .withUrl("/chatHub")
     .build();
 
-connectionChat.start().catch(err => console.error(err.toString()));
-
-connectionChat.on("ReceiveMessage", function (message, conversationId) {
-    if (currentConversationId === conversationId && chatBox.style.display === 'block') {
-        addMessageToUI(message);
-        if (message.senderRole === 'Customer') {
-            markMessagesAsRead([message.messageId]);
-        }
-    } else {
-        playNewMessageSound();
-    }
-});
-
-connectionChat.on("NewMessageNotification", function (conversationId) {
-    if (currentConversationId !== conversationId || chatBox.style.display === 'none') {
-        playNewMessageSound();
+async function initializeSignalRConnection() {
+    try {
+        await connectionChat.start();
+        setupEventListeners();
         loadConversations();
+    } catch (err) {
+        console.error('Error during SignalR Connection: ', err);
     }
-    
-});
+}
 
-connectionChat.on("MessageRead", function (messageId) {
-    const messageElement = document.querySelector(`div[data-message-id="${messageId}"]`);
-    if (messageElement) {
-        const readStatusElement = messageElement.querySelector('.read-status');
-        if (readStatusElement) {
-            readStatusElement.innerText = 'Đã xem';
+function setupEventListeners() {
+    connectionChat.on("ReceiveMessage", function (message, conversationId) {
+        if (currentConversationId === conversationId && chatBox.style.display === 'block') {
+            addMessageToUI(message);
+            if (message.senderRole === 'Customer') {
+                markMessagesAsRead([message.messageId]);
+            }
+        } else {
+            playNewMessageSound();
         }
-    }
-});
+    });
+
+    connectionChat.on("NewMessageNotification", function (conversationId) {
+        if (currentConversationId !== conversationId || chatBox.style.display === 'none') {
+            playNewMessageSound();
+            loadConversations();
+        }
+
+    });
+
+    connectionChat.on("MessageRead", function (messageId) {
+        const messageElement = document.querySelector(`div[data-message-id="${messageId}"]`);
+        if (messageElement) {
+            const readStatusElement = messageElement.querySelector('.read-status');
+            if (readStatusElement) {
+                readStatusElement.innerText = 'Đã xem';
+            }
+        }
+    });
+}
 
 function playNewMessageSound() {
     var sound = document.getElementById("messageSound");
@@ -127,7 +137,7 @@ function clearMessages() {
     messagesContainer.innerHTML = ''; // Xóa nội dung hiện tại của container
 }
 
-var currentConversationId = null;
+var currentConversationId = 0;
 
 async function openConversation(conversation) {
     if (currentConversationId) {
@@ -249,10 +259,6 @@ function addMessageToUI(message) {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-window.onload = function () {
-    loadConversations();
-};
-
 async function markMessagesAsRead(messageIds) {
     if (messageIds.length === 0) {
         return; // Không có tin nhắn nào để đánh dấu
@@ -272,4 +278,8 @@ async function markMessagesAsRead(messageIds) {
     }
 }
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    initializeSignalRConnection();
+});
 

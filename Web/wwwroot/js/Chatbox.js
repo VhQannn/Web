@@ -4,7 +4,45 @@ const connectionChat = new signalR.HubConnectionBuilder()
     .build();
 
 
-connectionChat.start().catch(err => console.error(err.toString()));
+async function initializeSignalRConnection() {
+    try {
+        await connectionChat.start();
+        setupEventListeners();
+        loadChat();
+    } catch (err) {
+        console.error('Error during SignalR Connection: ', err);
+    }
+}
+
+function setupEventListeners() {
+    connectionChat.on("ReceiveMessage", function (message, _conversationId) {
+        if (currentConversationId === _conversationId) {
+            if (chatBox.style.display === 'none') {
+                console.log("hello");
+                playNewMessageSound();
+            } else {
+                addMessageToUI(message);
+                if (message.senderRole === 'Admin') {
+                    markMessagesAsRead([message.messageId]);
+                }
+            }
+
+        }
+    });
+
+
+    connectionChat.on("MessageRead", function (messageId) {
+        const messageElement = document.querySelector(`div[data-message-id="${messageId}"]`);
+        if (messageElement) {
+            const readStatusElement = messageElement.querySelector('.read-status');
+            if (readStatusElement) {
+                // Cập nhật nội dung của phần tử này thành "Đã xem"
+                readStatusElement.innerText = 'Đã xem';
+            }
+        }
+    });
+}
+
 
 var chat = document.getElementById('chat');
 var chatBox = document.getElementById('chatBox');
@@ -83,8 +121,6 @@ async function loadChat() {
         }
     }
 }
-
-document.addEventListener("DOMContentLoaded", loadChat());
 function addMessageToUI(message) {
     const messagesContainer = document.getElementById("chat");
     const messageDiv = document.createElement("div");
@@ -154,33 +190,7 @@ sendButton.addEventListener('click', function () {
 });
 
 
-// Xử lý tin nhắn nhận được
-connectionChat.on("ReceiveMessage", function (message, _conversationId) {
-    if (currentConversationId === _conversationId) {
-        if (chatBox.style.display === 'none') {
-            console.log("hello");
-            playNewMessageSound();
-        } else {
-            addMessageToUI(message);
-            if (message.senderRole === 'Admin') {
-                markMessagesAsRead([message.messageId]);
-            }
-        }
-        
-    }
-});
 
-
-connectionChat.on("MessageRead", function (messageId) {
-    const messageElement = document.querySelector(`div[data-message-id="${messageId}"]`);
-    if (messageElement) {
-        const readStatusElement = messageElement.querySelector('.read-status');
-        if (readStatusElement) {
-            // Cập nhật nội dung của phần tử này thành "Đã xem"
-            readStatusElement.innerText = 'Đã xem';
-        }
-    }
-});
 
 
 function playNewMessageSound() {
@@ -223,5 +233,10 @@ async function markMessagesAsRead(messageIds) {
         console.error('Error:', error);
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    initializeSignalRConnection();
+});
+
 
 
