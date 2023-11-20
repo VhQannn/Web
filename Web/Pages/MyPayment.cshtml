@@ -3,9 +3,19 @@
 
 @{
 	ViewData["Title"] = "Lịch Sử Giao Dịch";
+	TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
+	DateTime vietnamTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vietnamTimeZone);
+
+	int currentTime = vietnamTime.Hour;
 }
 <link rel="stylesheet" href="~/css/Mypayment.css" asp-append-version="true" />
 
+@if(currentTime >=22 || currentTime < 0)
+{
+	<p style="color:red"><strong>Lưu ý:</strong>
+		<br>Ngân hàng sẽ thống kê từ 22 giờ đến 24 giờ nên lúc này hệ thống sẽ cập nhật giao dịch chậm.</p>
+}
 <h1>Lịch sử giao dịch</h1>
 <div id="payment-table-container">
 	<table class="table">
