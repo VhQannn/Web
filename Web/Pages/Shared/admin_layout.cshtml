@@ -124,6 +124,28 @@
                             <span class="nav-link-text ms-1">Tạo mã đề check điểm</span>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link @((Context.Request.Path).ToString().Contains("manage-question-template")?"active":"")" href="/admin/manage-question-template">
+                            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+                                    <path d="M0 80C0 53.49 21.49 32 48 32H80H368H400C426.5 32 448 53.49 448 80V96H416V80C416 71.16 408.8 64 400 64H368H80H48C39.16 64 32 71.16 32 80V96H0V80zM432 128H16C7.164 128 0 135.2 0 144V464C0 490.5 21.49 512 48 512H400C426.5 512 448 490.5 448 464V144C448 135.2 440.8 128 432 128zM304 464C304 472.8 296.8 480 288 480C279.2 480 272 472.8 272 464V224C272 215.2 279.2 208 288 208C296.8 208 304 215.2 304 224V464zM208 464C208 472.8 200.8 480 192 480C183.2 480 176 472.8 176 464V224C176 215.2 183.2 208 192 208C200.8 208 208 215.2 208 224V464zM112 464C112 472.8 104.8 480 96 480C87.16 480 80 472.8 80 464V224C80 215.2 87.16 208 96 208C104.8 208 112 215.2 112 224V464z" />
+                                </svg>
+                            </div>
+                            <span class="nav-link-text ms-1">Quản lý mã đề check điểm.</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link @((Context.Request.Path).ToString().Contains("manage-payments") ? "active" : "")" href="/admin/manage-payments">
+                            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512">
+                                    <path d="M608 0H32C14.4 0 0 14.4 0 32v448c0 17.6 14.4 32 32 32h576c17.6 0 32-14.4 32-32V32c0-17.6-14.4-32-32-32zM192 416c-53 0-96-43-96-96s43-96 96-96 96 43 96 96-43 96-96 96zm288-256H160V96h320v64z" />
+                                </svg>
+                            </div>
+                            <span class="nav-link-text ms-1">Quản lý thanh toán</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
 

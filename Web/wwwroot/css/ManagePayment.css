@@ -1,0 +1,81 @@
+﻿form {
+    margin-bottom: 20px;
+}
+
+input[type="text"], input[type="number"] {
+    padding: 5px;
+    margin-right: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 6px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+    .table th, .table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+    }
+
+.custom-pagination {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+    margin-top: 20px;
+}
+
+    .custom-pagination li {
+        display: inline;
+        margin-right: 5px;
+    }
+
+        .custom-pagination li a {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            color: #007bff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+            .custom-pagination li.active a, .custom-pagination li a:hover {
+                background-color: #007bff;
+                color: white;
+            }
+
+        .custom-pagination li.disabled a {
+            color: #ccc;
+            cursor: default;
+        }
+
+    .custom-pagination .page-item {
+        display: inline-block; /* or other styles as needed */
+        margin-right: 5px; /* spacing between items */
+        /* Add more styles as needed */
+    }
+
+    .custom-pagination .page-link {
+        display: inline-block; /* Ensures the text is shown */
+        padding: 5px 10px; /* Adjust as needed */
+        /* Additional styling for links */
+    }

@@ -1,0 +1,52 @@
+﻿@page "/admin/manage-question-template"
+@model Web.Pages.Admin.ManageTemplatesModel
+
+@{
+    ViewData["Title"] = "Quản lý mã đề mẫu";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (!string.IsNullOrEmpty(TempData["SuccessMessage"] as string))
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(TempData["ErrorMessage"] as string))
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (Model.Templates != null && Model.Templates.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Template Code</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var template in Model.Templates)
+            {
+                <tr>
+                    <td>@template.QuestionTemplateCode</td>
+                    <td>
+                        <form method="post" asp-page-handler="Delete">
+                            <input type="hidden" name="templateId" value="@template.QuestionTemplateId" />
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No templates available.</p>
+}
