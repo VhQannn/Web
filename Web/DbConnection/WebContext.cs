@@ -6,14 +6,14 @@ namespace Web.DbConnection;
 
 public partial class WebContext : DbContext
 {
-    public WebContext()
-    {
-    }
+	public WebContext()
+	{
+	}
 
-    public WebContext(DbContextOptions<HotrohoctapContext> options)
-        : base(options)
-    {
-    }
+	public WebContext(DbContextOptions<WebContext> options)
+		: base(options)
+	{
+	}
 
 	public virtual DbSet<Assignment> Assignments { get; set; }
 
@@ -64,9 +64,7 @@ public partial class WebContext : DbContext
 	public virtual DbSet<WithdrawalRequest> WithdrawalRequests { get; set; }
 
 	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-		=> optionsBuilder.UseSqlServer("Server=hotrohoctap.database.windows.net;Database=Hotrohoctap;uid=dbroot;pwd=bEFbd7sXUf;TrustServerCertificate=true");
-
+	{ }
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		modelBuilder.Entity<Assignment>(entity =>
@@ -645,6 +643,18 @@ public partial class WebContext : DbContext
 			entity.Property(e => e.Facebook)
 				.HasMaxLength(255)
 				.HasColumnName("facebook");
+			entity.Property(e => e.IsVerify)
+				.HasDefaultValueSql("((0))")
+				.HasColumnName("isVerify");
+			entity.Property(e => e.Otpcode)
+				.HasMaxLength(6)
+				.IsUnicode(false)
+				.HasDefaultValueSql("((0))")
+				.HasColumnName("OTPCode");
+			entity.Property(e => e.OtpcreateTime)
+				.HasDefaultValueSql("(getdate())")
+				.HasColumnType("datetime")
+				.HasColumnName("OTPCreateTime");
 			entity.Property(e => e.Password)
 				.HasMaxLength(255)
 				.HasColumnName("password");

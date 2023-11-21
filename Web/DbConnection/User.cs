@@ -21,6 +21,12 @@ public partial class User
 
     public DateTime? UpdatedAt { get; set; }
 
+    public bool? IsVerify { get; set; }
+
+    public string? Otpcode { get; set; }
+
+    public DateTime? OtpcreateTime { get; set; }
+
     public virtual ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
