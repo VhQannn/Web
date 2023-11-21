@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Web.DbConnection;
 using Web.DTOs;
+using Web.Util;
 
 namespace Web.Controllers
 {
@@ -14,11 +15,13 @@ namespace Web.Controllers
 	{
 
 		private readonly WebContext _context;
+		private readonly UploadFile _uploadFile;
 		private readonly IHubContext<ChatHub> _chatHub;
 		private readonly  TimeZoneInfo vietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
 		private readonly DateTime vietnamTime;
-		public ChatController(WebContext context, IHubContext<ChatHub> chatHub)
+		public ChatController(UploadFile uploadFile, WebContext context, IHubContext<ChatHub> chatHub)
 		{
+			_uploadFile = uploadFile;
 			_context = context;
 			_chatHub = chatHub;
 			vietnamTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vietnamTimeZone);
@@ -112,6 +115,87 @@ namespace Web.Controllers
 			return Ok();
 		}
 
+		[HttpPost("send-customer-message-file")]
+		public async Task<IActionResult> SendCustomerMessageFile([FromForm] IFormFile file, [FromForm] int conversationId, [FromForm] string messageType)
+		{
+			var currentUserName = User.Identity.Name;
+			var currentUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == currentUserName);
+
+			if (currentUser == null)
+			{
+				return NotFound("Không tìm thấy người dùng!");
+			}
+
+			try
+			{
+				var result = await _uploadFile.UploadFileToCloud(file);
+				if(result != null)
+				{
+					var message = new Message
+					{
+						ConversationId = conversationId,
+						SenderId = currentUser.UserId,
+						SentTime = vietnamTime,
+						MessageType = messageType
+					};
+
+					var savedMessage = await _context.Messages.AddAsync(message);
+
+					await _context.SaveChangesAsync();
+					// Tìm và cập nhật cuộc trò chuyện
+					var conversation = await _context.Conversations
+						.FirstOrDefaultAsync(c => c.ConversationId == conversationId);
+					if (conversation != null)
+					{
+						conversation.UpdatedTime = vietnamTime;
+						_context.Conversations.Update(conversation);
+					}
+
+					var multimedia = new Multimedium
+					{
+						CreatedDate = DateTime.UtcNow,
+						UpdatedDate = DateTime.UtcNow,
+						MultimediaUrl = result.SecureUri.ToString(),
+						MessageId = savedMessage.Entity.MessageId,
+						MultimediaType = "file"
+
+					};
+					await _context.Multimedia.AddAsync(multimedia);
+
+					await _context.SaveChangesAsync();
+
+					// Gửi tin nhắn tới group tương ứng với cuộc trò chuyện
+					await _chatHub.Clients.Group($"Conversation-{conversationId}")
+						.SendAsync("ReceiveMessage", new MessageDto
+						{
+							MessageId = savedMessage.Entity.MessageId,
+							SenderName = savedMessage.Entity.Sender.Username,
+							SenderRole = savedMessage.Entity.Sender.UserType,
+							IsRead = false,
+							MessageText = result.SecureUri.ToString(),
+							SentTime = savedMessage.Entity.SentTime,
+							MessageType = savedMessage.Entity.MessageType
+						}, conversationId);
+
+					await _chatHub.Clients.Group("Admins").SendAsync("NewMessageNotification", conversationId);
+
+
+					return Ok();
+				} else
+				{
+					return NotFound();
+				}
+
+				
+
+			}
+			catch (Exception)
+			{
+
+				return NotFound();
+			}
+		}
+
 		[HttpGet("system-conversations")]
 		public async Task<IActionResult> GetSystemConversations()
 		{
@@ -159,7 +243,8 @@ namespace Web.Controllers
 					SenderName = m.Sender.Username,
 					SenderRole = m.Sender.UserType,
 					IsRead = _context.MessageReadStatuses.Any(s => s.MessageId == m.MessageId),
-					MessageText = m.MessageText,
+					MessageText = m.MessageType == "Text" ? m.MessageText :
+						  _context.Multimedia.Where(a => a.MessageId == m.MessageId).FirstOrDefault().MultimediaUrl ?? string.Empty,
 					SentTime = m.SentTime,
 					MessageType = m.MessageType
 				})

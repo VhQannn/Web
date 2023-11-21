@@ -13,6 +13,7 @@ async function initializeSignalRConnection() {
         console.error('Error during SignalR Connection: ', err);
     }
 }
+let tempImageFile = null;
 let newMessagesCount = 0;
 function setupEventListeners() {
     connectionChat.on("ReceiveMessage", function (message, _conversationId) {
@@ -128,74 +129,105 @@ async function loadChat() {
 }
 function addMessageToUI(message) {
     const messagesContainer = document.getElementById("chat");
-    const messageDiv = document.createElement("div");
+    if (message.messageType == 'Text') {
+        const messageDiv = document.createElement("div");
 
-     // Set data-message-id cho messageDiv
-    messageDiv.dataset.messageId = message.messageId;
+        // Set data-message-id cho messageDiv
+        messageDiv.dataset.messageId = message.messageId;
 
 
-    // Kiểm tra người gửi tin nhắn để quyết định class của thẻ div
-    if (message.senderRole === 'Admin') {
-        messageDiv.className = 'message stark';
-    } else if (message.senderRole === 'Customer') {
-        messageDiv.className = 'message parker';
+        // Kiểm tra người gửi tin nhắn để quyết định class của thẻ div
+        if (message.senderRole === 'Admin') {
+            messageDiv.className = 'message stark';
+        } else if (message.senderRole === 'Customer') {
+            messageDiv.className = 'message parker';
+        }
+
+        // Nội dung tin nhắn
+        const messageContent = document.createElement("div");
+        messageContent.className = 'content';
+        messageContent.innerText = message.messageText;
+        messageDiv.appendChild(messageContent);
+
+        // Container cho thời gian gửi và trạng thái đã xem
+        const statusTimeContainer = document.createElement("div");
+        statusTimeContainer.className = 'status-time-container';
+
+        // Thời gian gửi tin nhắn
+        const messageTime = document.createElement("div");
+        messageTime.className = 'time';
+        const sentTime = new Date(message.sentTime);
+        messageTime.innerText = sentTime.toLocaleTimeString(); // Định dạng thời gian
+        statusTimeContainer.appendChild(messageTime);
+
+        // Trạng thái đã xem (nếu có)
+        if (message.senderRole === 'Customer' && message.isRead) {
+            const readStatus = document.createElement("div");
+            readStatus.className = 'read-status';
+            readStatus.innerText = 'Đã xem';
+            statusTimeContainer.appendChild(readStatus);
+        } else if (message.senderRole === 'Customer' && !message.isRead) {
+            const readStatus = document.createElement("div");
+            readStatus.className = 'read-status';
+            readStatus.innerText = 'Đã gửi';
+            statusTimeContainer.appendChild(readStatus);
+        }
+
+        messageDiv.appendChild(statusTimeContainer);
+        messagesContainer.appendChild(messageDiv);
+    } else if (message.messageType == 'Image') {
+        const messageDiv = document.createElement("div");
+
+        // Set data-message-id cho messageDiv
+        messageDiv.dataset.messageId = message.messageId;
+
+
+        // Kiểm tra người gửi tin nhắn để quyết định class của thẻ div
+        if (message.senderRole === 'Admin') {
+            messageDiv.className = 'message stark';
+        } else if (message.senderRole === 'Customer') {
+            messageDiv.className = 'message parker';
+        }
+
+        const img = document.createElement('img');
+        img.src = message.messageText;
+        img.alt = "Image message";
+        img.onclick = function () {
+            document.getElementById('modalImage').src = this.src;
+            document.getElementById('imageModal').style.display = 'block';
+        };
+        messageDiv.appendChild(img);
+
+        // Container cho thời gian gửi và trạng thái đã xem
+        const statusTimeContainer = document.createElement("div");
+        statusTimeContainer.className = 'status-time-container';
+
+        // Thời gian gửi tin nhắn
+        const messageTime = document.createElement("div");
+        messageTime.className = 'time';
+        const sentTime = new Date(message.sentTime);
+        messageTime.innerText = sentTime.toLocaleTimeString(); // Định dạng thời gian
+        statusTimeContainer.appendChild(messageTime);
+
+        // Trạng thái đã xem (nếu có)
+        if (message.senderRole === 'Customer' && message.isRead) {
+            const readStatus = document.createElement("div");
+            readStatus.className = 'read-status';
+            readStatus.innerText = 'Đã xem';
+            statusTimeContainer.appendChild(readStatus);
+        } else if (message.senderRole === 'Customer' && !message.isRead) {
+            const readStatus = document.createElement("div");
+            readStatus.className = 'read-status';
+            readStatus.innerText = 'Đã gửi';
+            statusTimeContainer.appendChild(readStatus);
+        }
+
+        messageDiv.appendChild(statusTimeContainer);
+        messagesContainer.appendChild(messageDiv);
     }
-
-    // Nội dung tin nhắn
-    const messageContent = document.createElement("div");
-    messageContent.className = 'content';
-    messageContent.innerText = message.messageText;
-    messageDiv.appendChild(messageContent);
-
-    // Container cho thời gian gửi và trạng thái đã xem
-    const statusTimeContainer = document.createElement("div");
-    statusTimeContainer.className = 'status-time-container';
-
-    // Thời gian gửi tin nhắn
-    const messageTime = document.createElement("div");
-    messageTime.className = 'time';
-    const sentTime = new Date(message.sentTime);
-    messageTime.innerText = sentTime.toLocaleTimeString(); // Định dạng thời gian
-    statusTimeContainer.appendChild(messageTime);
-
-    // Trạng thái đã xem (nếu có)
-    if (message.senderRole === 'Customer' && message.isRead) {
-        const readStatus = document.createElement("div");
-        readStatus.className = 'read-status';
-        readStatus.innerText = 'Đã xem';
-        statusTimeContainer.appendChild(readStatus);
-    } else if (message.senderRole === 'Customer' && !message.isRead) {
-        const readStatus = document.createElement("div");
-        readStatus.className = 'read-status';
-        readStatus.innerText = 'Đã gửi';
-        statusTimeContainer.appendChild(readStatus);
-    }
-
-    messageDiv.appendChild(statusTimeContainer);
-    messagesContainer.appendChild(messageDiv);
+    
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
-
-
-
-
-const inputField = document.querySelector('.input input');
-const sendButton = document.querySelector('.input span');
-
-inputField.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-        sendMessage(inputField.value);
-        inputField.value = '';
-    }
-});
-
-sendButton.addEventListener('click', function () {
-    sendMessage(inputField.value);
-    inputField.value = '';
-});
-
-
-
 
 
 function playNewMessageSound() {
@@ -205,20 +237,49 @@ function playNewMessageSound() {
 
 
 
-// Cập nhật hàm sendMessage để gửi tin nhắn qua SignalR
-function sendMessage(messageText) {
-    fetch('/api/chat/send-customer-message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+function sendMessage(messageContent, messageType) {
+    if (messageType === 'Text') {
+        if (!messageContent.trim()) {
+            return; // Đừng gửi tin nhắn nếu không có nội dung
+        }
+        const messageData = {
             ConversationId: currentConversationId,
-            MessageText: messageText,
-            MessageType: 'Text'
+            MessageText: messageContent,
+            MessageType: messageType
+        };
+
+        fetch('/api/chat/send-customer-message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(messageData)
         })
-    })
-        .then()
-        .catch(error => console.error('Error:', error));
+            .then()
+            .catch(error => console.error('Error:', error));
+        document.getElementById('image-attached-badge').style.display = 'none'; // Ẩn badge
+    } else {
+        if (messageContent == null) {
+            return; // Đừng gửi tin nhắn nếu không có nội dung
+        }
+
+        const formData = new FormData();
+        formData.append('file', messageContent); // messageContent ở đây là đối tượng File
+        formData.append('ConversationId', currentConversationId);
+        formData.append('MessageType', messageType);
+
+        fetch('/api/chat/send-customer-message-file', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+            })
+            .catch(error => console.error('Error:', error));
+        document.getElementById('image-attached-badge').style.display = 'none'; // Ẩn badge
+    }
+   
 }
+
+
 
 async function markMessagesAsRead(messageIds) {
     if (messageIds.length === 0) {
@@ -254,5 +315,66 @@ document.addEventListener("DOMContentLoaded", function () {
     initializeSignalRConnection();
 });
 
+
+const inputField = document.getElementById('text-message');
+const sendButton = document.getElementById('btn-send');
+
+inputField.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter' && !e.repeat) {
+        if (tempImageFile) {
+            sendMessage(tempImageFile, 'Image');
+            tempImageFile = null;
+            document.getElementById('image-attached-badge').style.display = 'none'; // Ẩn badge
+        } else {
+            sendMessage(inputField.value, 'Text');
+            inputField.value = '';
+        }
+    }
+});
+
+inputField.addEventListener('paste', function (e) {
+    const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    for (const item of items) {
+        if (item.kind === 'file' && item.type.startsWith('image/')) {
+            const file = item.getAsFile();
+            tempImageFile = file; // Lưu trữ file ảnh tạm thời
+            document.getElementById('image-attached-badge').style.display = 'inline'; // Hiển thị badge
+        }
+    }
+});
+
+sendButton.addEventListener('click', function () {
+    if (tempImageFile) {
+        sendMessage(tempImageFile, 'Image');
+        tempImageFile = null;
+        document.getElementById('image-attached-badge').style.display = 'none'; // Ẩn badge
+    } else {
+        sendMessage(inputField.value, 'Text');
+        inputField.value = '';
+    }
+});
+
+
+// JavaScript: Xử lý sự kiện chọn file và dán ảnh từ clipboard
+document.getElementById('image-input').addEventListener('change', handleFileSelect);
+
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        tempImageFile = file; // Lưu trữ file ảnh tạm thời
+        document.getElementById('image-attached-badge').style.display = 'inline'; // Hiển thị badge
+    }
+}
+
+// Get the modal
+var modal = document.getElementById("imageModal");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function () {
+    modal.style.display = "none";
+}
 
 

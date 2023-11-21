@@ -22,17 +22,32 @@
 				<div class="messages" id="chat">
 				</div>
 				<div class="input">
-					<input placeholder="Type your message here!" type="text" /><span class="material-symbols-outlined" style=" margin-right: 16px;">
+					<input type="file" id="image-input" accept="image/*" style="display: none;" />
+					<span class="image-upload-container" onclick="document.getElementById('image-input').click()" style="position: relative; margin-right: 16px;">
+						<span class="material-symbols-outlined">
+							add_photo_alternate
+						</span>
+						<span id="image-attached-badge" class="badge" style="display: none;">✓</span>
+					</span>
+					<input id="text-message" placeholder="Type your message here!" type="text" />
+					<span id="btn-send" class="material-symbols-outlined" style="margin-right: 16px;">
 						send
 					</span>
 				</div>
+
+
 			</div>
 		</div>
 		<div id="chat-bubble" style="display: none;">
 			<span>💬</span>
 			<span id="new-message-badge" class="badge" style="display: none;">0</span>
 		</div>
-
+		<!-- Modal Image Viewer -->
+		<div id="imageModal" class="modal">
+			<span class="close">&times;</span>
+			<img class="modal-content" id="modalImage">
+			<div id="caption"></div>
+		</div>
 
 		<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
 		<script src="~/js/Chatbox.js" asp-append-version="true"></script>
@@ -49,7 +64,7 @@
 					<div class="pic stark" style="background-image: url('https://cdn3.iconfinder.com/data/icons/login-5/512/LOGIN_6-512.png');"></div>
 					<div id="name-conversation" class="name">
 					</div>
-					
+
 					<div class="minimize">
 						<span id="maximize-chat" class="material-symbols-outlined">
 							zoom_out_map
@@ -62,10 +77,20 @@
 				<div class="messages" id="chat">
 				</div>
 				<div class="input">
-					<input placeholder="Type your message here!" type="text" /><span class="material-symbols-outlined" style=" margin-right: 16px;">
+					<input type="file" id="image-input" accept="image/*" style="display: none;" />
+					<span class="image-upload-container" onclick="document.getElementById('image-input').click()" style="position: relative; margin-right: 16px;">
+						<span class="material-symbols-outlined">
+							add_photo_alternate
+						</span>
+						<span id="image-attached-badge" class="badge" style="display: none;">✓</span>
+					</span>
+					<input id="text-message" placeholder="Type your message here!" type="text" />
+					<span id="btn-send" class="material-symbols-outlined" style="margin-right: 16px;">
 						send
 					</span>
 				</div>
+
+
 			</div>
 		</div>
 
@@ -74,6 +99,12 @@
 			<span id="new-message-badge" class="badge" style="display: none;">0</span>
 		</div>
 
+		<!-- Modal Image Viewer -->
+		<div id="imageModal" class="modal">
+			<span class="close">&times;</span>
+			<img class="modal-content" id="modalImage">
+			<div id="caption"></div>
+		</div>
 
 		<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
 		<script src="~/js/ChatboxAdmin.js" asp-append-version="true"></script>

@@ -123,7 +123,8 @@
 										</button>
 									</div>
 									<div class="p-2">
-										<button  type="button" class="btn btn-danger btn-md btn-icon btn-circle btn-blushing">
+										<input type="file" id="image-input" accept="image/*" style="display: none;" />
+										<button type="button" class="btn btn-danger btn-md btn-icon btn-circle btn-blushing" onclick="document.getElementById('image-input').click()">
 											<i class="fs-15 bi bi-card-image"></i>
 										</button>
 									</div>
@@ -135,6 +136,13 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<!-- Modal Image Viewer -->
+<div id="imageModal" class="modal">
+	<span class="close">&times;</span>
+	<img class="modal-content" id="modalImage">
+	<div id="caption"></div>
 </div>
 <audio id="messageSound" src="~/assets/notification.mp3" preload="none"></audio>
 <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>

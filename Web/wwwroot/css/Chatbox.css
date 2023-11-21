@@ -18,6 +18,18 @@
     font-size: 12px;
 }
 
+#image-attached-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 12px;
+}
+
+
 
 .pic {
     width: 4rem;
@@ -145,55 +157,69 @@
     }
 
 
-    .chat .messages .status-time-container {
-        display: flex;
-        flex-direction: row-reverse;
-        justify-content: space-between;
-    }
-
-    .chat .messages .read-status {
-        font-size: 12px;
-        border-radius: 2rem;
-        background: #333;
-        color: #999;
-        width: -webkit-fit-content;
-        width: -moz-fit-content;
-        width: fit-content;
-        left: 0;
-        margin-right: 1px;
-    }
-
-    .chat .messages .time {
-        font-size: 12px;
-        border-radius: 2rem;
-        color: #999;
-        width: -webkit-fit-content;
-        width: -moz-fit-content;
-        width: fit-content;
-        right: 0;
-        margin-left: 1px;
-    }
-
-    .chat .messages .message {
-        box-sizing: border-box;
-        padding: 0.5rem 1rem;
-        margin: 1rem;
-        background: #FFF;
-        border-radius: 1.125rem 1.125rem 1.125rem 0;
-        min-height: 2.25rem;
-        width: -webkit-fit-content;
-        width: -moz-fit-content;
-        width: fit-content;
-        max-width: 66%;
-        box-shadow: 0 0 2rem rgba(0, 0, 0, 0.075), 0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.1);
-    }
-
-        .chat .messages .message.parker {
-            margin: 1rem 1rem 1rem auto;
-            border-radius: 1.125rem 1.125rem 0 1.125rem;
-            background: #333;
-            color: white;
+        .chat .messages .status-time-container {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
         }
+
+        .chat .messages .read-status {
+            font-size: 12px;
+            border-radius: 2rem;
+            background: #333;
+            color: #999;
+            width: -webkit-fit-content;
+            width: -moz-fit-content;
+            width: fit-content;
+            left: 0;
+            margin-right: 1px;
+        }
+
+        .chat .messages .time {
+            font-size: 12px;
+            border-radius: 2rem;
+            color: #999;
+            width: -webkit-fit-content;
+            width: -moz-fit-content;
+            width: fit-content;
+            right: 0;
+            margin-left: 1px;
+        }
+
+        .chat .messages .message {
+            box-sizing: border-box;
+            padding: 0.5rem 1rem;
+            margin: 1rem;
+            background: #FFF;
+            border-radius: 1.125rem 1.125rem 1.125rem 0;
+            min-height: 2.25rem;
+            width: -webkit-fit-content;
+            width: -moz-fit-content;
+            width: fit-content;
+            max-width: 66%;
+            box-shadow: 0 0 2rem rgba(0, 0, 0, 0.075), 0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.1);
+        }
+
+            .chat .messages .message.stark img {
+                max-width:100%;
+                max-height:100%;
+            }
+
+            .chat .messages .message.parker {
+                margin: 1rem 1rem 1rem auto;
+                border-radius: 1.125rem 1.125rem 0 1.125rem;
+                background: #333;
+                color: white;
+                max-width: 66%;
+                max-height: 100%;
+            }
+
+                .chat .messages .message.parker img {
+                    padding: 10px 5px;
+                    max-width: 100%;
+                    max-height: 100%;
+                    border-radius: 1.125rem 1.125rem 1.125rem 1.125rem;
+                }
 
 
 
@@ -254,10 +280,11 @@
     z-index: 1001; /* Đảm bảo nó nằm trên tất cả các phần tử khác */
 }
 /* Hiệu ứng hover cho nút thu nhỏ */
-#minimize-chat{
+#minimize-chat {
     color: #666; /* Màu thay đổi khi di chuột vào */
     cursor: pointer;
 }
+
 #maximize-chat {
     color: #666; /* Màu thay đổi khi di chuột vào */
     cursor: pointer;
@@ -335,25 +362,24 @@
             width: auto;
             margin: 0 10px;
         }
+
         .contacts .name {
             display: none;
-
         }
 
         .contacts .message {
             display: none;
         }
-        .center .chat .contact {
-            
+
+    .center .chat .contact {
+    }
+
+        .center .chat .contact .pic {
         }
 
-            .center .chat .contact .pic {
-                
-            }
-
-            .center .chat .contact .name {
-                margin: auto auto ;
-            }
+        .center .chat .contact .name {
+            margin: auto auto;
+        }
 
     .chat {
         position: absolute; /* Changed to absolute */
@@ -376,4 +402,36 @@
     .chat .input i {
         font-size: 1.25rem; /* Larger icons */
     }
+}
+
+/* Style the Image Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.9);
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
 }

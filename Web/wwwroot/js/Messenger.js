@@ -70,7 +70,7 @@ function playNewMessageSound() {
     var sound = document.getElementById("messageSound");
     sound.play();
 }
-
+let tempImageFile = null;
 var conversationsList = [];
 
 async function loadConversations() {
@@ -234,33 +234,79 @@ const sendButton = document.getElementById('send-message-button');
 
 inputField.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && !e.repeat) {
-        sendMessage(inputField.value, currentConversationId);
+        if (tempImageFile) {
+            sendMessage(tempImageFile, 'Image', currentConversationId);
+            tempImageFile = null;
+        } else {
+            sendMessage(inputField.value, 'Text', currentConversationId);
+            inputField.value = '';
+        }
+    }
+});
+
+inputField.addEventListener('paste', function (e) {
+    const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    for (const item of items) {
+        if (item.kind === 'file' && item.type.startsWith('image/')) {
+            const file = item.getAsFile();
+            tempImageFile = file; // Lưu trữ file ảnh tạm thời
+        }
+    }
+});
+
+
+sendButton.addEventListener('click', function () {
+    if (tempImageFile) {
+        sendMessage(tempImageFile, 'Image', currentConversationId);
+        tempImageFile = null;
+    } else {
+        sendMessage(inputField.value, 'Text', currentConversationId);
         inputField.value = '';
     }
 });
 
-sendButton.addEventListener('click', function () {
-    sendMessage(inputField.value, currentConversationId);
-    inputField.value = '';
-});
 
 
 
 
-function sendMessage(messageText, conversationId) {
-    if (!messageText.trim()) {
-        return; // Đừng gửi tin nhắn nếu không có nội dung
-    }
+function sendMessage(messageText, messageType, conversationId) {
 
-    fetch('/api/chat/send-customer-message', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+
+    if (messageType === 'Text') {
+        if (!messageText.trim()) {
+            return; // Đừng gửi tin nhắn nếu không có nội dung
+        }
+        const messageData = {
             ConversationId: conversationId,
             MessageText: messageText,
-            MessageType: 'Text'
+            MessageType: messageType
+        };
+
+        fetch('/api/chat/send-customer-message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(messageData)
         })
-    }).catch(error => console.error('Error:', error));
+            .then()
+            .catch(error => console.error('Error:', error));
+    } else {
+        if (messageText == null) {
+            return; // Đừng gửi tin nhắn nếu không có nội dung
+        }
+        const formData = new FormData();
+        formData.append('file', messageText); // messageContent ở đây là đối tượng File
+        formData.append('ConversationId', conversationId);
+        formData.append('MessageType', messageType);
+
+        fetch('/api/chat/send-customer-message-file', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+            })
+            .catch(error => console.error('Error:', error));
+    }
 }
 
 
@@ -274,11 +320,27 @@ function addMessageToUI(message) {
     if (message.senderRole === 'Customer') {
         messageDiv.className = 'left-chat-message fs-13 mb-2';
 
-        // Tạo thẻ p cho nội dung tin nhắn
-        const messageP = document.createElement("p");
-        messageP.className = 'mb-0 mr-3 pr-4';
-        messageP.innerText = message.messageText;
-        messageDiv.appendChild(messageP);
+        if (message.messageType == 'Text') {
+            // Tạo thẻ p cho nội dung tin nhắn
+            const messageP = document.createElement("p");
+            messageP.className = 'mb-0 mr-3 pr-4';
+            messageP.innerText = message.messageText;
+            messageDiv.appendChild(messageP);
+        } else if (message.messageType == 'Image') {
+            const messageP = document.createElement("p");
+            messageP.className = 'mb-0 mr-3 pr-4';
+            const img = document.createElement('img');
+            img.src = message.messageText;
+            img.className = 'image-message';
+            img.alt = "Image message";
+            img.onclick = function () {
+                document.getElementById('modalImage').src = this.src;
+                document.getElementById('imageModal').style.display = 'block';
+            };
+            messageP.appendChild(img);
+            messageDiv.appendChild(messageP);
+        }
+        
 
         // Tạo container cho thông tin thời gian và nút mở rộng
         const messageOptionsDiv = document.createElement("div");
@@ -310,8 +372,19 @@ function addMessageToUI(message) {
 
         const messageTextDiv = document.createElement("div");
         messageTextDiv.className = 'pr-2';
-        messageTextDiv.innerText = message.messageText;
-
+        if (message.messageType == 'Text') {
+            messageTextDiv.innerText = message.messageText;
+        } else if (message.messageType == 'Image') {
+            const img = document.createElement('img');
+            img.src = message.messageText;
+            img.className = 'image-message';
+            img.alt = "Image message";
+            img.onclick = function () {
+                document.getElementById('modalImage').src = this.src;
+                document.getElementById('imageModal').style.display = 'block';
+            };
+            messageTextDiv.appendChild(img);
+        }
 
         const spaceDiv = document.createElement("div");
         spaceDiv.className = "pr-4";
@@ -405,4 +478,27 @@ document.getElementById('search-conversation').addEventListener('input', async f
     }
 });
 
+
+// JavaScript: Xử lý sự kiện chọn file và dán ảnh từ clipboard
+document.getElementById('image-input').addEventListener('change', handleFileSelect);
+
+
+function handleFileSelect(event) {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        tempImageFile = file; // Lưu trữ file ảnh tạm thời
+    }
+}
+
+
+// Get the modal
+var modal = document.getElementById("imageModal");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function () {
+    modal.style.display = "none";
+}
 
