@@ -12,7 +12,7 @@ async function initializeSignalRConnection() {
         console.error('Error during SignalR Connection: ', err);
     }
 }
-
+let newMessagesCount = 0;
 function setupEventListeners() {
     connectionChat.on("ReceiveMessage", function (message, conversationId) {
         if (currentConversationId === conversationId && chatBox.style.display === 'block') {
@@ -28,6 +28,8 @@ function setupEventListeners() {
     connectionChat.on("NewMessageNotification", function (conversationId) {
         if (currentConversationId !== conversationId || chatBox.style.display === 'none') {
             playNewMessageSound();
+            newMessagesCount++;
+            updateNewMessageBadge(newMessagesCount);
             loadConversations();
         }
 
@@ -53,6 +55,7 @@ function playNewMessageSound() {
 var chat = document.getElementById('chat');
 var chatBox = document.getElementById('chatBox');
 var minimizeButton = document.getElementById('minimize-chat');
+var maximizeButton = document.getElementById('maximize-chat');
 var chatBubble = document.getElementById('chat-bubble');
 
 chatBox.style.display = 'none'
@@ -62,6 +65,9 @@ chatBubble.style.display = 'block';
 minimizeButton.addEventListener('click', function () {
     chatBox.style.display = 'none'
     chatBubble.style.display = 'block';
+});// Sự kiện thu nhỏ cửa sổ chat
+maximizeButton.addEventListener('click', function () {
+    window.location.href = "/admin/messenger";
 });
 
 // Sự kiện mở rộng cửa sổ chat từ bong bóng
@@ -69,7 +75,8 @@ chatBubble.addEventListener('click', function () {
     chatBox.style.display = 'block'; // hoặc 'block' tùy thuộc vào cách bạn đã định dạng nó
     chatBubble.style.display = 'none';
     chat.scrollTop = chat.scrollHeight - chat.clientHeight; // Cuộn đến tin nhắn cuối cùng
-
+    newMessagesCount = 0;
+    updateNewMessageBadge(newMessagesCount);
     openLatestConversation();
 });
 
@@ -82,6 +89,11 @@ async function loadConversations() {
             throw new Error('Network response was not ok');
         }
         let conversations = await response.json();
+
+        // Tính toán tổng số tin nhắn chưa đọc
+        newMessagesCount = conversations.reduce((total, conversation) => total + conversation.unreadMessagesCount, 0);
+        updateNewMessageBadge(newMessagesCount); // Cập nhật badge
+
         conversations = conversations.sort((a, b) => {
             if (b.unreadMessagesCount !== a.unreadMessagesCount) {
                 return b.unreadMessagesCount - a.unreadMessagesCount; // Ưu tiên conversation có nhiều tin nhắn chưa đọc hơn
@@ -278,6 +290,16 @@ async function markMessagesAsRead(messageIds) {
         loadConversations();
     } catch (error) {
         console.error('Error:', error);
+    }
+}
+
+function updateNewMessageBadge(count) {
+    const badge = document.getElementById('new-message-badge');
+    if (count > 0) {
+        badge.style.display = 'inline';
+        badge.innerText = count;
+    } else {
+        badge.style.display = 'none';
     }
 }
 

@@ -7,6 +7,18 @@
     transform: translateY(-50%);
 }
 
+#new-message-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 5px;
+    font-size: 12px;
+}
+
+
 .pic {
     width: 4rem;
     height: 4rem;
@@ -242,7 +254,11 @@
     z-index: 1001; /* Đảm bảo nó nằm trên tất cả các phần tử khác */
 }
 /* Hiệu ứng hover cho nút thu nhỏ */
-#minimize-chat span.material-symbols-outlined:hover {
+#minimize-chat{
+    color: #666; /* Màu thay đổi khi di chuột vào */
+    cursor: pointer;
+}
+#maximize-chat {
     color: #666; /* Màu thay đổi khi di chuột vào */
     cursor: pointer;
 }
@@ -336,7 +352,7 @@
             }
 
             .center .chat .contact .name {
-                margin: auto auto;
+                margin: auto auto ;
             }
 
     .chat {

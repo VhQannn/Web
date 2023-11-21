@@ -82,6 +82,15 @@ namespace Web.Controllers
 			};
 
 			var savedMessage = await _context.Messages.AddAsync(message);
+			// Tìm và cập nhật cuộc trò chuyện
+			var conversation = await _context.Conversations
+				.FirstOrDefaultAsync(c => c.ConversationId == messageDto.ConversationId);
+			if (conversation != null)
+			{
+				conversation.UpdatedTime = vietnamTime;
+				_context.Conversations.Update(conversation);
+			}
+
 			await _context.SaveChangesAsync();
 
 			// Gửi tin nhắn tới group tương ứng với cuộc trò chuyện
@@ -114,6 +123,8 @@ namespace Web.Controllers
 							&& (c.IsArchived == false || c.IsArchived == null)
 							&& (c.IsDeleted == false || c.IsDeleted == null))
 				.Where(c => !c.ConversationMembers.Any())
+				.Include(c => c.Messages)
+				.Where(c => c.Messages.Any())
 				.Select(c => new
 				{
 					ConversationId = c.ConversationId,
@@ -200,6 +211,37 @@ namespace Web.Controllers
 		}
 
 
+		[HttpGet("search-conversations")]
+		public async Task<IActionResult> SearchConversations(string searchTerm)
+		{
+			var filteredConversations = await _context.Conversations
+				.Include(c => c.ConversationMembers)
+				.Where(c => (c.IsActive == true || c.IsActive == null)
+							&& (c.IsArchived == false || c.IsArchived == null)
+							&& (c.IsDeleted == false || c.IsDeleted == null))
+				.Where(c => !c.ConversationMembers.Any())
+				.Include(c => c.Messages)
+				.Where(c => c.Messages.Any())
+				.Include(c => c.User)
+				.Where(c => c.User.Username.Contains(searchTerm))
+				.Select(c => new
+				{
+					ConversationId = c.ConversationId,
+					ConversationName = _context.Users.Where(u => u.UserId == c.UserId).Select(u => u.Username).FirstOrDefault(),
+					UpdatedTime = c.UpdatedTime,
+					UnreadMessagesCount = _context.Messages.Count(m => m.ConversationId == c.ConversationId &&
+											  !_context.MessageReadStatuses.Any(s => s.MessageId == m.MessageId) &&
+											  m.Sender.UserType == "Customer"),
+					LastMessage = _context.Messages.Where(m => m.ConversationId == c.ConversationId)
+						   .OrderByDescending(m => m.SentTime)
+						   .Select(m => m.MessageText)
+						   .FirstOrDefault()
+				})
+				.OrderByDescending(c => c.UpdatedTime)
+				.ToListAsync();
+
+			return Ok(filteredConversations);
+		}
 
 
 

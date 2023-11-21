@@ -30,7 +30,9 @@
 		</div>
 		<div id="chat-bubble" style="display: none;">
 			<span>💬</span>
+			<span id="new-message-badge" class="badge" style="display: none;">0</span>
 		</div>
+
 
 		<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
 		<script src="~/js/Chatbox.js" asp-append-version="true"></script>
@@ -47,8 +49,12 @@
 					<div class="pic stark" style="background-image: url('https://cdn3.iconfinder.com/data/icons/login-5/512/LOGIN_6-512.png');"></div>
 					<div id="name-conversation" class="name">
 					</div>
-					<div id="minimize-chat" class="minimize">
-						<span class="material-symbols-outlined">
+					
+					<div class="minimize">
+						<span id="maximize-chat" class="material-symbols-outlined">
+							zoom_out_map
+						</span>
+						<span id="minimize-chat" class="material-symbols-outlined">
 							close_fullscreen
 						</span>
 					</div>
@@ -65,7 +71,9 @@
 
 		<div id="chat-bubble" style="display: none;">
 			<span>💬</span>
+			<span id="new-message-badge" class="badge" style="display: none;">0</span>
 		</div>
+
 
 		<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
 		<script src="~/js/ChatboxAdmin.js" asp-append-version="true"></script>

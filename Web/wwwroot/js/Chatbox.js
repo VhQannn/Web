@@ -13,7 +13,7 @@ async function initializeSignalRConnection() {
         console.error('Error during SignalR Connection: ', err);
     }
 }
-
+let newMessagesCount = 0;
 function setupEventListeners() {
     connectionChat.on("ReceiveMessage", function (message, _conversationId) {
         if (currentConversationId === _conversationId) {
@@ -26,7 +26,10 @@ function setupEventListeners() {
                     markMessagesAsRead([message.messageId]);
                 }
             }
-
+        }
+        if (chatBox.style.display === 'none') {
+            newMessagesCount++;
+            updateNewMessageBadge(newMessagesCount);
         }
     });
 
@@ -63,6 +66,8 @@ chatBubble.addEventListener('click', function () {
     chatBox.style.display = 'block'; // hoặc 'block' tùy thuộc vào cách bạn đã định dạng nó
     chatBubble.style.display = 'none';
     chat.scrollTop = chat.scrollHeight - chat.clientHeight; // Cuộn đến tin nhắn cuối cùng
+    newMessagesCount = 0;
+    updateNewMessageBadge(newMessagesCount);
 });
 
 
@@ -233,6 +238,17 @@ async function markMessagesAsRead(messageIds) {
         console.error('Error:', error);
     }
 }
+
+function updateNewMessageBadge(count) {
+    const badge = document.getElementById('new-message-badge');
+    if (count > 0) {
+        badge.style.display = 'inline';
+        badge.innerText = count;
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
     initializeSignalRConnection();
