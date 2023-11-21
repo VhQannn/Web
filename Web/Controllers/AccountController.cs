@@ -206,13 +206,28 @@ namespace Web.Controllers
 		}
 
 		[HttpGet("verify")]
-		public async Task<ActionResult> VerifyEmail(string email, string username)
+		public async Task<ActionResult> VerifyEmail(string email, string username, string otp)
 		{
 			try
 			{
+				//check otp nếu đúng thì đổi
 				var user = await _context.Users.SingleOrDefaultAsync(x => x.Email.Equals(email) && x.Username == username);
-				user.IsVerify = true;
-				return Ok("Đã xác thực thành công");
+				if (DateTime.Now - user.OtpcreateTime > TimeSpan.FromMinutes(5))
+				{
+					return NotFound("Mã OTP đã hết hạn.");
+				}
+				if (user.Otpcode.Equals(otp))
+				{
+					user.IsVerify = true;
+					var check = await _context.SaveChangesAsync() > 0;
+					if (check)
+					{
+						return Ok("Đã xác thực thành công");
+					}
+					return NotFound("Không thể xác thực");
+
+				}
+				return NotFound("Mã OTP không chính xác");
 			}
 			catch (Exception)
 			{

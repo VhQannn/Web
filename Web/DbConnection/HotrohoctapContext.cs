@@ -646,6 +646,15 @@ public partial class HotrohoctapContext : DbContext
             entity.Property(e => e.IsVerify)
                 .HasDefaultValueSql("((0))")
                 .HasColumnName("isVerify");
+            entity.Property(e => e.Otpcode)
+                .HasMaxLength(6)
+                .IsUnicode(false)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("OTPCode");
+            entity.Property(e => e.OtpcreateTime)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("OTPCreateTime");
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
                 .HasColumnName("password");
