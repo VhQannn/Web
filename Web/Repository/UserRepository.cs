@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Security.Cryptography;
 using System.Text;
 using Web.DbConnection;
 using Web.IRepository;
@@ -37,8 +39,8 @@ namespace Web.Repository
         }
 
         public bool Register(RegisterDTO userDTO)
-        {   
-            if(IsExist(userDTO.Username))
+        {
+            if (IsExist(userDTO.Username))
             {
                 return false;
             }
@@ -56,7 +58,7 @@ namespace Web.Repository
             return _context.SaveChanges() > 0;
         }
 
-        public User UpdateRole(int userId,string role)
+        public User UpdateRole(int userId, string role)
         {
             var user = _context.Users.SingleOrDefault(x => x.UserId == userId);
             user.UserType = role;
@@ -78,6 +80,28 @@ namespace Web.Repository
             }
         }
 
-        
+        public string RandomPassword()
+        {
+            Random random = new Random();
+            int length = 10;
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+            string password = new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            return password;
+        }
+
+
+        public async Task<User> ChangePassword(string username, string password)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Username.Equals(username));
+            user.Password = HashPassword(password);
+            var check = await _context.SaveChangesAsync() > 0;
+            if (check)
+            {
+                return user;
+            }
+            return null;
+        }
     }
 }

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Web.DbConnection;
+using Web.DTOs;
+using Web.IRepository;
 using Web.Models;
 
 namespace Web.Controllers
@@ -15,11 +17,13 @@ namespace Web.Controllers
 		private readonly WebContext _context;
 		private readonly IHubContext<NotificationHub> _notificationHub;
 		private readonly MarkReportServices _markReportServices;
-		public AccountController(WebContext context, IHubContext<NotificationHub> notificationHub, MarkReportServices markReportServices)
+		private readonly IUserRepository _userRepositoy;
+		public AccountController(WebContext context, IHubContext<NotificationHub> notificationHub, MarkReportServices markReportServices, IUserRepository userRepository)
 		{
 			_context = context;
 			_notificationHub = notificationHub;
 			_markReportServices = markReportServices;
+			_userRepositoy = userRepository;
 		}
 
 		[HttpGet("current")]
@@ -235,5 +239,27 @@ namespace Web.Controllers
 				return NotFound("Không thể xác thực");
 			}
 		}
-	}
+
+		[Authorize]
+        [HttpPost("change-password")]
+        public async Task<ActionResult> ForgetPassword(ChangePasswordDTO changePasswordDTO)
+        {
+            try
+            {
+				var check = await _userRepositoy.ChangePassword(changePasswordDTO.Username, changePasswordDTO.Password);
+				if(check != null)
+				{
+					return Ok(check);
+				}
+				return BadRequest();
+            }
+            catch (Exception)
+            {
+
+                return NotFound("Không thể xác thực");
+            }
+        }
+
+
+    }
 }

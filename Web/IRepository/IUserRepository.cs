@@ -9,5 +9,7 @@ namespace Web.IRepository
         bool Register(RegisterDTO userDTO);
         List<User> GetAll();
         User UpdateRole(int userId, string role);
+        Task<User> ChangePassword(string username, string password);
+        string RandomPassword();
     }
 }
