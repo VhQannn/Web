@@ -205,6 +205,11 @@ namespace Web.Controllers
 
         }
 
-
+        [HttpGet("verify")]
+        public async Task VerifyEmail(string email, string username)
+        {
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email.Equals(email) && x.Username == username);  
+                    
+        }
     }
 }

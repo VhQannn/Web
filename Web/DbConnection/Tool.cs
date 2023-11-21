@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Web.DbConnection;
+namespace Web.dbConnection;
 
 public partial class Tool
 {

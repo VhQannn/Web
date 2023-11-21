@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace Web.DbConnection;
+namespace Web.dbConnection;
 
 public partial class HotrohoctapContext : DbContext
 {
@@ -65,7 +65,7 @@ public partial class HotrohoctapContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=hotrohoctap.database.windows.net;Database=Hotrohoctap;uid=dbroot;pwd=bEFbd7sXUf;TrustServerCertificate=true");
+        => optionsBuilder.UseSqlServer("Server=hotrohoctap.database.windows.net;uid=dbroot;pwd=bEFbd7sXUf;Database=Hotrohoctap;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -645,6 +645,9 @@ public partial class HotrohoctapContext : DbContext
             entity.Property(e => e.Facebook)
                 .HasMaxLength(255)
                 .HasColumnName("facebook");
+            entity.Property(e => e.IsVerify)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("isVerify");
             entity.Property(e => e.Password)
                 .HasMaxLength(255)
                 .HasColumnName("password");

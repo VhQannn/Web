@@ -7,6 +7,7 @@ using Web.IRepository;
 using Web.Repository;
 using Web.Controllers;
 using Web.Util;
+using Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<MarkReportServices>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<UploadFile>();
