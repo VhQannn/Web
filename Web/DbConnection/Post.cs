@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Web.dbConnection;
+namespace Web.DbConnection;
 
 public partial class Post
 {
