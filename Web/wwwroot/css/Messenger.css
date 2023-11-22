@@ -490,6 +490,38 @@ img.shadow {
     box-shadow: 0 4px 8px 0 rgb(34 41 47 / 3%);
 }
 
+    .typing {
+        display: inline-block;
+        width: 0.8rem;
+        height: 0.8rem;
+        margin-right: 0rem;
+        box-sizing: border-box;
+        background: #ccc;
+        border-radius: 50%;
+    }
+
+         .typing.typing-1 {
+            -webkit-animation: typing 3s infinite;
+            animation: typing 3s infinite;
+        }
+
+         .typing.typing-2 {
+            -webkit-animation: typing 3s 250ms infinite;
+            animation: typing 3s 250ms infinite;
+        }
+
+    .chat .messages .message .typing.typing-3 {
+        -webkit-animation: typing 3s 500ms infinite;
+        animation: typing 3s 500ms infinite;
+    }
+
+.chat .messages .message.parker img {
+    padding: 10px 5px;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 1.125rem 1.125rem 1.125rem 1.125rem;
+}
+
 .chat.chat-panel .message-arrow, .chat.chat-panel .message-time {
     position: absolute;
     right: 5px;
@@ -697,4 +729,28 @@ img.shadow {
     border-radius: 50%;
     padding: 2px 5px;
     font-size: 12px;
+}
+
+@-webkit-keyframes typing {
+    0%, 75%, 100% {
+        transform: translate(0, 0.25rem) scale(0.9);
+        opacity: 0.5;
+    }
+
+    25% {
+        transform: translate(0, -0.25rem) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes typing {
+    0%, 75%, 100% {
+        transform: translate(0, 0.25rem) scale(0.9);
+        opacity: 0.5;
+    }
+
+    25% {
+        transform: translate(0, -0.25rem) scale(1);
+        opacity: 1;
+    }
 }

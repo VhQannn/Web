@@ -218,6 +218,31 @@ span:hover {
                 max-height: 100%;
             }
 
+            .chat .messages .message .typing {
+                display: inline-block;
+                width: 0.8rem;
+                height: 0.8rem;
+                margin-right: 0rem;
+                box-sizing: border-box;
+                background: #ccc;
+                border-radius: 50%;
+            }
+
+                .chat .messages .message .typing.typing-1 {
+                    -webkit-animation: typing 3s infinite;
+                    animation: typing 3s infinite;
+                }
+
+                .chat .messages .message .typing.typing-2 {
+                    -webkit-animation: typing 3s 250ms infinite;
+                    animation: typing 3s 250ms infinite;
+                }
+
+                .chat .messages .message .typing.typing-3 {
+                    -webkit-animation: typing 3s 500ms infinite;
+                    animation: typing 3s 500ms infinite;
+                }
+
                 .chat .messages .message.parker img {
                     padding: 10px 5px;
                     max-width: 100%;
@@ -438,4 +463,29 @@ span:hover {
     font-size: 40px;
     font-weight: bold;
     cursor: pointer;
+}
+
+
+@-webkit-keyframes typing {
+    0%, 75%, 100% {
+        transform: translate(0, 0.25rem) scale(0.9);
+        opacity: 0.5;
+    }
+
+    25% {
+        transform: translate(0, -0.25rem) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes typing {
+    0%, 75%, 100% {
+        transform: translate(0, 0.25rem) scale(0.9);
+        opacity: 0.5;
+    }
+
+    25% {
+        transform: translate(0, -0.25rem) scale(1);
+        opacity: 1;
+    }
 }

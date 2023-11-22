@@ -33,5 +33,16 @@ namespace Web
 		{
 			await Clients.Group(groupName).SendAsync("MessageRead", messageId);
 		}
+
+		public async Task NotifyTyping(string groupName)
+		{
+			await Clients.OthersInGroup(groupName).SendAsync("UserTyping");
+		}
+
+		public async Task NotifyCancelTyping(string groupName)
+		{
+			await Clients.OthersInGroup(groupName).SendAsync("UserCancelTyping");
+		}
+
 	}
 }

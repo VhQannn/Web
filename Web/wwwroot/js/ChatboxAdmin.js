@@ -6,6 +6,7 @@ var currentConversationId = 0;
 var currentConversation = null;
 let tempImageFile = null;
 let newMessagesCount = 0;
+let typingTimeoutId = null;
 
 var chat = document.getElementById('chat');
 var chatBox = document.getElementById('chatBox');
@@ -98,7 +99,56 @@ function setupEventListeners() {
             }
         }
     });
+    connectionChat.on("UserTyping", function () {
+        showTypingIndicator();
+    });
+
+    connectionChat.on("UserCancelTyping", function () {
+        hideTypingIndicator();
+    });
 }
+
+function showTypingIndicator(conversationId) {
+    let typingIndicator = document.querySelector('.typing-indicator');
+
+    // Chỉ tạo mới nếu chưa có
+    if (!typingIndicator) {
+        typingIndicator = document.createElement("div");
+        typingIndicator.className = "message stark typing-indicator";
+        typingIndicator.innerHTML = `
+            <div class="typing typing-1"></div>
+            <div class="typing typing-2"></div>
+            <div class="typing typing-3"></div>
+        `;
+        typingIndicator.dataset.conversationId = conversationId;
+
+        // Thêm vào cuối danh sách tin nhắn
+        const messagesContainer = document.getElementById("chat");
+        messagesContainer.appendChild(typingIndicator);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Reset bộ đếm thời gian
+    clearTimeout(typingTimeoutId);
+    typingTimeoutId = setTimeout(() => {
+        hideTypingIndicator();
+    }, 5000);
+}
+
+
+function hideTypingIndicator() {
+    // Tìm và xóa phần tử thông báo "đang nhập"
+    const typingIndicator = document.querySelector('.typing-indicator');
+    if (typingIndicator) {
+        typingIndicator.remove();
+    }
+
+    // Hủy bộ đếm thời gian
+    if (typingTimeoutId) {
+        clearTimeout(typingTimeoutId);
+    }
+}
+
 
 function playNewMessageSound(message) {
     var sound = document.getElementById("messageSound");
@@ -382,6 +432,7 @@ function addMessageToUI(message) {
     }
 
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    hideTypingIndicator();
 }
 
 async function markMessagesAsRead(messageIds) {
@@ -437,7 +488,34 @@ inputField.addEventListener('paste', function (e) {
     }
 });
 
+let typingTimer; // Timer để xác định khi người dùng ngưng nhập
+const typingInterval = 3000; // Thời gian chờ (ví dụ: 3000ms = 3 giây)
+
+inputField.addEventListener('input', function () {
+    clearTimeout(typingTimer);
+    if (inputField.value) {
+        notifyTyping(currentConversationId);
+        typingTimer = setTimeout(() => {
+            notifyCancelTyping(currentConversationId);
+        }, typingInterval);
+    } else {
+        // Người dùng đã xóa hết nội dung
+        notifyCancelTyping(currentConversationId);
+    }
+});
+
+// Hàm thông báo khi bắt đầu nhập
+async function notifyTyping(conversationId) {
+    await connectionChat.invoke("NotifyTyping", `Conversation-${conversationId}`);
+}
+
+// Hàm thông báo khi ngưng nhập
+async function notifyCancelTyping(conversationId) {
+    await connectionChat.invoke("NotifyCancelTyping", `Conversation-${conversationId}`);
+}
+
 sendButton.addEventListener('click', function () {
+    clearTimeout(typingTimer);
     if (tempImageFile) {
         sendMessage(tempImageFile, 'Image', currentConversationId);
         tempImageFile = null;
