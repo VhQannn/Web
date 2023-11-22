@@ -1,36 +1,89 @@
-﻿
+﻿let originalTitle = document.title;
+let newMessageTitle = " đã gửi tin nhắn cho bạn!";
+let isTabActive = true;
+
+var currentConversationId = 0;
+var currentConversation = null;
+let tempImageFile = null;
+let newMessagesCount = 0;
+
+var chat = document.getElementById('chat');
+var chatBox = document.getElementById('chatBox');
+var minimizeButton = document.getElementById('minimize-chat');
+var maximizeButton = document.getElementById('maximize-chat');
+var chatBubble = document.getElementById('chat-bubble');
+var modal = document.getElementById("imageModal");
+var span = document.getElementsByClassName("close")[0];
+const inputField = document.getElementById('text-message');
+const sendButton = document.getElementById('btn-send');
+document.getElementById('image-input').addEventListener('change', handleFileSelect);
+
+chatBox.style.display = 'none'
+chatBubble.style.display = 'block';
+
+var conversationsList = [];
+
+document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === 'visible') {
+        isTabActive = true;
+        if (chatBox.style.display === 'block') {
+            openConversation(currentConversation);
+        }
+    } else {
+        isTabActive = false;
+    }
+});
+
 const connectionChat = new signalR.HubConnectionBuilder()
     .withUrl("/chatHub")
     .build();
 
-async function initializeSignalRConnection() {
+initializeSignalRConnection = async () => {
+    setupEventListeners();
+    await startSignalRConnection();
+    loadConversations();
+}
+
+async function startSignalRConnection() {
     try {
         await connectionChat.start();
-        setupEventListeners();
-        loadConversations();
+        console.log("SignalR Connected.");
     } catch (err) {
-        console.error('Error during SignalR Connection: ', err);
+        console.error('SignalR Connection failed: ', err);
+        setTimeout(startSignalRConnection, 5000); // Thử kết nối lại sau 5 giây nếu không thành công
     }
 }
-let tempImageFile = null;
-let newMessagesCount = 0;
+
+
+connectionChat.onclose(async () => {
+    await startSignalRConnection();
+});
+
+
+
+
 function setupEventListeners() {
     connectionChat.on("ReceiveMessage", function (message, conversationId) {
+        console.log(isTabActive);
         if (currentConversationId === conversationId && chatBox.style.display === 'block') {
-            addMessageToUI(message);
-            if (message.senderRole === 'Customer') {
-                markMessagesAsRead([message.messageId]);
+            if (isTabActive) {
+                addMessageToUI(message);
+                if (message.senderRole === 'Customer') {
+                    markMessagesAsRead([message.messageId]);
+                }
+            } else {
+                playNewMessageSound(message);
+                loadConversations();
             }
         } else {
-            playNewMessageSound();
+            playNewMessageSound(message);
+            loadConversations();
         }
     });
 
-    connectionChat.on("NewMessageNotification", function (conversationId) {
-        if (currentConversationId !== conversationId || chatBox.style.display === 'none') {
-            playNewMessageSound();
-            newMessagesCount++;
-            updateNewMessageBadge(newMessagesCount);
+    connectionChat.on("NewMessageNotification", function (message, conversationId) {
+        if (currentConversationId !== conversationId) {
+            playNewMessageSound(message);
             loadConversations();
         }
 
@@ -47,26 +100,22 @@ function setupEventListeners() {
     });
 }
 
-function playNewMessageSound() {
+function playNewMessageSound(message) {
     var sound = document.getElementById("messageSound");
     sound.play();
+    document.title = `${message.senderName}${newMessageTitle}`;
 }
 
 
-var chat = document.getElementById('chat');
-var chatBox = document.getElementById('chatBox');
-var minimizeButton = document.getElementById('minimize-chat');
-var maximizeButton = document.getElementById('maximize-chat');
-var chatBubble = document.getElementById('chat-bubble');
 
-chatBox.style.display = 'none'
-chatBubble.style.display = 'block';
 
 // Sự kiện thu nhỏ cửa sổ chat
 minimizeButton.addEventListener('click', function () {
     chatBox.style.display = 'none'
     chatBubble.style.display = 'block';
-});// Sự kiện thu nhỏ cửa sổ chat
+    currentConversationId = 0;
+});
+
 maximizeButton.addEventListener('click', function () {
     window.location.href = "/admin/messenger";
 });
@@ -81,7 +130,7 @@ chatBubble.addEventListener('click', function () {
     openLatestConversation();
 });
 
-var conversationsList = [];
+
 
 async function loadConversations() {
     try {
@@ -155,9 +204,12 @@ function clearMessages() {
     messagesContainer.innerHTML = ''; // Xóa nội dung hiện tại của container
 }
 
-var currentConversationId = 0;
+
 
 async function openConversation(conversation) {
+    if (document.title.includes(conversation.conversationName)) {
+        document.title = originalTitle;
+    }
     if (currentConversationId) {
         await connectionChat.invoke("LeaveGroup", `Conversation-${currentConversationId}`);
     }
@@ -166,22 +218,18 @@ async function openConversation(conversation) {
     clearMessages();
     messages.forEach(addMessageToUI);
 
-    // Lấy tất cả ID tin nhắn từ DOM và lọc ra những tin nhắn chưa đọc
     const unreadMessageIds = messages
         .filter(msg => !msg.isRead && msg.senderRole === 'Customer')
         .map(msg => msg.messageId);
 
     if (unreadMessageIds.length > 0) {
-        // Chỉ gọi API nếu có tin nhắn chưa đọc
         markMessagesAsRead(unreadMessageIds);
     }
 
     var conversationName = document.getElementById('name-conversation');
-
     conversationName.innerHTML = conversation.conversationName;
-
     currentConversationId = conversation.conversationId;
-
+    currentConversation = conversation;
     await connectionChat.invoke("JoinGroup", `Conversation-${conversation.conversationId}`);
 
 }
@@ -191,9 +239,8 @@ function leaveConversation(conversationId) {
 }
 
 
-
 function sendMessage(messageText, messageType, conversationId) {
-    
+
 
     if (messageType === 'Text') {
         if (!messageText.trim()) {
@@ -366,16 +413,6 @@ function updateNewMessageBadge(count) {
     }
 }
 
-
-document.addEventListener("DOMContentLoaded", function () {
-    initializeSignalRConnection();
-});
-
-
-
-const inputField = document.getElementById('text-message');
-const sendButton = document.getElementById('btn-send');
-
 inputField.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && !e.repeat) {
         if (tempImageFile) {
@@ -399,6 +436,7 @@ inputField.addEventListener('paste', function (e) {
         }
     }
 });
+
 sendButton.addEventListener('click', function () {
     if (tempImageFile) {
         sendMessage(tempImageFile, 'Image', currentConversationId);
@@ -411,11 +449,6 @@ sendButton.addEventListener('click', function () {
 });
 
 
-
-// JavaScript: Xử lý sự kiện chọn file và dán ảnh từ clipboard
-document.getElementById('image-input').addEventListener('change', handleFileSelect);
-
-
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
@@ -424,13 +457,19 @@ function handleFileSelect(event) {
     }
 }
 
-// Get the modal
-var modal = document.getElementById("imageModal");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
 // When the user clicks on <span> (x), close the modal
 span.onclick = function () {
     modal.style.display = "none";
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    initializeSignalRConnection();
+    // Yêu cầu quyền thông báo
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                new Notification("Bạn sẽ nhận được thông báo từ chúng tôi!");
+            }
+        });
+    }
+});

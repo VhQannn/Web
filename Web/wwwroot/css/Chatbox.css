@@ -29,6 +29,10 @@
     font-size: 12px;
 }
 
+span:hover {
+    cursor: pointer;
+}
+
 
 
 .pic {

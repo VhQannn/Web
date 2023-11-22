@@ -1,53 +1,77 @@
-﻿(function ($) {
-    "use strict";
-    $('.scrollable-chat-panel').perfectScrollbar();
-    var position = $(".chat-search").last().position().top;
-    $('.scrollable-chat-panel').scrollTop(position);
-    $('.scrollable-chat-panel').perfectScrollbar('update');
-    $('.pagination-scrool').perfectScrollbar();
+﻿
+let originalTitle = document.title;
+let newMessageTitle = " đã gửi tin nhắn cho bạn!";
+let isTabActive = true;
 
-    $('.chat-upload-trigger').on('click', function (e) {
-        $(this).parent().find('.chat-upload').toggleClass("active");
-    });
-    $('.user-detail-trigger').on('click', function (e) {
-        $(this).closest('.chat').find('.chat-user-detail').toggleClass("active");
-    });
-    $('.user-undetail-trigger').on('click', function (e) {
-        $(this).closest('.chat').find('.chat-user-detail').toggleClass("active");
-    });
-})(jQuery);
+var currentConversationId = 0;
+var currentConversation = null;
+let tempImageFile = null;
+
+const inputField = document.getElementById('send-message');
+const sendButton = document.getElementById('send-message-button');
+var modal = document.getElementById("imageModal");
+var span = document.getElementsByClassName("close")[0];
+document.getElementById('image-input').addEventListener('change', handleFileSelect);
+
+
+var conversationsList = [];
+
+document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === 'visible') {
+        isTabActive = true;
+        openConversation(currentConversation);
+    } else {
+        isTabActive = false;
+    }
+});
 
 const connectionChat = new signalR.HubConnectionBuilder()
     .withUrl("/chatHub")
     .build();
 
-async function initializeSignalRConnection() {
+initializeSignalRConnection = async () => {
+    setupEventListeners();
+    await startSignalRConnection();
+    loadConversations();
+}
+
+async function startSignalRConnection() {
     try {
         await connectionChat.start();
-        setupEventListeners();
-        loadConversations();
+        console.log("SignalR Connected.");
     } catch (err) {
-        console.error('Error during SignalR Connection: ', err);
+        console.error('SignalR Connection failed: ', err);
+        setTimeout(startSignalRConnection, 5000); // Thử kết nối lại sau 5 giây nếu không thành công
     }
 }
+
+
+connectionChat.onclose(async () => {
+    await startSignalRConnection();
+});
 
 function setupEventListeners() {
     connectionChat.on("ReceiveMessage", function (message, conversationId) {
         if (currentConversationId === conversationId) {
-            addMessageToUI(message);
-            if (message.senderRole === 'Customer') {
-                markMessagesAsRead([message.messageId]);
+            if (isTabActive) {
+                addMessageToUI(message);
+                if (message.senderRole === 'Customer') {
+                    markMessagesAsRead([message.messageId]);
+                }
+            } else {
+                playNewMessageSound(message);
+                loadConversations();
             }
         } else {
             playNewMessageSound();
+            loadConversations();
         }
     });
 
-    connectionChat.on("NewMessageNotification", function (conversationId) {
-        if (currentConversationId !== conversationId || chatBox.style.display === 'none') {
-            
+    connectionChat.on("NewMessageNotification", function (message, conversationId) {
+        if (currentConversationId !== conversationId) {
+            playNewMessageSound(message);
             loadConversations();
-            playNewMessageSound();
         }
 
     });
@@ -66,12 +90,12 @@ function setupEventListeners() {
     });
 }
 
-function playNewMessageSound() {
+function playNewMessageSound(message) {
     var sound = document.getElementById("messageSound");
     sound.play();
+    document.title = `${message.senderName}${newMessageTitle}`;
 }
-let tempImageFile = null;
-var conversationsList = [];
+
 
 async function loadConversations() {
     try {
@@ -90,13 +114,6 @@ async function loadConversations() {
         conversationsList = conversations;
     } catch (error) {
         console.error('Fetch error:', error);
-    }
-}
-
-function openLatestConversation() {
-    if (conversationsList && conversationsList.length > 0) {
-        const latestConversation = conversationsList.sort((a, b) => new Date(b.UpdatedTime) - new Date(a.UpdatedTime))[0];
-        openConversation(latestConversation);
     }
 }
 
@@ -180,9 +197,12 @@ function clearMessages() {
     messagesContainer.innerHTML = ''; // Xóa nội dung hiện tại của container
 }
 
-var currentConversationId = 0;
+
 
 async function openConversation(conversation) {
+    if (document.title.includes(conversation.conversationName)) {
+        document.title = originalTitle;
+    }
     if (currentConversationId) {
         await connectionChat.invoke("LeaveGroup", `Conversation-${currentConversationId}`);
     }
@@ -214,7 +234,7 @@ async function openConversation(conversation) {
     conversationTime.innerHTML = `<i class="la la-clock mr-1"></i>${formatDate(conversation.updatedTime) }`;
 
     currentConversationId = conversation.conversationId;
-
+    currentConversation = conversation;
     await connectionChat.invoke("JoinGroup", `Conversation-${conversation.conversationId}`);
 
 }
@@ -229,14 +249,14 @@ function leaveConversation(conversationId) {
 }
 
 
-const inputField = document.getElementById('send-message');
-const sendButton = document.getElementById('send-message-button');
+
 
 inputField.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && !e.repeat) {
         if (tempImageFile) {
             sendMessage(tempImageFile, 'Image', currentConversationId);
             tempImageFile = null;
+            document.getElementById('image-attached-badge').style.display = 'none'; // Ẩn badge
         } else {
             sendMessage(inputField.value, 'Text', currentConversationId);
             inputField.value = '';
@@ -250,6 +270,7 @@ inputField.addEventListener('paste', function (e) {
         if (item.kind === 'file' && item.type.startsWith('image/')) {
             const file = item.getAsFile();
             tempImageFile = file; // Lưu trữ file ảnh tạm thời
+            document.getElementById('image-attached-badge').style.display = 'inline'; // Hiển thị badge
         }
     }
 });
@@ -259,6 +280,7 @@ sendButton.addEventListener('click', function () {
     if (tempImageFile) {
         sendMessage(tempImageFile, 'Image', currentConversationId);
         tempImageFile = null;
+        document.getElementById('image-attached-badge').style.display = 'none'; // Ẩn badge
     } else {
         sendMessage(inputField.value, 'Text', currentConversationId);
         inputField.value = '';
@@ -455,13 +477,6 @@ async function markMessagesAsRead(messageIds) {
 }
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    initializeSignalRConnection();
-    
-});
-
-
-
 document.getElementById('search-conversation').addEventListener('input', async function (e) {
     var searchTerm = e.target.value.trim();
 
@@ -478,27 +493,27 @@ document.getElementById('search-conversation').addEventListener('input', async f
     }
 });
 
-
-// JavaScript: Xử lý sự kiện chọn file và dán ảnh từ clipboard
-document.getElementById('image-input').addEventListener('change', handleFileSelect);
-
-
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
         tempImageFile = file; // Lưu trữ file ảnh tạm thời
+        document.getElementById('image-attached-badge').style.display = 'inline'; // Hiển thị badge
     }
 }
 
-
-// Get the modal
-var modal = document.getElementById("imageModal");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks on <span> (x), close the modal
 span.onclick = function () {
     modal.style.display = "none";
 }
 
+
+document.addEventListener("DOMContentLoaded", function () {
+    initializeSignalRConnection();
+    // Yêu cầu quyền thông báo
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                new Notification("Bạn sẽ nhận được thông báo từ chúng tôi!");
+            }
+        });
+    }
+});

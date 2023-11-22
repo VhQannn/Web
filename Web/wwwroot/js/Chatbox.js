@@ -1,36 +1,85 @@
-﻿
+﻿let originalTitle = document.title;
+let newMessageTitle = "Bạn có tin nhắn mới!";
+let isTabActive = true;
+
+var currentConversationId = 0;
+let tempImageFile = null;
+let newMessagesCount = 0;
+
+var chat = document.getElementById('chat');
+var chatBox = document.getElementById('chatBox');
+var minimizeButton = document.getElementById('minimize-chat');
+var chatBubble = document.getElementById('chat-bubble');
+var modal = document.getElementById("imageModal");
+var span = document.getElementsByClassName("close")[0];
+const inputField = document.getElementById('text-message');
+const sendButton = document.getElementById('btn-send');
+document.getElementById('image-input').addEventListener('change', handleFileSelect);
+
+
+chatBox.style.display = 'none'
+chatBubble.style.display = 'block';
+
+
+document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === 'visible') {
+        document.title = originalTitle;
+        isTabActive = true;
+        if (chatBox.style.display === 'block') {
+            loadChat();
+        }
+    } else {
+        isTabActive = false;
+    }
+});
+
+
 const connectionChat = new signalR.HubConnectionBuilder()
     .withUrl("/chatHub")
     .build();
 
 
-async function initializeSignalRConnection() {
+initializeSignalRConnection = async () => {
+    setupEventListeners();
+    await startSignalRConnection();
+    loadChat();
+}
+
+async function startSignalRConnection() {
     try {
         await connectionChat.start();
-        setupEventListeners();
-        loadChat();
+        console.log("SignalR Connected.");
     } catch (err) {
-        console.error('Error during SignalR Connection: ', err);
+        console.error('SignalR Connection failed: ', err);
+        setTimeout(startSignalRConnection, 5000); // Thử kết nối lại sau 5 giây nếu không thành công
     }
 }
-let tempImageFile = null;
-let newMessagesCount = 0;
+
+
+connectionChat.onclose(async () => {
+    await startSignalRConnection();
+});
+
+
 function setupEventListeners() {
     connectionChat.on("ReceiveMessage", function (message, _conversationId) {
         if (currentConversationId === _conversationId) {
             if (chatBox.style.display === 'none') {
+                newMessagesCount++;
+                updateNewMessageBadge(newMessagesCount);
                 addMessageToUI(message);
                 playNewMessageSound();
             } else {
-                addMessageToUI(message);
-                if (message.senderRole === 'Admin') {
-                    markMessagesAsRead([message.messageId]);
+                if (isTabActive) {
+                    addMessageToUI(message);
+                    if (message.senderRole === 'Admin') {
+                        markMessagesAsRead([message.messageId]);
+                    }
+                } else {
+                    addMessageToUI(message);
+                    playNewMessageSound();
                 }
             }
-        }
-        if (chatBox.style.display === 'none') {
-            newMessagesCount++;
-            updateNewMessageBadge(newMessagesCount);
         }
     });
 
@@ -48,13 +97,7 @@ function setupEventListeners() {
 }
 
 
-var chat = document.getElementById('chat');
-var chatBox = document.getElementById('chatBox');
-var minimizeButton = document.getElementById('minimize-chat');
-var chatBubble = document.getElementById('chat-bubble');
 
-chatBox.style.display = 'none'
-chatBubble.style.display = 'block';
 
 // Sự kiện thu nhỏ cửa sổ chat
 minimizeButton.addEventListener('click', function () {
@@ -64,11 +107,13 @@ minimizeButton.addEventListener('click', function () {
 
 // Sự kiện mở rộng cửa sổ chat từ bong bóng
 chatBubble.addEventListener('click', function () {
+    document.title = originalTitle;
     chatBox.style.display = 'block'; // hoặc 'block' tùy thuộc vào cách bạn đã định dạng nó
     chatBubble.style.display = 'none';
     chat.scrollTop = chat.scrollHeight - chat.clientHeight; // Cuộn đến tin nhắn cuối cùng
     newMessagesCount = 0;
     updateNewMessageBadge(newMessagesCount);
+    loadChat();
 });
 
 
@@ -100,7 +145,7 @@ async function getMessagesForConversation(conversationId) {
     }
 }
 
-var currentConversationId = 0;
+
 
 function clearMessages() {
     const messagesContainer = document.getElementById("chat");
@@ -113,7 +158,7 @@ async function loadChat() {
     if (conversation) {
         currentConversationId = conversation;
         await connectionChat.invoke("JoinGroup", `Conversation-${currentConversationId}`);
-        
+
         const messages = await getMessagesForConversation(conversation);
         messages.forEach(addMessageToUI);
         // Lấy tất cả ID tin nhắn từ DOM và lọc ra những tin nhắn chưa đọc
@@ -225,7 +270,7 @@ function addMessageToUI(message) {
         messageDiv.appendChild(statusTimeContainer);
         messagesContainer.appendChild(messageDiv);
     }
-    
+
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
@@ -233,7 +278,9 @@ function addMessageToUI(message) {
 function playNewMessageSound() {
     var sound = document.getElementById("messageSound");
     sound.play();
+    document.title = `${newMessageTitle}`;
 }
+
 
 
 
@@ -276,7 +323,7 @@ function sendMessage(messageContent, messageType) {
             .catch(error => console.error('Error:', error));
         document.getElementById('image-attached-badge').style.display = 'none'; // Ẩn badge
     }
-   
+
 }
 
 
@@ -313,11 +360,18 @@ function updateNewMessageBadge(count) {
 
 document.addEventListener("DOMContentLoaded", function () {
     initializeSignalRConnection();
+    // Yêu cầu quyền thông báo
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") {
+                new Notification("Bạn sẽ nhận được thông báo từ chúng tôi!");
+            }
+        });
+    }
 });
 
 
-const inputField = document.getElementById('text-message');
-const sendButton = document.getElementById('btn-send');
+
 
 inputField.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && !e.repeat) {
@@ -354,10 +408,6 @@ sendButton.addEventListener('click', function () {
     }
 });
 
-
-// JavaScript: Xử lý sự kiện chọn file và dán ảnh từ clipboard
-document.getElementById('image-input').addEventListener('change', handleFileSelect);
-
 function handleFileSelect(event) {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
@@ -366,13 +416,6 @@ function handleFileSelect(event) {
     }
 }
 
-// Get the modal
-var modal = document.getElementById("imageModal");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks on <span> (x), close the modal
 span.onclick = function () {
     modal.style.display = "none";
 }

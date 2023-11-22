@@ -101,35 +101,40 @@
 					<input id="send-message" type="text" class="form-control" placeholder="Write a message">
 					<div class="input-group-append prepend-white">
 						<span class="input-group-text pl-2 pr-2">
-							<i class="chat-upload-trigger fs-19 bi bi-file-earmark-plus ml-2 mr-2"></i>
-							<i class="fs-19 bi bi-emoji-smile ml-2 mr-2"></i>
-							<i class="fs-19 bi bi-camera ml-2 mr-2"></i>
-							<i id="send-message-button" class="fs-19 bi bi-cursor ml-2 mr-2"></i>
-							<div class="chat-upload">
-								<div class="d-flex flex-column">
-									<div class="p-2">
-										<button type="button" class="btn btn-secondary btn-md btn-icon btn-circle btn-blushing">
-											<i class="fs-15 bi bi-camera"></i>
-										</button>
-									</div>
-									<div class="p-2">
-										<button type="button" class="btn btn-success btn-md btn-icon btn-circle btn-blushing">
-											<i class="fs-15 bi bi-file-earmark-plus"></i>
-										</button>
-									</div>
-									<div class="p-2">
-										<button type="button" class="btn btn-warning btn-md btn-icon btn-circle btn-blushing">
-											<i class="fs-15 bi bi-person"></i>
-										</button>
-									</div>
-									<div class="p-2">
-										<input type="file" id="image-input" accept="image/*" style="display: none;" />
-										<button type="button" class="btn btn-danger btn-md btn-icon btn-circle btn-blushing" onclick="document.getElementById('image-input').click()">
-											<i class="fs-15 bi bi-card-image"></i>
-										</button>
-									</div>
+							<span class="image-upload-container" onclick="document.getElementById('image-input').click()" style="position: relative;">
+								<i class="chat-upload-trigger fs-19 bi bi-file-earmark-plus ml-2 mr-2"></i>
+								<span id="image-attached-badge" class="badge" style="display: none;">✓
+							</span>
+						</span>
+						
+						<i class="fs-19 bi bi-emoji-smile ml-2 mr-2"></i>
+						<i class="fs-19 bi bi-camera ml-2 mr-2"></i>
+						<i id="send-message-button" class="fs-19 bi bi-cursor ml-2 mr-2"></i>
+						<div class="chat-upload">
+							<div class="d-flex flex-column">
+								<div class="p-2">
+									<button type="button" class="btn btn-secondary btn-md btn-icon btn-circle btn-blushing">
+										<i class="fs-15 bi bi-camera"></i>
+									</button>
+								</div>
+								<div class="p-2">
+									<button type="button" class="btn btn-success btn-md btn-icon btn-circle btn-blushing">
+										<i class="fs-15 bi bi-file-earmark-plus"></i>
+									</button>
+								</div>
+								<div class="p-2">
+									<button type="button" class="btn btn-warning btn-md btn-icon btn-circle btn-blushing">
+										<i class="fs-15 bi bi-person"></i>
+									</button>
+								</div>
+								<div class="p-2">
+									<input type="file" id="image-input" accept="image/*" style="display: none;" />
+									<button type="button" class="btn btn-danger btn-md btn-icon btn-circle btn-blushing" onclick="document.getElementById('image-input').click()">
+										<i class="fs-15 bi bi-card-image"></i>
+									</button>
 								</div>
 							</div>
+						</div>
 						</span>
 					</div>
 				</div>
@@ -146,7 +151,4 @@
 </div>
 <audio id="messageSound" src="~/assets/notification.mp3" preload="none"></audio>
 <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.6.7/js/min/perfect-scrollbar.jquery.min.js"></script>
 <script src="~/js/Messenger.js" asp-append-version="true"></script>

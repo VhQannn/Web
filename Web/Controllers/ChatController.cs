@@ -109,7 +109,16 @@ namespace Web.Controllers
 					MessageType = savedMessage.Entity.MessageType
 				}, messageDto.ConversationId);
 
-			await _chatHub.Clients.Group("Admins").SendAsync("NewMessageNotification", messageDto.ConversationId);
+			await _chatHub.Clients.Group("Admins").SendAsync("NewMessageNotification", new MessageDto
+			{
+				MessageId = savedMessage.Entity.MessageId,
+				SenderName = savedMessage.Entity.Sender.Username,
+				SenderRole = savedMessage.Entity.Sender.UserType,
+				IsRead = false,
+				MessageText = savedMessage.Entity.MessageText,
+				SentTime = savedMessage.Entity.SentTime,
+				MessageType = savedMessage.Entity.MessageType
+			}, messageDto.ConversationId);
 
 
 			return Ok();
