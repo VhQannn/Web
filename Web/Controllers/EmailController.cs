@@ -63,7 +63,7 @@ public class EmailController : ControllerBase
     }
 
     [HttpPost("forget-password")]
-    public async Task<IActionResult> ForgetPassword(VerifyPassswordDTO verifyPassswordDTO)
+    public async Task<IActionResult> ForgetPassword(VerifyPasswordDTO verifyPassswordDTO)
     {
         try
         {

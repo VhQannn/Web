@@ -32,16 +32,16 @@ namespace Web.Services
 </html>";
             var mailMessage = new MailMessage
             {
-                From = new MailAddress("hihi@gmail.com"),
+                From = new MailAddress("admin@hotrohoctap.net"),
                 Subject = subject,
                 Body = htmlBody,
                 IsBodyHtml = true
             };
 
-            using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+            using (SmtpClient smtp = new SmtpClient("smtp.hostinger.com", 587))
             {
                 smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential("hihi@gmail.com", "lcid qgud jvif wmqg");
+                smtp.Credentials = new NetworkCredential("admin@hotrohoctap.net", "3zCKA8Bd4Thr!");
                 smtp.EnableSsl = true;
                 mailMessage.To.Add(recipient);
                 await smtp.SendMailAsync(mailMessage);
@@ -69,16 +69,16 @@ namespace Web.Services
 </html>";
             var mailMessage = new MailMessage
             {
-                From = new MailAddress("hihi@gmail.com"),
+                From = new MailAddress("admin@hotrohoctap.net"),
                 Subject = "Forget password",
                 Body = htmlBody,
                 IsBodyHtml = true
             };
 
-            using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+            using (SmtpClient smtp = new SmtpClient("smtp.hostinger.com", 587))
             {
                 smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential("hihi@gmail.com", "lcid qgud jvif wmqg");
+                smtp.Credentials = new NetworkCredential("admin@hotrohoctap.net", "3zCKA8Bd4Thr!");
                 smtp.EnableSsl = true;
                 mailMessage.To.Add(recipient);
                 await smtp.SendMailAsync(mailMessage);

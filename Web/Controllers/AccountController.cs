@@ -209,6 +209,7 @@ namespace Web.Controllers
 
 		}
 
+		[AllowAnonymous]
 		[HttpGet("verify")]
 		public async Task<ActionResult> VerifyEmail(string email, string username, string otp)
 		{
@@ -226,8 +227,8 @@ namespace Web.Controllers
 					var check = await _context.SaveChangesAsync() > 0;
 					if (check)
 					{
-						return Ok("Đã xác thực thành công");
-					}
+                        return Redirect("/verifyemail");
+                    }
 					return NotFound("Không thể xác thực");
 
 				}

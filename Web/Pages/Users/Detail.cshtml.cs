@@ -20,9 +20,10 @@ namespace Web.Pages.Users
         public string Username { get; set; }
         public string? UserType { get; set; }
         public string? Facebook { get; set; }
+        public string? Email { get; set; }
         public int UserId { get; set; }
         public double AverageRating { get; set; }
-
+        public bool? IsVerify { get; set; }
         public List<RatingCommentDTO> Comments { get; set; }
         public int CurrentPage { get; set; } = 1;
         public int TotalPages { get; set; }
@@ -43,7 +44,9 @@ namespace Web.Pages.Users
                                          u.UserId,
                                          u.Username,
                                          u.UserType,
-                                         u.Facebook
+                                         u.Facebook,
+                                         u.IsVerify,
+                                         u.Email,
                                      })
                                      .FirstOrDefaultAsync();
 
@@ -84,8 +87,8 @@ namespace Web.Pages.Users
             Username = user.Username;
             UserType = user.UserType;
             Facebook = user.Facebook;
-
-
+            IsVerify = user.IsVerify;
+            Email = user.Email;
             return Page();
         }
     }

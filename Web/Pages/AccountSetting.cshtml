@@ -1,0 +1,58 @@
+﻿@page 
+@model Web.Pages.AccountSettingModel
+@{
+}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action" onclick="showContent('personalInfo')">Thay đổi thông tin cá nhân</a>
+                <a href="#" class="list-group-item list-group-item-action" onclick="showContent('changePassword')">Đổi mật khẩu</a>
+                <a href="#" class="list-group-item list-group-item-action" onclick="showContent('changeEmail')">Đổi email</a>
+
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div id="personalInfo" class="content-section">
+                <form method="post">
+                    <!-- Các trường input cho thông tin cá nhân -->
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </form>
+            </div>
+            <div id="changePassword" class="content-section" style="display: none;">
+                <form method="post" class="form-group">
+                    <div class="mb-3">
+                        <label for="oldPassword" class="form-label">Mật khẩu cũ</label>
+                        <input type="password" class="form-control" id="oldPassword" asp-for="ChangePassword.OldPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                        <input type="password" class="form-control" id="newPassword" asp-for="ChangePassword.NewPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmNewPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                        <input type="password" class="form-control" id="confirmNewPassword" asp-for="ChangePassword.ConfirmNewPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+                </form>
+            </div>
+            <div id="changeEmail" class="content-section" style="display: none;">
+                <form method="post">
+                    <!-- Các trường input cho đổi email -->
+                    <button type="submit" class="btn btn-primary">Đổi email</button>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+<script>
+    function showContent(sectionId) {
+        document.querySelectorAll('.content-section').forEach(function (el) {
+            el.style.display = 'none';
+        });
+        document.getElementById(sectionId).style.display = 'block';
+    }
+</script>

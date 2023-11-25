@@ -8,6 +8,10 @@
     int emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 }
 <link rel="stylesheet" href="~/css/detail-page.css">
+@if (!Model.IsVerify.Value)
+{
+    <p>Email của bạn chưa được xác thực. Vui lòng bấm vào đây để <a href="#" onclick="sendVerificationEmail('@Model.Username', '@Model.Email')">đây</a> để xác nhận email.</p>
+}
 <div class="container">
     <div class="row shadow-lg p-4 bg-white rounded">
         <!-- Cột 1: Avatar, Icon Facebook và mô tả -->
@@ -93,3 +97,27 @@
 </div>
 
 
+<script>
+    function sendVerificationEmail(username, email) {
+        var data = {
+            username: username,
+            email: email
+        };
+
+        fetch('/api/email/send-verify-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(data => {
+                console.log('Success:', data);
+                alert("Đã gửi email vui lòng kiểm tra email của bạn.")
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert("Có lỗi xảy ra.")
+            });
+    }
+</script>
