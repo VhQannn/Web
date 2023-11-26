@@ -1,0 +1,160 @@
+﻿@page "/admin/widthdrawal-request"
+@model Web.Pages.Admin.WidthdrawalRequestManagementModel
+@{
+	ViewData["Title"] = "Quản lý đơn rút tiền";
+	Layout = "admin_layout";
+	// Định nghĩa hàm chuyển đổi số tiền thành định dạng tiền Việt Nam
+	Func<decimal, string> formatVnd = amount => amount.ToString("N0") + " đ";
+}
+<h2 class="mb-4">@ViewData["Title"]</h2>
+
+<!-- Combined form for search and status filter -->
+<form method="get" class="mb-3">
+	<div class="row g-3 align-items-center">
+		<div class="col-auto">
+			<input type="text" name="Username" value="@Model.Username" class="form-control" placeholder="Search by username" />
+		</div>
+		<div class="col-auto">
+			<input type="number" name="RequestId" value="@Model.RequestId" class="form-control" placeholder="Search by request ID" />
+		</div>
+		<div class="col-auto" style="margin-top: 32px;">
+			<button type="submit" class="btn btn-primary">Search</button>
+		</div>
+		<input type="hidden" name="StatusFilter" value="@Model.StatusFilter" />
+	</div>
+</form>
+
+<!-- Status filter buttons -->
+<div class="btn-group mb-3">
+	<a asp-page="./WidthdrawalRequestManagement" asp-route-Username="@Model.Username" asp-route-PaymentId="@Model.RequestId" asp-route-StatusFilter="All" class="btn @(Model.StatusFilter == "All" ? "btn-primary" : "btn-secondary")">All</a>
+	<a asp-page="./WidthdrawalRequestManagement" asp-route-Username="@Model.Username" asp-route-PaymentId="@Model.RequestId" asp-route-StatusFilter="Pending" class="btn @(Model.StatusFilter == "Pending" ? "btn-primary" : "btn-secondary")">Pending</a>
+	<a asp-page="./WidthdrawalRequestManagement" asp-route-Username="@Model.Username" asp-route-PaymentId="@Model.RequestId" asp-route-StatusFilter="Approved" class="btn @(Model.StatusFilter == "Approved" ? "btn-primary" : "btn-secondary")">Approved</a>
+	<a asp-page="./WidthdrawalRequestManagement" asp-route-Username="@Model.Username" asp-route-PaymentId="@Model.RequestId" asp-route-StatusFilter="Rejected" class="btn @(Model.StatusFilter == "Rejected" ? "btn-primary" : "btn-secondary")">Rejected</a>
+
+</div>
+
+<!-- Table -->
+<div class="table-responsive">
+	<table class="table table-striped table-hover table-bordered">
+		<thead>
+			<tr>
+				<th>Request ID</th>
+				<th>Amount</th>
+				<th>Status</th>
+				<th>Username</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var request in Model.Requets)
+			{
+				<tr>
+					<td>@request.WithdrawalRequestId</td>
+					 <td>@formatVnd(request.Payment.Amount)</td>
+					<td style="color: @(request.Status == "rejected" ? "#006400" : request.Status == "pending" ? "#D5B006" : "#344767");"><b>@request.Status</b></td>
+					<td>@request.Supporter.Username</td>
+					<td>
+						<div class="btn-group">
+							<form method="post" asp-page-handler="UpdateStatus">
+								<input type="hidden" name="WithdrawalRequestId" value="@request.WithdrawalRequestId" />
+								<input type="hidden" name="newStatus" value="pending" />
+								<input type="hidden" name="Username" value="@Model.Username" />
+								<input type="hidden" name="requestIdFilter" value="@Model.RequestId" />
+								<input type="hidden" name="StatusFilter" value="@Model.StatusFilter" />
+								<button type="submit" class="btn btn-warning">Set Pending</button>
+							</form>
+							<form method="post" asp-page-handler="UpdateStatus">
+								<input type="hidden" name="WithdrawalRequestId" value="@request.WithdrawalRequestId" />
+								<input type="hidden" name="newStatus" value="approved" />
+								<input type="hidden" name="Username" value="@Model.Username" />
+								<input type="hidden" name="requestIdFilter" value="@Model.RequestId" />
+								<input type="hidden" name="StatusFilter" value="@Model.StatusFilter" />
+								<button type="submit" class="btn btn-dark">Set Approved</button>
+							</form>
+							<form method="post" asp-page-handler="UpdateStatus">
+								<input type="hidden" name="WithdrawalRequestId" value="@request.WithdrawalRequestId" />
+								<input type="hidden" name="newStatus" value="rejected" />
+								<input type="hidden" name="Username" value="@Model.Username" />
+								<input type="hidden" name="requestIdFilter" value="@Model.RequestId" />
+								<input type="hidden" name="StatusFilter" value="@Model.StatusFilter" />
+								<button type="submit" class="btn btn-danger">Set Rejected</button>
+							</form>
+
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+@if (Model.TotalPages > 1)
+{
+	<nav aria-label="Page navigation">
+		<ul class="custom-pagination">
+			<!-- Your existing pagination controls here -->
+		</ul>
+	</nav>
+}
+
+
+@if (Model.TotalPages > 1)
+{
+	<nav aria-label="Page navigation" class="mt-4">
+		<ul class="pagination">
+			<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+				<a class="page-link" asp-page="./ManagePayment" asp-route-currentPage="@(Model.CurrentPage - 1)">&lt;</a>
+			</li>
+
+			@if (Model.CurrentPage > 2)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-page="./ManagePayment" asp-route-currentPage="1">1</a>
+				</li>
+				@if (Model.CurrentPage > 3)
+				{
+					<li class="page-item disabled"><span class="page-link">...</span></li>
+				}
+			}
+
+			@if (Model.CurrentPage > 1)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-page="./ManagePayment" asp-route-currentPage="@(Model.CurrentPage - 1)">
+						@(Model.CurrentPage - 1)
+					</a>
+				</li>
+			}
+
+			<li class="page-item active">
+				<a class="page-link" asp-page="./ManagePayment" asp-route-currentPage="@Model.CurrentPage">@Model.CurrentPage</a>
+			</li>
+
+			@if (Model.CurrentPage < Model.TotalPages)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-page="./ManagePayment" asp-route-currentPage="@(Model.CurrentPage + 1)">
+						@(Model.CurrentPage + 1)
+					</a>
+				</li>
+			}
+
+			@if (Model.CurrentPage < Model.TotalPages - 1)
+			{
+				@if (Model.CurrentPage < Model.TotalPages - 2)
+				{
+					<li class="page-item disabled"><span class="page-link">...</span></li>
+				}
+				<li class="page-item">
+					<a class="page-link" asp-page="./ManagePayment" asp-route-currentPage="@Model.TotalPages">
+						@Model.TotalPages
+					</a>
+				</li>
+			}
+
+			<li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+				<a class="page-link" asp-page="./ManagePayment" asp-route-currentPage="@(Model.CurrentPage + 1)">></a>
+			</li>
+		</ul>
+	</nav>
+}
