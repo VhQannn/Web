@@ -632,7 +632,10 @@ img.shadow {
 
 .chat.chat-panel .left-chat-message, .chat.chat-panel .right-chat-message {
     padding: .5rem 1rem;
-    max-width: 47%
+    max-width: 47%;
+    overflow: auto; /* Thêm thanh cuộn nếu cần */
+    word-break: break-all; /* Ngắt từ ở bất cứ đâu để ngăn tràn */
+    word-wrap: break-word; /* Ngắt từ dài ở ranh giới khung chứa */
 }
 
 

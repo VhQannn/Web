@@ -221,7 +221,6 @@ span:hover {
                 background: #333;
                 color: white;
                 max-width: 66%;
-                max-height: 100%;
             }
 
                 .chat .messages .message.parker .content {
