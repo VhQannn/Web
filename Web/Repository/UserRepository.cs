@@ -96,12 +96,16 @@ namespace Web.Repository
         {
             var user = await _context.Users.SingleOrDefaultAsync(x => x.Username.Equals(username));
             user.Password = HashPassword(password);
-            var check = await _context.SaveChangesAsync() > 0;
-            if (check)
+            try
             {
-                return user;
+                var result = await _context.SaveChangesAsync();
+                return result > 0 ? user : null;
             }
-            return null;
+            catch (Exception ex)
+            {
+                Console.Write(ex.ToString());   
+                return null;
+            }
         }
     }
 }

@@ -1,27 +1,91 @@
 ﻿body {
-    background-color: #f5f5f5;
+    background: #f7f7f7; /* Replace with your preferred color or background image */
+    font-family: 'Arial', sans-serif;
+}
+
+.login-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-wrap: wrap; /* Allows items to wrap to the next line on smaller screens */
+}
+
+.banner, .form-container {
+    flex: 1; /* Allows both children to grow and share space equally */
+    max-width: 50%; /* Sets a maximum width for larger screens */
 }
 
 .form-container {
-    background-color: #ffffff;
+    background: white;
     padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.password-toggle {
-    position: relative;
+h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
 }
 
-    .password-toggle .toggle-icon {
-        position: absolute;
-        top: 50%;
-        right: 10px;
-        transform: translateY(-50%);
-        cursor: pointer;
+.input-form input {
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+    .input-form input:focus {
+        border-color: #007bff;
     }
-.validation-message {
-    font-size: 0.875rem;
-    color: red;
-    margin-top: 5px;
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    width: 100%;
+    cursor: pointer;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+.register-navigate a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+    .register-navigate a:hover {
+        text-decoration: underline;
+    }
+
+@media (max-width: 768px) {
+    .banner, .form-container {
+        max-width: 100%; /* Allows each child to take full width on smaller screens */
+    }
+
+    .login-form {
+        flex-direction: column; /* Stacks the children vertically */
+    }
+}
+
+@media (max-width: 480px) {
+    /* Further adjustments for very small devices */
+    .form-container {
+        width: 95%;
+        padding: 10px;
+    }
+
+    .input-form input, .btn-primary {
+        font-size: 12px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
 }

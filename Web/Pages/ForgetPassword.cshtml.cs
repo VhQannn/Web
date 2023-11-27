@@ -49,8 +49,10 @@ namespace Web.Pages
             {
                 ErrorMessage = "Có lỗi xảy ra khi gửi yêu cầu đến API.";
             }
-
-            SuccessMessage = "Đã gửi mật khẩu mới vào email. Vui lòng kiểm tra email của bạn";
+            else
+            {
+                SuccessMessage = "Đã gửi mật khẩu mới vào email. Vui lòng kiểm tra email của bạn";
+            }
             return Page();
 
         }

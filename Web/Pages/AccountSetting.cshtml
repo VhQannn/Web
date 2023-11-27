@@ -2,7 +2,16 @@
 @model Web.Pages.AccountSettingModel
 @{
 }
+
 <div class="container-fluid">
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-info">@Model.SuccessMessage</div>
+    }
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
@@ -24,6 +33,7 @@
             </div>
             <div id="changePassword" class="content-section" style="display: none;">
                 <form method="post" class="form-group">
+                    <input hidden asp-for="uId" value="@Model.uId"/>
                     <div class="mb-3">
                         <label for="oldPassword" class="form-label">Mật khẩu cũ</label>
                         <input type="password" class="form-control" id="oldPassword" asp-for="ChangePassword.OldPassword" required>
@@ -36,7 +46,7 @@
                         <label for="confirmNewPassword" class="form-label">Xác nhận mật khẩu mới</label>
                         <input type="password" class="form-control" id="confirmNewPassword" asp-for="ChangePassword.ConfirmNewPassword" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+                    <button type="submit" class="btn btn-primary" asp-page-handler="ChangePass">Đổi mật khẩu</button>
                 </form>
             </div>
             <div id="changeEmail" class="content-section" style="display: none;">
@@ -48,11 +58,33 @@
         </main>
     </div>
 </div>
-<script>
-    function showContent(sectionId) {
-        document.querySelectorAll('.content-section').forEach(function (el) {
-            el.style.display = 'none';
-        });
-        document.getElementById(sectionId).style.display = 'block';
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+        <script>
+            function showContent(sectionId) {
+                document.querySelectorAll('.content-section').forEach(function (el) {
+                    el.style.display = 'none';
+                });
+                document.getElementById(sectionId).style.display = 'block';
+            }
+
+            // Hàm để lấy tham số từ URL
+            function getQueryParam(param) {
+                var searchParams = new URLSearchParams(window.location.search);
+                return searchParams.get(param);
+            }
+
+            // Khi tải trang, kiểm tra tham số 'tab' và hiển thị tab tương ứng
+            window.onload = function () {
+                var activeTab = getQueryParam('tab');
+                if (activeTab) {
+                    showContent(activeTab);
+                }
+            };
+        </script>
     }
-</script>
+
+}
+
