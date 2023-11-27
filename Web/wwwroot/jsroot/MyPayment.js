@@ -89,7 +89,7 @@ async function loadListPayment(pageNumber) {
                     } else if (item.serviceType == "Check-Score") {
                         labelForRole = "Chi tiết môn";
                         $('#payment-table-container .table th:nth-child(2)').text(labelForRole);
-                        
+
                         actionButton = `<span class="text-primary">Giao dịch hoàn tất, xem chi tiết ở trang kết quả</span>`;;
                     }
 
@@ -98,6 +98,7 @@ async function loadListPayment(pageNumber) {
 
             if (item.serviceType == "Post") {
                 tableBody.append(`<tr>
+                    <td data-label="Id">${item.paymentId}</td>
                     <td data-label="Ngày Giao Dịch">${paymentDate}</td>
                     <td data-label="${labelForRole}">${item.receiver.username}</td>
                     <td data-label="Số Tiền">${amountFormatted}</td>
@@ -108,6 +109,7 @@ async function loadListPayment(pageNumber) {
             } else if (item.serviceType == "Check-Score") {
                 var subjectInfo = await checkScoreDetails(item.paymentId);
                 tableBody.append(`<tr>
+                    <td data-label="Id">${item.paymentId}</td>
                     <td data-label="Ngày Giao Dịch">${paymentDate}</td>
                     <td data-label="${labelForRole}">${subjectInfo}</td>
                     <td data-label="Số Tiền">${amountFormatted}</td>
@@ -134,7 +136,7 @@ function attachButtonClickEvents() {
         var paymentId = $(this).data('payment-id');
         var amount = $(this).data('payment-amount');
         var username = $(this).data('payment-username');
-        
+
         var linkQRCode = "https://api.vietqr.io/image/970422-0911589806-BHJrmo8.jpg?accountName=MA%20VAN%20TUONG&amount=" + amount;
         linkQRCode += "&addInfo=Payment%20OrderID" + paymentId + "%20" + encodeURIComponent(username);
 
@@ -143,7 +145,7 @@ function attachButtonClickEvents() {
         $("#txtQRCode").attr('src', linkQRCode);
     });
 
-    
+
 
     $(document).on('click', '.view-withdrawal-request', function () {
         var requestComment = $(this).data('request-comment');
@@ -169,7 +171,7 @@ function attachButtonClickEvents() {
         $('#modelRequest').modal('hide');
     });
 
-    $('.close').click(function () {
+    $('.close-modal').click(function () {
         $('#modelRequest').modal('hide');
         $('#viewWithdrawalRequestModal').modal('hide');
     });
@@ -246,3 +248,6 @@ connection.on("NewWithdrawalRequest", function () {
 });
 
 loadListPayment(currentPage);
+$('.modal').on('shown.bs.modal', function () {
+    $('.modal-backdrop').hide(); // Ẩn modal backdrop khi một modal được hiển thị
+});

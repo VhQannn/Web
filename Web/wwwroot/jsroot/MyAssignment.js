@@ -3,10 +3,11 @@
     .build();
 
 let currentPage = 1;
-const pageSize = 2;
+const pageSize = 10;
 
 $(document).on('click', 'a[data-target="#modelRating"]', function () {
     $('#modelRating').modal('show');
+    $('.modal-backdrop').hide();
 });
 
 
@@ -35,7 +36,7 @@ function loadPosts(pageNumber) {
                     } else if (post.status === "completed") {
                         buttonHtml = `<span class="text-primary">Đã Hoàn Thành</span>`;
                     }
-                } else if (post.status === "completed" && post.poster.role === "Supporter") {
+                } else if ((post.status === "completed" || post.status === "COMPLETED") && post.poster.role === "Supporter") {
                     // Hiển thị tùy chọn đánh giá cho Customer
                     $('#payment-table-container .table th:nth-child(1)').text('Người Hỗ Trợ Cho Bạn');
                     labelForRole = "Người Hỗ Trợ";
@@ -143,9 +144,10 @@ function attachButtonClickEvents() {
 
 
 
-    $('.close').click(function () {
+    $('.close-modal').click(function () {
         $('#modelRating').modal('hide');
         $('#viewRatingModal').modal('hide');
+        $('.modal-backdrop').hide();
     });
 
 
