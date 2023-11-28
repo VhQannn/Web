@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.EntityFrameworkCore;
+using Web.Data;
 
 namespace Web.DbConnection;
 
 public partial class WebContext : DbContext
 {
-	public WebContext()
-	{
-	}
-
-	public WebContext(DbContextOptions<WebContext> options)
+    public WebContext()
+    {
+    }
+    public WebContext(DbContextOptions<WebContext> options)
 		: base(options)
 	{
 	}

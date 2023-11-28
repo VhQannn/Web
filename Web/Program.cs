@@ -8,8 +8,12 @@ using Web.Repository;
 using Web.Controllers;
 using Web.Util;
 using Web.Services;
+using ProtoBuf.Meta;
+using Microsoft.AspNetCore.Identity;
+using Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("WebIdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'WebIdentityContextConnection' not found.");
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -44,8 +48,11 @@ builder.Services.AddScoped<MarkReportServices>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<UploadFile>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 builder.Services.AddDbContext<WebContext>
     (opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<WebIdentityContext>();
 builder.Services.AddSignalR();
 builder.Services.AddSession();
 var app = builder.Build();
