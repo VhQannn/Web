@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("WebIdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'WebIdentityContextConnection' not found.");
 
 // Add services to the container.
 builder.Services.AddRazorPages();

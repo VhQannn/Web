@@ -50,6 +50,10 @@ namespace Web.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
+            if (HttpContext.Request.Query.ContainsKey("error"))
+            {
+                return RedirectToPage("/Login", new { message = "External authentication was cancelled." });
+            }
             if (User.Identity.IsAuthenticated)
             {
                 // Lấy thông tin người dùng
