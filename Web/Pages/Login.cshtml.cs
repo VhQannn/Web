@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -23,13 +24,18 @@ namespace Web.Pages
         public bool IsRemember { get; set; }
         private IUserRepository _userRepository;
 
-        public LoginModel(IUserRepository userRepository)
+        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        private readonly IAuthenticationSchemeProvider _schemeProvider;
+
+        public LoginModel(IUserRepository userRepository, IAuthenticationSchemeProvider schemeProvider)
         {
             _userRepository = userRepository;
+            _schemeProvider = schemeProvider;
         }
-        public void OnGet()
+        public async Task OnGet()
         {
-           
+            var allSchemes = await _schemeProvider.GetAllSchemesAsync();
+            ExternalLogins = allSchemes.Where(s => !string.IsNullOrEmpty(s.DisplayName)).ToList();
         }
         public async Task<IActionResult> OnPost()
         {
@@ -45,7 +51,6 @@ namespace Web.Pages
                 ViewData["Error"] = "Tên đăng nhập hoặc mật khẩu không đúng.";
                 return Page();
             }
-            Console.WriteLine(currentUser.UserId);
             HttpContext.Session.SetInt32("UserId", currentUser.UserId);
             HttpContext.Session.SetString("UserName", currentUser.Username);
             HttpContext.Session.SetString("Role", currentUser.UserType.ToString());

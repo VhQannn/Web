@@ -38,7 +38,7 @@ namespace Web.Repository
             return _context.Users.Any(x => x.Username == username);
         }
 
-        public bool Register(RegisterDTO userDTO)
+        public bool Register(RegisterDTO userDTO, bool isVerify)
         {
             if (IsExist(userDTO.Username))
             {
@@ -52,7 +52,8 @@ namespace Web.Repository
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.UtcNow,
                 UserType = "Customer",
-                Facebook = ""
+                Facebook = "",
+                IsVerify = isVerify
             };
             _context.Users.Add(user);
             return _context.SaveChanges() > 0;
@@ -107,5 +108,6 @@ namespace Web.Repository
                 return null;
             }
         }
+
     }
 }

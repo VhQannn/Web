@@ -5,11 +5,6 @@
     ViewData["Title"] = "Đăng nhập";
 }
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-
-<style>
-    /* Include the above CSS here */
-</style>
-
 <div class="login-form">
     <div class="banner">
         <img src="~/images/Login-Banner.png" class="img-fluid" />
@@ -19,17 +14,24 @@
             <h2>Đăng nhập</h2>
             <div class="input-form">
                 <input type="text" placeholder="Username" asp-for="@Model.Username" class="form-control" />
-                <input type="password" placeholder="Mật khẩu" asp-for="@Model.Password" class="form-control" />
+                <input type="password" placeholder="Mật khẩu" asp-for="@Model.Password" class="form-control my-3" />
             </div>
             <div class="form-check">
                 <input type="checkbox" id="rememberSwitch" asp-for="@Model.IsRemember" />
                 <label for="rememberSwitch">Nhớ mật khẩu</label>
+                <a href="/forget-password">Quên mật khẩu</a>
             </div>
             <div class="register-navigate">
                 <p>Chưa có tài khoản? <a href="/register">Đăng ký ngay!</a></p>
-                <a href="/forget-password">Quên mật khẩu</a>
             </div>
             <button class="btn btn-primary">Đăng Nhập</button>
         </form>
+        <div class="external-container my-3">
+            @foreach (var scheme in Model.ExternalLogins)
+            {
+                <a class="btn btn-lg btn-outline-secondary" href="/ExternalLogin?provider=@(scheme.Name)"><i class="fa-brands fa-@(scheme.Name.ToLower())"></i></a>
+            }
+
+        </div>
     </div>
 </div>

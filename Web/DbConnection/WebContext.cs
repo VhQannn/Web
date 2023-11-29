@@ -1,21 +1,19 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace Web.DbConnection;
 
-public partial class WebContext : DbContext
+public partial class WebContext :DbContext
 {
-	public WebContext()
-	{
-	}
-
-	public WebContext(DbContextOptions<WebContext> options)
+    public WebContext()
+    {
+    }
+    public WebContext(DbContextOptions<WebContext> options)
 		: base(options)
 	{
 	}
 
-	public virtual DbSet<Assignment> Assignments { get; set; }
+
+    public virtual DbSet<Assignment> Assignments { get; set; }
 
 	public virtual DbSet<Comment> Comments { get; set; }
 

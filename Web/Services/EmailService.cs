@@ -86,5 +86,35 @@ namespace Web.Services
 
 
         }
+
+
+        public async Task SendEmailRandomPassword(string recipient, string password)
+        {
+            string htmlBody = @$"
+<html>
+<head></head>
+<body>
+    <p>Mật khẩu mới của bạn là: {password}</p>
+</body>
+</html>";
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("admin@hotrohoctap.net"),
+                Subject = "Mật khẩu tự tạo",
+                Body = htmlBody,
+                IsBodyHtml = true
+            };
+
+            using (SmtpClient smtp = new SmtpClient("smtp.hostinger.com", 587))
+            {
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential("admin@hotrohoctap.net", "3zCKA8Bd4Thr!");
+                smtp.EnableSsl = true;
+                mailMessage.To.Add(recipient);
+                await smtp.SendMailAsync(mailMessage);
+            }
+
+
+        }
     }
 }
