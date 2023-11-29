@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Web.DbConnection;
 
-public partial class User
+public partial class User 
 {
     public int UserId { get; set; }
 

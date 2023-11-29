@@ -32,7 +32,7 @@ namespace Web.Pages
                 return Page();
             }
 
-            bool isSuccess = _userRepository.Register(User);
+            bool isSuccess = _userRepository.Register(User, false);
             if(!isSuccess)
             {
                 TempData["Error"] = "Đăng kí thất bại! Vui lòng thử lại";

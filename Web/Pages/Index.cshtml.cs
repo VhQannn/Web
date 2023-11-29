@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Web.DbConnection;
 
 namespace Web.Pages
@@ -32,6 +33,7 @@ namespace Web.Pages
         {
             ViewData["CategoryName"] = new SelectList(_context.PostCategories, "PostCategoryName", "PostCategoryName", SelectedPostCategoryName);
             Post = new List<Post>();
+           
             if (!string.IsNullOrEmpty(CategoryName))
             {
                 Console.Write(CategoryName);

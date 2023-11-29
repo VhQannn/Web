@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Web;
 using System.Net;
@@ -10,7 +10,8 @@ using Web.Util;
 using Web.Services;
 using ProtoBuf.Meta;
 using Microsoft.AspNetCore.Identity;
-using Web.Data;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("WebIdentityContextConnection") ?? throw new InvalidOperationException("Connection string 'WebIdentityContextConnection' not found.");
@@ -28,13 +29,23 @@ builder.Services.AddScoped<UploadFile>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 }).AddCookie(options =>
 {
     options.LoginPath = "/login";
     options.AccessDeniedPath = "/forbidden";
     options.LogoutPath = "/logout";  // Add this line for logout path
+}).AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = "886015841712-v16ddvquo185i7oieqhi1j0if4n2uef7.apps.googleusercontent.com";
+    googleOptions.ClientSecret = "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";
+    googleOptions.Scope.Add("email");
+}).AddDiscord(options =>
+{
+    options.ClientId = "1179457452387860550";
+    options.ClientSecret = "N_0TFhzHjYhbxVa_VKH_bqPswzHWwLMd";
+    options.Scope.Add("email");
 });
 
 builder.Services.AddSession(options =>
@@ -43,16 +54,16 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddHttpClient();
+
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<MarkReportServices>();
-builder.Services.AddHttpClient();
 builder.Services.AddScoped<UploadFile>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddDbContext<WebContext>
     (opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<WebIdentityContext>();
 builder.Services.AddSignalR();
 builder.Services.AddSession();
 var app = builder.Build();
@@ -65,9 +76,11 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-/*app.UseStatusCodePagesWithRedirects("/Index");*/
+//app.UseStatusCodePagesWithRedirects("/Index");
 app.UseStatusCodePagesWithReExecute("/Status/{0}");
-app.UseStatusCodePages(context => {
+
+app.UseStatusCodePages(context =>
+{
     var response = context.HttpContext.Response;
 
     if (response.StatusCode == (int)HttpStatusCode.Forbidden)

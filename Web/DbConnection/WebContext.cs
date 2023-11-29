@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using Web.Data;
 
 namespace Web.DbConnection;
 
-public partial class WebContext : DbContext
+public partial class WebContext :DbContext
 {
     public WebContext()
     {
@@ -16,7 +12,8 @@ public partial class WebContext : DbContext
 	{
 	}
 
-	public virtual DbSet<Assignment> Assignments { get; set; }
+
+    public virtual DbSet<Assignment> Assignments { get; set; }
 
 	public virtual DbSet<Comment> Comments { get; set; }
 
