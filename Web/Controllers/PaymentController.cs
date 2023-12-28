@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Microsoft.Extensions.Hosting;
 using Web.Models;
 using System.Text.RegularExpressions;
+using Web.IRepository;
 
 namespace Web.Controllers
 {
@@ -20,10 +21,12 @@ namespace Web.Controllers
 		private readonly IHubContext<NotificationHub> _notificationHub;
 		private readonly ILogger<PaymentController> _logger;
         private readonly MarkReportServices _markReportServices;
+		private readonly IUserRepository _userRepository;
 
-        public PaymentController(WebContext context, IHubContext<NotificationHub> notificationHub, ILogger<PaymentController> logger, MarkReportServices markReportServices)
+		public PaymentController(IUserRepository userRepository, WebContext context, IHubContext<NotificationHub> notificationHub, ILogger<PaymentController> logger, MarkReportServices markReportServices)
         {
-            _context = context;
+			_userRepository = userRepository;
+			_context = context;
             _notificationHub = notificationHub;
             _logger = logger;
             _markReportServices = markReportServices;
@@ -180,6 +183,34 @@ namespace Web.Controllers
                 }
 
             }
+			else if (payment.ServiceType == "InsurancePackage")
+			{
+				var package = await _context.SupporterInsurancePackages.FindAsync(payment.RelatedId);
+				if (package == null)
+				{
+					_logger.LogWarning($"Package ID: {payment.RelatedId} not found for payment ID: {payment.PaymentId}.");
+					return false;
+				}
+
+				if (payment.UserId.HasValue)
+				{
+					var supporterInsurance = new UserSupporterInsurance
+					{
+						UserId = payment.UserId.Value, // Sử dụng .Value để lấy giá trị int
+						PackageId = package.PackageId,
+						StartDate = DateTime.UtcNow,
+						EndDate = DateTime.UtcNow.AddDays(package.Duration)
+					};
+					_context.UserSupporterInsurances.Add(supporterInsurance);
+					_userRepository.UpdateRole(payment.UserId.Value, "Supporter");
+				}
+				else
+				{
+					// Xử lý trường hợp không có UserId
+					_logger.LogWarning($"Payment ID: {payment.PaymentId} does not have a valid UserId.");
+					return false;
+				}
+			}
 
 
 			try

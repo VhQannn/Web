@@ -1,0 +1,78 @@
+﻿.card-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Added gap for spacing between cards */
+    margin-bottom: 2rem;
+    flex-wrap: wrap; /* Allows cards to wrap on smaller screens */
+}
+
+.card {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.25rem;
+    background-color: #1A202C; /* Slightly lighter shade for better contrast */
+    padding: 1.5rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px); /* Subtle lift effect on hover */
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    }
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centered header content */
+    margin-bottom: 1rem; /* Added margin for spacing */
+}
+
+.title {
+    font-size: 1.75rem; /* Slightly larger for emphasis */
+    color: #E2E8F0; /* Lighter color for better readability */
+    margin-bottom: 0.5rem; /* Spacing between title and price */
+}
+
+.price {
+    font-size: 2.75rem;
+    color: #FBBF24; /* Brighter color for emphasis */
+}
+
+.desc {
+    text-align: center; /* Center-aligned description */
+    color: #CBD5E1; /* Slightly lighter for readability */
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.lists {
+    margin-bottom: 1.5rem;
+    flex: 1 1 0%;
+    color: #A0AEC0; /* Lighter color for list items */
+}
+
+    .lists .list {
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center; /* Aligns SVG and text */
+        justify-content: center; /* Center-aligned list items */
+    }
+
+        .lists .list svg {
+            height: 1.5rem;
+            width: 1.5rem;
+            margin-right: 0.5rem;
+            color: #68D391; /* Changed to a green shade for a fresh look */
+        }
+
+.action {
+    width: 100%; /* Full-width button */
+    border: none;
+    border-radius: 0.25rem;
+    background-color: #4C51BF; /* Deep blue for contrast */
+    padding: 0.75rem;
+    text-align: center;
+    font-weight: 600;
+    color: #EBF4FF; /* Light color for text */
+    cursor: pointer; /* Cursor change to indicate it's clickable */
+}

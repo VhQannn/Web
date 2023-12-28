@@ -91,6 +91,11 @@ async function loadListPayment(pageNumber) {
                         $('#payment-table-container .table th:nth-child(2)').text(labelForRole);
 
                         actionButton = `<span class="text-primary">Giao dịch hoàn tất, xem chi tiết ở trang kết quả</span>`;;
+                    } else if (item.serviceType == "InsurancePackage") {
+                        labelForRole = "Chi tiết dịch vụ";
+                        $('#payment-table-container .table th:nth-child(2)').text(labelForRole);
+
+                        actionButton = `<span class="text-primary">Giao dịch hoàn tất, đã kích hoạt gói bảo hiểm tương ứng</span>`;;
                     }
 
                 }
@@ -114,6 +119,16 @@ async function loadListPayment(pageNumber) {
                     <td data-label="${labelForRole}">${subjectInfo}</td>
                     <td data-label="Số Tiền">${amountFormatted}</td>
                     <td data-label="Loại Dịch Vụ"><a href="./CheckResult?id=${item.relatedId}" class="post-details-link">${item.serviceType}</a></td>
+                    <td data-label="Trạng Thái Giao Dịch">${item.status}</td>
+                    <td data-label="Hành Động">${actionButton}</td>
+                </tr>`);
+            } else if (item.serviceType == "InsurancePackage") {
+                tableBody.append(`<tr>
+                    <td data-label="Id">${item.paymentId}</td>
+                    <td data-label="Ngày Giao Dịch">${paymentDate}</td>
+                    <td data-label="${labelForRole}">${item.receiver.username}</td>
+                    <td data-label="Số Tiền">${amountFormatted}</td>
+                    <td data-label="Loại Dịch Vụ">Gói dịch vụ dành cho người hỗ trợ</td>
                     <td data-label="Trạng Thái Giao Dịch">${item.status}</td>
                     <td data-label="Hành Động">${actionButton}</td>
                 </tr>`);

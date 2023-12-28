@@ -1,0 +1,63 @@
+﻿
+		<link rel="stylesheet" href="~/css/package.css" asp-append-version="true" />
+
+		@using System.Globalization
+		@Html.AntiForgeryToken()
+
+		<div class="card-container">
+			@foreach (var package in Model)
+			{
+				<div class="card">
+					<div class="header">
+						<span class="title">@package.PackageName</span>
+						<span class="price">@package.Price.ToString("C", new CultureInfo("vi-VN"))</span>
+
+					</div>
+					<p class="desc">Trở thành người hỗ trợ giải quyết bài tập cho người khác</p>
+					<ul class="lists">
+						<li class="list">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+								<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+							</svg>
+							<span>Comment vào các bài đăng của người cần hỗ trợ</span>
+						</li>
+						<li class="list">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+								<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+							</svg>
+							<span>Deal giá trực tiếp qua phần bình luận</span>
+						</li>
+						<li class="list">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+								<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+							</svg>
+							<span>Nhận bài, nhận tiền qua các bài đăng đã hỗ trợ</span>
+						</li>
+					</ul>
+					<button type="button" class="action" data-package-id="@package.PackageId">Get Started</button>
+
+				</div>
+			}
+		</div>
+
+		<span id="regError" data-my-attribute=""></span>
+
+		<div class="my-toast">
+			<div id="toast"></div>
+		</div>
+
+		<div class="overlay" id="overlay"></div>
+
+		<div class="confirm-box" id="confirm-box">
+			<div class="box-header">
+				<h2>Đồng ý mua gói dịch vụ dành cho người hỗ trợ?</h2>
+			</div>
+			<div class="box-content">
+				<p>Bạn sẽ nhận được giao dịch với số tiền tương với trạng thái đang chờ ở mục Giao Dịch Của Tôi. Sau đó hãy hoàn tất quá trình thanh toán, tài khoản sẽ được kích hoạt sang tài khoản supporter ngay sau khi hệ thống nhận được giao dịch!</p>
+			</div>
+			<div class="button-container">
+				<button id="yes-button">Tôi đã đọc kĩ và xác nhận muốn đăng kí dịch vụ</button>
+				<button id="no-button">Không, tôi sẽ suy nghĩ lại</button>
+			</div>
+		</div>
+		<script src="~/js/Buypackage.js" asp-append-version="true"></script>

@@ -120,5 +120,8 @@
 	<script src="~/js/Notification.js" asp-append-version="true"></script>
 
 	@await RenderSectionAsync("Scripts", required: false)
+
+
+	@await Component.InvokeAsync("Package")
 </body>
 </html>

@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Web.DbConnection;
 
-public partial class User 
+public partial class User
 {
     public int UserId { get; set; }
 
@@ -63,6 +62,8 @@ public partial class User
     public virtual ICollection<Rating> RatingSupporters { get; set; } = new List<Rating>();
 
     public virtual ICollection<Tool> Tools { get; set; } = new List<Tool>();
+
+    public virtual ICollection<UserSupporterInsurance> UserSupporterInsurances { get; set; } = new List<UserSupporterInsurance>();
 
     public virtual ICollection<UserTool> UserTools { get; set; } = new List<UserTool>();
 
