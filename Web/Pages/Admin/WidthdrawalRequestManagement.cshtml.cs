@@ -32,11 +32,11 @@ namespace Web.Pages.Admin
 
         public async Task OnGetAsync(int currentPage = 1)
         {
-            IQueryable<WithdrawalRequest> requestQuery = _context.WithdrawalRequests.Include(p => p.Supporter).Include(p => p.Payment);
+            IQueryable<WithdrawalRequest> requestQuery = _context.WithdrawalRequests.Include(u => u.User);
 
             if (!string.IsNullOrEmpty(Username))
             {
-                requestQuery = requestQuery.Where(p => p.Supporter.Username.Contains(Username));
+                requestQuery = requestQuery.Where(p => p.User.Username.Contains(Username));
             }
 
             if (RequestId.HasValue)

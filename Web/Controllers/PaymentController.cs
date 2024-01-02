@@ -10,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using Web.Models;
 using System.Text.RegularExpressions;
 using Web.IRepository;
+using Microsoft.AspNet.Identity;
+using Web.Components;
 
 namespace Web.Controllers
 {
@@ -210,6 +212,27 @@ namespace Web.Controllers
 					_logger.LogWarning($"Payment ID: {payment.PaymentId} does not have a valid UserId.");
 					return false;
 				}
+			} else if (payment.ServiceType == "Deposit")
+			{
+				var currentUser = _context.Users.FirstOrDefault(u => u.UserId == payment.UserId.Value);
+				if (currentUser == null)
+				{
+					return false;
+				}
+
+				currentUser.VirtualCurrencyBalance += receivedAmount;
+				_context.Users.Update(currentUser);
+
+				// Ghi lại giao dịch
+				var transaction = new VirtualCurrencyTransaction
+				{
+					UserId = currentUser.UserId,
+					Amount = receivedAmount,
+					TransactionDate = DateTime.UtcNow,
+					Description = "Nạp tiền vào tài khoản"
+				};
+				_context.VirtualCurrencyTransactions.Add(transaction);
+
 			}
 
 

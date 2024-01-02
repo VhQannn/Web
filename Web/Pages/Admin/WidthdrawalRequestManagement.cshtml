@@ -50,9 +50,9 @@
 			{
 				<tr>
 					<td>@request.WithdrawalRequestId</td>
-					 <td>@formatVnd(request.Payment.Amount)</td>
+					 <td>@formatVnd(request.Amount)</td>
 					<td style="color: @(request.Status == "rejected" ? "#006400" : request.Status == "pending" ? "#D5B006" : "#344767");"><b>@request.Status</b></td>
-					<td>@request.Supporter.Username</td>
+					<td>@request.User.Username</td>
 					<td>
 						<div class="btn-group">
 							<form method="post" asp-page-handler="UpdateStatus">

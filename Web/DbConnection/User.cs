@@ -27,6 +27,8 @@ public partial class User
 
     public DateTime? OtpcreateTime { get; set; }
 
+    public decimal VirtualCurrencyBalance { get; set; }
+
     public virtual ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
@@ -66,6 +68,10 @@ public partial class User
     public virtual ICollection<UserSupporterInsurance> UserSupporterInsurances { get; set; } = new List<UserSupporterInsurance>();
 
     public virtual ICollection<UserTool> UserTools { get; set; } = new List<UserTool>();
+
+    public virtual ICollection<VirtualCurrency> VirtualCurrencies { get; set; } = new List<VirtualCurrency>();
+
+    public virtual ICollection<VirtualCurrencyTransaction> VirtualCurrencyTransactions { get; set; } = new List<VirtualCurrencyTransaction>();
 
     public virtual ICollection<WithdrawalRequest> WithdrawalRequests { get; set; } = new List<WithdrawalRequest>();
 }

@@ -55,7 +55,7 @@ function processPackageSelection(packageId) {
                 return;
             }
             if (!response.ok) {
-                throw new Error('Lỗi server: ' + response.statusText);
+                throw new Error('Lỗi server: ' + response.responseText);
             }
             return response.json();
         })
@@ -65,7 +65,7 @@ function processPackageSelection(packageId) {
             }
         })
         .catch(error => {
-            showToast("Lỗi", error.toString(), "error");
+            showToast("Lỗi", error.responseText, "error");
         });
 }
 

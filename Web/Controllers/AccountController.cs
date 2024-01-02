@@ -10,7 +10,7 @@ using Web.Models;
 
 namespace Web.Controllers
 {
-	[Route("api/account")]
+    [Route("api/account")]
 	[ApiController]
 	public class AccountController : Controller
 	{
@@ -137,18 +137,6 @@ namespace Web.Controllers
 											  Id = r.UserId,
 											  Username = r.Username
 										  }).FirstOrDefault()
-										  ,
-
-										  WithdrawalRequest = _context.WithdrawalRequests.Where(a => a.PaymentId == p.PaymentId)
-							.Select(r => new WithdrawalDTO
-							{
-								WithdrawalRequestId = r.WithdrawalRequestId,
-								PaymentId = r.PaymentId,
-								Comments = r.Comments,
-								RequestDate = r.RequestDate,
-								Status = r.Status
-
-							}).FirstOrDefault()
 
 									  })
 									 .ToListAsync();
@@ -261,6 +249,66 @@ namespace Web.Controllers
             }
         }
 
+		[Authorize]
+		[HttpPost("coin-payment")]
+		public async Task<ActionResult> PaymentByVirtualCurrency([FromBody] PaymentRequestDTO paymentRequest)
+		{
+			var currentUser = await _context.Users
+		.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
 
-    }
+			if (currentUser == null)
+			{
+				return Unauthorized("Vui lòng đăng nhập.");
+			}
+
+			var payment = await _context.Payments
+				.FirstOrDefaultAsync(p => p.PaymentId == paymentRequest.PaymentId && p.UserId == currentUser.UserId);
+
+			if (payment == null)
+			{
+				return NotFound("Không tìm thấy thông tin thanh toán.");
+			}
+
+			if (currentUser.VirtualCurrencyBalance < payment.Amount)
+			{
+				return BadRequest("Số dư không đủ để thực hiện giao dịch.");
+			}
+
+			// Xử lý giảm số dư tiền ảo
+			currentUser.VirtualCurrencyBalance -= payment.Amount;
+
+			// Thêm lịch sử giao dịch tiền ảo
+			var transaction = new VirtualCurrency
+			{
+				UserId = currentUser.UserId,
+				Amount = -payment.Amount,
+				TransactionType = "Payment",
+				TransactionDate = DateTime.UtcNow
+			};
+			_context.VirtualCurrencies.Add(transaction);
+
+			// Cập nhật trạng thái thanh toán
+			payment.Status = "COMPLETED";
+
+			await _context.SaveChangesAsync();
+
+			return Ok(new { message = "Thanh toán thành công." });
+		}
+
+
+		[HttpGet("balance")]
+		[Authorize]
+		public async Task<IActionResult> GetBalance()
+		{
+			var currentUserName = User.Identity.Name;
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == currentUserName);
+
+			if (user == null)
+			{
+				return NotFound("User not found.");
+			}
+
+			return Ok(new { Balance = user.VirtualCurrencyBalance });
+		}
+	}
 }

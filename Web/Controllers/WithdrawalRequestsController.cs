@@ -19,59 +19,47 @@ namespace Web.Controllers
 		}
 
 		// POST: api/WithdrawalRequests/Create
-        [HttpPost("create")]
-        public async Task<IActionResult> CreateWithdrawalRequest([FromBody] WithdrawalRequestDTO requestDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var requestExits = _context.WithdrawalRequests.FirstOrDefault(u => u.PaymentId == requestDto.PaymentId);
-            if(requestExits != null)
-            {
-				return BadRequest("This payment request is already exits");
+		[HttpPost("create")]
+		public async Task<IActionResult> CreateWithdrawalRequest([FromBody] WithdrawalRequestDTO requestDto)
+		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
 			}
 
 			var currentUserName = User.Identity.Name;
-			var currentUser = _context.Users.FirstOrDefault(u => u.Username == currentUserName);
 
-			if (currentUser == null)
+			var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == currentUserName);
+			if (user == null)
 			{
-				return NotFound("Vui lòng đăng nhập để thực hiện thao tác!");
+				return NotFound("User not found.");
 			}
 
-            var paymentRequest = _context.Payments.FirstOrDefault(u => u.PaymentId == requestDto.PaymentId);
-
-            if (paymentRequest == null)
-            {
-                return BadRequest("Payment not found");
-            }
-
-			if (currentUser.UserType != "Supporter")
-            {
-				return BadRequest("Just Supporter can withdrawal request.");
-			}
-
-            if(currentUser.UserId != paymentRequest.ReceiverId)
-            {
-				return BadRequest("Don't permission to request this payment.");
+			// Kiểm tra số dư hiện tại của người dùng
+			if (user.VirtualCurrencyBalance < requestDto.Amount)
+			{
+				return BadRequest("Insufficient balance.");
 			}
 
 			var withdrawalRequest = new WithdrawalRequest
-            {
-                // Map from DTO to WithdrawalRequest entity
-                PaymentId = requestDto.PaymentId,
-                SupporterId = currentUser.UserId,
-                Status = "pending",
-                Comments = requestDto.Comments
-            };
+			{
+				UserId = user.UserId,
+				Amount = requestDto.Amount,
+				RequestDate = DateTime.UtcNow,
+				Status = "Pending",
+				Comments = requestDto.Comments
+			};
 
-            _context.WithdrawalRequests.Add(withdrawalRequest);
-            await _context.SaveChangesAsync();
-            await _notificationHub.Clients.Group(currentUser.Username).SendAsync("NewWithdrawalRequest");
-            return Ok(new { Message = "Withdrawal request created successfully.", RequestId = withdrawalRequest.WithdrawalRequestId });
-        }
+			_context.WithdrawalRequests.Add(withdrawalRequest);
+			// Trừ số dư hiện tại của người dùng
+			user.VirtualCurrencyBalance -= requestDto.Amount;
+
+			await _context.SaveChangesAsync();
+			await _notificationHub.Clients.Group(user.Username).SendAsync("NewWithdrawalRequest");
+
+			return Ok(new { Message = "Withdrawal request created successfully.", RequestId = withdrawalRequest.WithdrawalRequestId });
+		}
+
 
 	}
 }

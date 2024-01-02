@@ -22,6 +22,4 @@ public partial class Payment
     public int? ReceiverId { get; set; }
 
     public virtual User? User { get; set; }
-
-    public virtual ICollection<WithdrawalRequest> WithdrawalRequests { get; set; } = new List<WithdrawalRequest>();
 }

@@ -61,27 +61,18 @@ async function loadListPayment(pageNumber) {
             if (item.user.role === "Supporter") {
                 $('#payment-table-container .table th:nth-child(2)').text('Người Thực Hiện Giao Dịch');
                 labelForRole = "Người Thực Hiện";
-                if (item.status === "COMPLETED") {
-                    if (item.withdrawalRequest != null) {
-                        actionButton = `<a class="btn btn-primary btn-sm text-white view-withdrawal-request" 
-                        data-request-id="${item.withdrawalRequest.withdrawalRequestId}" 
-                        data-request-comment="${item.withdrawalRequest.comments}" 
-                        data-request-status="${item.withdrawalRequest.status}" 
-                        title="View Withdrawal Request">
-                        Xem Đơn Rút Tiền
-                        </a>`;
-                    } else {
-                        actionButton = `<a class="btn btn-danger btn-sm text-white" id="btnCreateRequest" title="Withdrawal Request" data-toggle="modal" data-target="#modelRequest" data-payment-id="${item.paymentId}">
-                                            Yêu Cầu Rút Tiền
-                                            </a>`;
-                    }
-
-                }
             } else {
                 labelForRole = "Người Nhận Bài";
                 // For regular users
                 if (item.status === "PENDING") {
-                    actionButton = `<button class="view-qr-button btn btn-danger btn-sm text-white" data-payment-id="${item.paymentId}" data-payment-amount="${item.amount}" data-payment-username="${item.user.username}">View QR Code</button>`;
+                    if (item.serviceType == "Post") {
+                        actionButton = `<button class="coin-button btn btn-danger btn-sm text-white" data-payment-id="${item.paymentId}">Sử dụng số dư hiện tại</button>`;
+                    } else if (item.serviceType == "Check-Score") {
+                        actionButton = `<button class="coin-button btn btn-danger btn-sm text-white" data-payment-id="${item.paymentId}">Sử dụng số dư hiện tại</button>`;
+                    } else {
+                        actionButton = `<button class="view-qr-button btn btn-danger btn-sm text-white" data-payment-id="${item.paymentId}" data-payment-amount="${item.amount}" data-payment-username="${item.user.username}">View QR Code</button>`;
+                    }
+                    
                 } else if (item.status === "COMPLETED") {
                     if (item.serviceType == "Post") {
                         $('#payment-table-container .table th:nth-child(2)').text('Người Nhận Bài');
@@ -160,6 +151,26 @@ function attachButtonClickEvents() {
         $("#txtQRCode").attr('src', linkQRCode);
     });
 
+    $('.coin-button').click(function () {
+        var paymentId = $(this).data('payment-id');
+
+        // Gửi yêu cầu đến API
+        $.ajax({
+            url: '/api/account/coin-payment',
+            type: 'POST',
+            data: JSON.stringify({ paymentId: paymentId }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                showToast("Thành công!", "Đã sử dụng số dư tài khoản hiện tại để thanh toán giao dịch", "success");
+                loadListPayment(currentPage);
+
+            },
+            error: function (error) {
+                showToast("Không thành công!", error.responseText, "error");
+
+            }
+        });
+    });
 
 
     $(document).on('click', '.view-withdrawal-request', function () {
@@ -218,7 +229,7 @@ $('#btn-request').click(function () {
             showToast("Thành công!", "Đã yêu cầu rút tiền thành công", "success");
         })
         .catch(error => {
-            showToast("Error", "Failed to submit withdrawal request: " + error, "error");
+            showToast("Thành công!", "Đã yêu cầu rút tiền thành công", "success");
         });
 
     $('#modelRequest').modal('hide');
@@ -263,6 +274,7 @@ connection.on("NewWithdrawalRequest", function () {
 });
 
 loadListPayment(currentPage);
+
 $('.modal').on('shown.bs.modal', function () {
     $('.modal-backdrop').hide(); // Ẩn modal backdrop khi một modal được hiển thị
 });
