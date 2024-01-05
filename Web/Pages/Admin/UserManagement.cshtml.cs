@@ -26,6 +26,12 @@ namespace Web.Pages.Admin
             Users = _userRepository.GetAll();
         }
 
+        public List<User> SearchUser(string username)
+        {
+            var list = _userRepository.GetAll();
+            var searchResult = list.Where(x => x.Username.Contains(username)).ToList();
+            return searchResult;
+        }
    
     }
 }

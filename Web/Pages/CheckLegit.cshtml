@@ -1,0 +1,34 @@
+﻿@page
+@model Web.Pages.CheckLegitModel
+@{
+    ViewData["Title"] = "User Insurance Check";
+}
+
+
+<form method="post">
+    <div class="form-group">
+        <label for="Username">Username:</label>
+        <input type="text" class="form-control" id="Username" name="Username" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Check Insurance</button>
+</form>
+
+@if (Model.UserFound.HasValue)
+{
+    if (Model.UserFound.Value)
+    {
+        <p>User <strong>@Model.UserDetails.Username</strong> has active insurance.</p>
+        <p>Email: @Model.UserDetails.Email</p>
+        <p>Facebook: @Model.UserDetails.Facebook</p>
+    }
+    else
+    {
+        <p>User <strong>@Model.UserDetails.Username</strong> does not have active insurance.</p>
+        <p>Email: @Model.UserDetails.Email</p>
+        <p>Other relevant user information here...</p>
+    }
+}
+else if (Model.Username != null)
+{
+    <p>User <strong>@Model.Username</strong> not found.</p>
+}

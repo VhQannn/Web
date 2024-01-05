@@ -65,11 +65,15 @@ public partial class WebContext : DbContext
 
     public virtual DbSet<UserTool> UserTools { get; set; }
 
+    public virtual DbSet<VirtualCurrency> VirtualCurrencies { get; set; }
+
+    public virtual DbSet<VirtualCurrencyTransaction> VirtualCurrencyTransactions { get; set; }
+
     public virtual DbSet<WithdrawalRequest> WithdrawalRequests { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-TEIM7A0\\SQLEXPRESS;Database=Web;uid=sa;pwd=admin;TrustServerCertificate=true");
+        => optionsBuilder.UseSqlServer("Server=Hello;Database=Web;uid=sa;pwd=123;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -684,6 +688,7 @@ public partial class WebContext : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(255)
                 .HasColumnName("username");
+            entity.Property(e => e.VirtualCurrencyBalance).HasColumnType("decimal(10, 2)");
         });
 
         modelBuilder.Entity<UserSupporterInsurance>(entity =>
@@ -736,29 +741,57 @@ public partial class WebContext : DbContext
                 .HasConstraintName("FK__User_Tool__user___208CD6FA");
         });
 
+        modelBuilder.Entity<VirtualCurrency>(entity =>
+        {
+            entity.HasKey(e => e.VirtualCurrencyId).HasName("PK__VirtualC__75CDC725BBF45F65");
+
+            entity.ToTable("VirtualCurrency");
+
+            entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.TransactionDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.TransactionType).HasMaxLength(50);
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.VirtualCurrencies)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__VirtualCu__user___3B40CD36");
+        });
+
+        modelBuilder.Entity<VirtualCurrencyTransaction>(entity =>
+        {
+            entity.HasKey(e => e.TransactionId).HasName("PK__VirtualC__55433A6B3DE769FA");
+
+            entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.TransactionDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.VirtualCurrencyTransactions)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__VirtualCu__user___3C34F16F");
+        });
+
         modelBuilder.Entity<WithdrawalRequest>(entity =>
         {
-            entity.HasKey(e => e.WithdrawalRequestId).HasName("PK__Withdraw__199972BE7AB5E2AC");
+            entity.HasKey(e => e.WithdrawalRequestId).HasName("PK__Withdraw__FD8AA1F29EABF47B");
 
-            entity.Property(e => e.WithdrawalRequestId).HasColumnName("withdrawal_request_id");
-            entity.Property(e => e.Comments).HasColumnName("comments");
-            entity.Property(e => e.PaymentId).HasColumnName("payment_id");
+            entity.Property(e => e.Amount).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.RequestDate)
                 .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("request_date");
-            entity.Property(e => e.Status)
-                .HasMaxLength(50)
-                .HasColumnName("status");
-            entity.Property(e => e.SupporterId).HasColumnName("supporter_id");
+                .HasColumnType("datetime");
+            entity.Property(e => e.Status).HasMaxLength(50);
+            entity.Property(e => e.UserId).HasColumnName("user_id");
 
-            entity.HasOne(d => d.Payment).WithMany(p => p.WithdrawalRequests)
-                .HasForeignKey(d => d.PaymentId)
-                .HasConstraintName("FK__Withdrawa__payme__2180FB33");
-
-            entity.HasOne(d => d.Supporter).WithMany(p => p.WithdrawalRequests)
-                .HasForeignKey(d => d.SupporterId)
-                .HasConstraintName("FK__Withdrawa__suppo__22751F6C");
+            entity.HasOne(d => d.User).WithMany(p => p.WithdrawalRequests)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Withdrawa__user___3D2915A8");
         });
 
         OnModelCreatingPartial(modelBuilder);

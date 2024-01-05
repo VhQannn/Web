@@ -1,11 +1,14 @@
-﻿@page 
+﻿@page
 @model Web.Pages.Admin.UserManagementModel
 
 @{
     var count = 0;
     Layout = "admin_layout";
 }
-
+<div class="search-container d-flex">
+    <input type="text" />
+    <button>Search</button>
+</div>
 <div class="container">
     @for (int i = 0; i < Model.Users.Count; i++)
     {
@@ -14,6 +17,11 @@
                 <h5 class="card-title">ID: @Model.Users[i].UserId</h5>
                 <p>Username: @Model.Users[i].Username</p>
                 <p class="card-text">Role <span id="userType-@Model.Users[i].UserId">@Model.Users[i].UserType</span></p>
+                <div>
+                    <button class="btn btn-sm btn-danger">Ban</button>
+                    <a href="/check-transaction/@Model.Users[i].UserId" class="btn btn-sm btn-info">Check Transaction</a>
+                </div>
+
                 <select id="select-@i" class="form-select" onchange="updateRole(@Model.Users[i].UserId, 'select-@i')">
                     @foreach (var role in Enum.GetValues(typeof(Web.RoleEnum)))
                     {
@@ -44,7 +52,7 @@
             if (userTypeElement.length) {
                 userTypeElement.text(newRole);
             }
-           
+
         });
 
     </script>

@@ -42,14 +42,14 @@ namespace Web.Pages
             if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
             {
                 ViewData["Error"] = "Tên đăng nhập và mật khẩu là bắt buộc.";
-                return Page();
+                return Redirect("/login");
             }
 
             var currentUser = _userRepository.Login(Username, Password);
             if (currentUser == null)
             {
                 ViewData["Error"] = "Tên đăng nhập hoặc mật khẩu không đúng.";
-                return Page();
+                return Redirect("/login");
             }
             HttpContext.Session.SetInt32("UserId", currentUser.UserId);
             HttpContext.Session.SetString("UserName", currentUser.Username);
@@ -59,7 +59,6 @@ namespace Web.Pages
             {
                 new Claim(ClaimTypes.Name, currentUser.Username),
                 new Claim(ClaimTypes.Role, currentUser.UserType.ToString()),
-                // Add user ID as a claim
                 new Claim(ClaimTypes.NameIdentifier, currentUser.UserId.ToString())
             };
 

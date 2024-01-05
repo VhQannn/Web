@@ -1,0 +1,13 @@
+﻿@page "/check-transaction/{id}"
+@model Web.Pages.Admin.VirtualCurrencyManagementModel
+@{
+}
+<p>Total Amount: @Model.TotalAmount</p>
+@if(Model.VirtualCurrencyList.Count <= 0)
+{
+    <h1>Không có dữ liệu</h1>
+}
+else
+{
+    <h1>Hihi</h1>
+}

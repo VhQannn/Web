@@ -83,81 +83,81 @@ namespace Web.Controllers
 			return Ok(new { PaymentId = payment.PaymentId });
 		}
 
-		[HttpGet("my-payment")]
-		[Authorize]
-		public async Task<IActionResult> OnGetMyPayment(int pageNumber = 1, int pageSize = 5)
-		{
-			if (_context.Payments == null)
-			{
-				return NotFound("No payment data available.");
-			}
+		//[HttpGet("my-payment")]
+		//[Authorize]
+		//public async Task<IActionResult> OnGetMyPayment(int pageNumber = 1, int pageSize = 5)
+		//{
+		//	if (_context.Payments == null)
+		//	{
+		//		return NotFound("No payment data available.");
+		//	}
 
-			var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
-			if (user == null)
-			{
-				return NotFound("User not found.");
-			}
+		//	var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
+		//	if (user == null)
+		//	{
+		//		return NotFound("User not found.");
+		//	}
 
-			IQueryable<Payment> query;
+		//	IQueryable<Payment> query;
 
-			if (user.UserType == "Supporter")
-			{
-				query = _context.Payments
-						.Where(p => p.ReceiverId == user.UserId)
-						.Include(p => p.User);
-			}
-			else
-			{
-				query = _context.Payments
-						.Where(p => p.UserId == user.UserId)
-						.Include(p => p.User);
-			}
+		//	if (user.UserType == "Supporter")
+		//	{
+		//		query = _context.Payments
+		//				.Where(p => p.ReceiverId == user.UserId)
+		//				.Include(p => p.User);
+		//	}
+		//	else
+		//	{
+		//		query = _context.Payments
+		//				.Where(p => p.UserId == user.UserId)
+		//				.Include(p => p.User);
+		//	}
 
-			var totalRecords = await query.CountAsync();
-			var skip = (pageNumber - 1) * pageSize;
-			var payments = await query.OrderByDescending(p => p.PaymentDate)
-									 .Skip(skip)
-									 .Take(pageSize)
-									  .Select(p => new MyPaymentSupporterDTO // Project onto the DTO
-									  {
-										  PaymentId = p.PaymentId,
-										  Amount = p.Amount,
-										  PaymentDate = p.PaymentDate,
-										  Status = p.Status,
-										  RelatedId = p.RelatedId,
-										  ServiceType = p.ServiceType,
-										  User = new AccountDTO
-										  {
-											  Id = user.UserId,
-											  Username = user.Username,
-											  Role = user.UserType
-										  },
-										  Receiver = _context.Users.Where(u => u.UserId == p.ReceiverId).Select(r => new AccountDTO
-										  {
-											  Id = r.UserId,
-											  Username = r.Username
-										  }).FirstOrDefault()
-										  ,
+		//	var totalRecords = await query.CountAsync();
+		//	var skip = (pageNumber - 1) * pageSize;
+		//	var payments = await query.OrderByDescending(p => p.PaymentDate)
+		//							 .Skip(skip)
+		//							 .Take(pageSize)
+		//							  .Select(p => new MyPaymentSupporterDTO // Project onto the DTO
+		//							  {
+		//								  PaymentId = p.PaymentId,
+		//								  Amount = p.Amount,
+		//								  PaymentDate = p.PaymentDate,
+		//								  Status = p.Status,
+		//								  RelatedId = p.RelatedId,
+		//								  ServiceType = p.ServiceType,
+		//								  User = new AccountDTO
+		//								  {
+		//									  Id = user.UserId,
+		//									  Username = user.Username,
+		//									  Role = user.UserType
+		//								  },
+		//								  Receiver = _context.Users.Where(u => u.UserId == p.ReceiverId).Select(r => new AccountDTO
+		//								  {
+		//									  Id = r.UserId,
+		//									  Username = r.Username
+		//								  }).FirstOrDefault()
+		//								  ,
 
-										  WithdrawalRequest = _context.WithdrawalRequests.Where(a => a.PaymentId == p.PaymentId)
-							.Select(r => new WithdrawalDTO
-							{
-								WithdrawalRequestId = r.WithdrawalRequestId,
-								PaymentId = r.PaymentId,
-								Comments = r.Comments,
-								RequestDate = r.RequestDate,
-								Status = r.Status
+		//								  //WithdrawalRequest = _context.WithdrawalRequests.Where(a => a.PaymentId == p.PaymentId)
+		//					.Select(r => new WithdrawalDTO
+		//					{
+		//						WithdrawalRequestId = r.WithdrawalRequestId,
+		//						PaymentId = r.PaymentId,
+		//						Comments = r.Comments,
+		//						RequestDate = r.RequestDate,
+		//						Status = r.Status
 
-							}).FirstOrDefault()
+		//					}).FirstOrDefault()
 
-									  })
-									 .ToListAsync();
+		//							  })
+		//							 .ToListAsync();
 
-			int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+		//	int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
-			return Ok(new { data = payments, totalRecords, totalPages });
+		//	return Ok(new { data = payments, totalRecords, totalPages });
 
-		}
+		//}
 
 
 		[HttpGet("check-score-detail")]
