@@ -2,11 +2,11 @@
 @model Web.Pages.CreatePostModel
 
 @{
-    ViewData["Title"] = "Tạo bài đăng";
+    ViewData["Title"] = "Tạo bài đăng assigment";
 }
 <!-- Styles -->
 
-<h1 class="text-center">Tạo bài đăng</h1>
+<h1 class="text-center">Tạo bài đăng assigment</h1>
 
 <hr />
 <div class="row">
@@ -16,20 +16,25 @@
 
             <div class="form-group">
                 <label asp-for="Post.PostTitle" class="control-label">Tiêu đề</label>
-                <input asp-for="Post.PostTitle" class="form-control" />
+                <input asp-for="Post.PostTitle" class="form-control" value="Cần thuê người làm project môn: "/>
                 <span asp-validation-for="Post.PostTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Post.PostContent" class="control-label">Nội dung</label>
-                <input asp-for="Post.PostContent" class="form-control" />
+                <label asp-for="Post.PostContent" class="control-label">Mô tả chi tiết</label>
+                <textarea asp-for="Post.PostContent" class="form-control" ></textarea>
                 <span asp-validation-for="Post.PostContent" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Post.DateSlot" class="control-label">Ngày</label>
+                <label asp-for="Post.DateSlot" class="control-label">Ngày kết thúc</label>
                 <input asp-for="Post.DateSlot" class="form-control" type="date" />
                 <span asp-validation-for="Post.DateSlot" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Post.PostCategoryId" class="control-label">Môn</label>
+                <select asp-for="Post.PostCategoryId" asp-items="@ViewData["PostCategoryId"] as SelectList" class="form-control select2"></select>
+                <span asp-validation-for="Post.PostCategoryId" class="text-danger"></span>
+            </div>
+            @* <div class="form-group">
                 <label class="control-label">Ca thi</label>
 
                 <div class="row">
@@ -45,16 +50,7 @@
                         <input name="EndTime" class="form-control" type="time" />
                     </div>
                 </div>
-            </div>
-
-
-            <div class="form-group">
-                <label asp-for="Post.PostCategoryId" class="control-label">Môn</label>
-                <select asp-for="Post.PostCategoryId" asp-items="@ViewData["PostCategoryId"] as SelectList" class="form-control select2"></select>
-                <span asp-validation-for="Post.PostCategoryId" class="text-danger"></span>
-            </div>
-
-
+            </div> *@
             <div class="form-group my-4 text-center">
                 <input type="submit" value="Tạo" class="btn btn-primary" />
             </div>

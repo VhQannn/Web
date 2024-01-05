@@ -27,11 +27,11 @@ namespace Web.Pages
         [BindProperty]
         public Post Post { get; set; } = default!;
 
-        [BindProperty]
+        /*[BindProperty]
         public string StartTime { get; set; } = default!;
 
         [BindProperty]
-        public string EndTime { get; set; } = default!;
+        public string EndTime { get; set; } = default!;*/
 
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
@@ -41,7 +41,7 @@ namespace Web.Pages
             var currentUser = _context.Users.FirstOrDefault(u => u.Username == currentUserName);
             Post.PostDate = DateTime.Now;
             Post.Status = "pending";
-            Post.TimeSlot = $"{StartTime} - {EndTime}";
+            Post.TimeSlot = "";
             Post.User = currentUser;
 
             if (!ModelState.IsValid || _context.Posts == null || Post == null)
